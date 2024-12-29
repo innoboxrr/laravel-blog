@@ -1,0 +1,19 @@
+{
+    "name": "innoboxrr/laravel-blog",
+    "description": "Añade un blog a tu app de laravel en cuestión de minutos",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Innoboxrr\\LaravelBlog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Homero Raul",
+            "email": "h.raulvc@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

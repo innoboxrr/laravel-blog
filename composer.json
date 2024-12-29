@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Innoboxrr\\LaravelBlog\\": "src/"
+            "Innoboxrr\\LaravelBlog\\": "src/",
+            "Innoboxrr\\LaravelBlog\\Database\\Factories\\": "database/factories/"
         }
     },
     "authors": [
@@ -27,6 +28,11 @@
                 "Innoboxrr\\LaravelBlog\\Providers\\EventServiceProvider",
                 "Innoboxrr\\LaravelBlog\\Providers\\RouteServiceProvider"
             ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Innoboxrr\\LaravelBlog\\Tests\\": "tests/"
         }
     }
 }

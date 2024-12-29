@@ -19,7 +19,7 @@ class BlogCategoryObserver
      */
     public function created(BlogCategory $blogCategory): void
     {
-        // Remove if laravel-audit is used: $blogCategory->log('created');
+        $blogCategory->log('created');
     }
  
     /**
@@ -27,7 +27,7 @@ class BlogCategoryObserver
      */
     public function updated(BlogCategory $blogCategory): void
     {
-        // Remove if laravel-audit is used: $blogCategory->log('updated');
+        $blogCategory->log('updated');
     }
  
     /**
@@ -35,7 +35,7 @@ class BlogCategoryObserver
      */
     public function deleted(BlogCategory $blogCategory): void
     {
-        // Remove if laravel-audit is used: $blogCategory->log('deleted');
+        $blogCategory->log('deleted');
     }
  
     /**
@@ -43,7 +43,7 @@ class BlogCategoryObserver
      */
     public function restored(BlogCategory $blogCategory): void
     {
-        // Remove if laravel-audit is used: $blogCategory->log('restored');
+        $blogCategory->log('restored');
     }
  
     /**
@@ -51,6 +51,6 @@ class BlogCategoryObserver
      */
     public function forceDeleted(BlogCategory $blogCategory): void
     {
-        // Remove if laravel-audit is used: $blogCategory->log('forceDeleted');
+        $blogCategory->log('forceDeleted');
     }
 }

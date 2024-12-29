@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_categories', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_categories', function (Blueprint $table) {
             $table->id();
-            //EDIT//
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->unsignedSmallInteger('order')->default(0);
+            $table->string('description')->nullable();
+            $table->foreignId('parent_id')->nullable();
+            $table->foreignId('blog_id');
             $table->timestamps();
             $table->softDeletes();
         });

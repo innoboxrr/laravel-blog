@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection(config('laravel-blog.database.connection'))->create('blog_post_metas', function (Blueprint $table) {
+        Schema::create('blog_category_post', function (Blueprint $table) {
             $table->id();
-            $table->string('key');
-            $table->longText('value');
+            $table->foreignId('blog_category_id')->constrained()->onDelete('cascade');
             $table->foreignId('blog_post_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_post_metas');
+        Schema::dropIfExists('blog_category_posts');
     }
 };

@@ -13,9 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_posts', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_posts', function (Blueprint $table) {
             $table->id();
-            //EDIT//
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->string('status')->default('draft');
+            $table->json('payload')->nullable();
+            $table->longText('content')->nullable();
+            $table->foreignId('blog_id');
+            $table->timestamp('published_at')->nullable();
+            $table->foreignId('author_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

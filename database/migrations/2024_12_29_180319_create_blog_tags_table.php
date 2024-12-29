@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_tags', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_tags', function (Blueprint $table) {
             $table->id();
-            //EDIT//
+            $table->string('name');
+            $table->unsignedSmallInteger('usage')->default(0);
+            $table->foreignId('blog_id');
             $table->timestamps();
             $table->softDeletes();
         });

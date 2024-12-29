@@ -12,6 +12,7 @@ use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogPostStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogPostAssignment;
 use Innoboxrr\LaravelBlog\Models\Traits\Operations\BlogPostOperations;
 use Innoboxrr\LaravelBlog\Models\Traits\Mutators\BlogPostMutators;
+use Innoboxrr\LaravelBlog\Enums\BlogPostStatus;
 
 class BlogPost extends Model
 {
@@ -27,44 +28,74 @@ class BlogPost extends Model
         BlogPostMutators;
         
     protected $fillable = [
-        //FILLABLE//
+        'title',
+        'slug',
+        'status',
+        'payload',
+        'content',
+        'blog_id',
+        'published_at',
+        'author_id',
     ];
 
     protected $creatable = [
-        //CREATABLE//
+        'title',
+        'slug',
+        'status',
+        'content',
+        'blog_id',
+        'published_at',
+        'author_id',
     ];
 
     protected $updatable = [
-        //UPDATABLE//
+        'title',
+        'slug',
+        'status',
+        'content',
+        'published_at',
     ];
 
     protected $casts = [
-        //CASTS//
+        'status' => BlogPostStatus::class,
+        'payload' => 'json',
     ];
 
     protected $protected_metas = [];
 
     protected $editable_metas = [
-        //EDITABLEMETAS//
+        'views',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        // Más etiquetas para seo
     ];
 
     public static $export_cols = [
-        //EXPORTCOLS//
+        'title',
+        'slug',
+        'status',
+        'content',
+        'blog_id',
+        'published_at',
     ];
 
     public static $loadable_relations = [
-        //LOADABLERELATIONS//
+        'blog',
+        'tags',
+        'categories',
+        'author',
     ];
 
     public static $loadable_counts = [
-        //LOADABLECOUNTS//
+        'blog',
+        'tags',
+        'categories',
+        'author',
     ];
 
-    /*
     protected static function newFactory()
     {
         return \Innoboxrr\LaravelBlog\Database\Factories\BlogPostFactory::new();
     }
-    */
-
 }

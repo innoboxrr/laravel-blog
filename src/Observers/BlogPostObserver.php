@@ -19,7 +19,7 @@ class BlogPostObserver
      */
     public function created(BlogPost $blogPost): void
     {
-        // Remove if laravel-audit is used: $blogPost->log('created');
+        $blogPost->log('created');
     }
  
     /**
@@ -27,7 +27,7 @@ class BlogPostObserver
      */
     public function updated(BlogPost $blogPost): void
     {
-        // Remove if laravel-audit is used: $blogPost->log('updated');
+        $blogPost->log('updated');
     }
  
     /**
@@ -35,7 +35,7 @@ class BlogPostObserver
      */
     public function deleted(BlogPost $blogPost): void
     {
-        // Remove if laravel-audit is used: $blogPost->log('deleted');
+        $blogPost->log('deleted');
     }
  
     /**
@@ -43,7 +43,7 @@ class BlogPostObserver
      */
     public function restored(BlogPost $blogPost): void
     {
-        // Remove if laravel-audit is used: $blogPost->log('restored');
+        $blogPost->log('restored');
     }
  
     /**
@@ -51,6 +51,6 @@ class BlogPostObserver
      */
     public function forceDeleted(BlogPost $blogPost): void
     {
-        // Remove if laravel-audit is used: $blogPost->log('forceDeleted');
+        $blogPost->log('forceDeleted');
     }
 }

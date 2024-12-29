@@ -27,44 +27,62 @@ class BlogCategory extends Model
         BlogCategoryMutators;
         
     protected $fillable = [
-        //FILLABLE//
+        'name',
+        'slug',
+        'order',
+        'description',
+        'parent_id',
+        'blog_id',
     ];
 
     protected $creatable = [
-        //CREATABLE//
+        'name',
+        'slug',
+        'order',
+        'description',
+        'parent_id',
+        'blog_id',
     ];
 
     protected $updatable = [
-        //UPDATABLE//
+        'name',
+        'slug',
+        'order',
+        'description',
+        'parent_id',
     ];
 
-    protected $casts = [
-        //CASTS//
-    ];
+    protected $casts = [];
 
     protected $protected_metas = [];
 
-    protected $editable_metas = [
-        //EDITABLEMETAS//
-    ];
+    protected $editable_metas = [];
 
     public static $export_cols = [
-        //EXPORTCOLS//
+        'name',
+        'slug',
+        'order',
+        'description',
+        'parent_id',
+        'blog_id',
     ];
 
     public static $loadable_relations = [
-        //LOADABLERELATIONS//
+        'blog',
+        'parent',
+        'children',
+        'posts',
     ];
 
     public static $loadable_counts = [
-        //LOADABLECOUNTS//
+        'blog',
+        'parent',
+        'children',
+        'posts',
     ];
 
-    /*
     protected static function newFactory()
     {
         return \Innoboxrr\LaravelBlog\Database\Factories\BlogCategoryFactory::new();
     }
-    */
-
 }

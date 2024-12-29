@@ -27,37 +27,44 @@ class BlogTag extends Model
         BlogTagMutators;
         
     protected $fillable = [
-        //FILLABLE//
+        'name',
+        'usage',
+        'blog_id',
     ];
 
     protected $creatable = [
-        //CREATABLE//
+        'name',
+        'blog_id',
     ];
 
     protected $updatable = [
-        //UPDATABLE//
+        'name',
     ];
 
-    protected $casts = [
-        //CASTS//
-    ];
+    protected $casts = [];
 
     protected $protected_metas = [];
 
-    protected $editable_metas = [
-        //EDITABLEMETAS//
-    ];
+    protected $editable_metas = [];
 
     public static $export_cols = [
-        //EXPORTCOLS//
+        'id',
+        'name',
+        'usage',
+        'blog_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     public static $loadable_relations = [
-        //LOADABLERELATIONS//
+        'blog',
+        'posts',
     ];
 
     public static $loadable_counts = [
-        //LOADABLECOUNTS//
+        'blog',
+        'posts',
     ];
 
     /*

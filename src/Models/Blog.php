@@ -12,6 +12,7 @@ use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogAssignment;
 use Innoboxrr\LaravelBlog\Models\Traits\Operations\BlogOperations;
 use Innoboxrr\LaravelBlog\Models\Traits\Mutators\BlogMutators;
+use Innoboxrr\LaravelBlog\Enums\BlogStatus;
 
 class Blog extends Model
 {
@@ -27,44 +28,66 @@ class Blog extends Model
         BlogMutators;
         
     protected $fillable = [
-        //FILLABLE//
+        'name',
+        'slug',
+        'status',
+        'domain',
+        'domain_verified_at',
+        'bloggable_type',
+        'bloggable_id',
     ];
 
     protected $creatable = [
-        //CREATABLE//
+        'name',
+        'slug',
+        'status',
+        'domain',
+        'bloggable_type',
+        'bloggable_id',
     ];
 
     protected $updatable = [
-        //UPDATABLE//
+        'name',
+        'slug',
+        'status',
+        'domain',
     ];
 
     protected $casts = [
-        //CASTS//
+        'status' => BlogStatus::class,
     ];
 
     protected $protected_metas = [];
 
-    protected $editable_metas = [
-        //EDITABLEMETAS//
-    ];
+    protected $editable_metas = [];
 
     public static $export_cols = [
-        //EXPORTCOLS//
+        'name',
+        'slug',
+        'status',
+        'domain',
+        'domain_verified_at',
+        'bloggable_type',
+        'bloggable_id',
     ];
 
     public static $loadable_relations = [
-        //LOADABLERELATIONS//
+        'bloggable',
+        'categories',
+        'tags',
+        'posts',
     ];
 
     public static $loadable_counts = [
-        //LOADABLECOUNTS//
+        'bloggable',
+        'categories',
+        'tags',
+        'posts',
     ];
 
-    /*
     protected static function newFactory()
     {
         return \Innoboxrr\LaravelBlog\Database\Factories\BlogFactory::new();
     }
-    */
 
 }

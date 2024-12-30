@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Innoboxrr\Traits\MetaOperations;
 use Innoboxrr\Traits\ModelAppendsTrait;
+use Innoboxrr\LaravelAudit\Support\Traits\Auditable;
 use Innoboxrr\LaravelBlog\Models\Traits\Relations\BlogPostRelations;
 use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogPostStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogPostAssignment;
@@ -21,6 +22,7 @@ class BlogPost extends Model
         SoftDeletes,
         MetaOperations,
         ModelAppendsTrait,
+        Auditable,
         BlogPostRelations,
         BlogPostStorage,
         BlogPostAssignment,

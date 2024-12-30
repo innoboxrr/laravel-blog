@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Innoboxrr\Traits\MetaOperations;
 use Innoboxrr\Traits\ModelAppendsTrait;
+use Innoboxrr\LaravelAudit\Support\Traits\Auditable;
 use Innoboxrr\LaravelBlog\Models\Traits\Relations\BlogTagRelations;
 use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogTagStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogTagAssignment;
@@ -20,6 +21,7 @@ class BlogTag extends Model
         SoftDeletes,
         MetaOperations,
         ModelAppendsTrait,
+        Auditable,
         BlogTagRelations,
         BlogTagStorage,
         BlogTagAssignment,

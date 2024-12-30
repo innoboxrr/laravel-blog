@@ -2,7 +2,7 @@
     <div>
         <p>{{ message }}</p>
         <p>Count: {{ count }}</p>
-        <button @click="increment">Increment</button>
+        <button @click="increment">Increments</button>
         <button @click="updateMessage('New Message from Pinia!')">Update Message</button>
         <pre>{{ blog }}</pre>
     </div>

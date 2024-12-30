@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Innoboxrr\Traits\MetaOperations;
 use Innoboxrr\Traits\ModelAppendsTrait;
+use Innoboxrr\LaravelAudit\Support\Traits\Auditable;
 use Innoboxrr\LaravelBlog\Models\Traits\Relations\BlogSubscriberRelations;
 use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogSubscriberStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogSubscriberAssignment;
@@ -20,6 +21,7 @@ class BlogSubscriber extends Model
         SoftDeletes,
         MetaOperations,
         ModelAppendsTrait,
+        Auditable,
         BlogSubscriberRelations,
         BlogSubscriberStorage,
         BlogSubscriberAssignment,

@@ -37,7 +37,7 @@ class CreateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'slug' => 'required|string|unique:blogs,slug|regex:/^[a-z0-9-]+$/',
-            'domain' => 'required|string|unique:blogs,domain|regex:/^[a-z0-9-]+$/',
+            'domain' => 'nullable|string|unique:blogs,domain|url',
             'bloggable_type' => 'required|string',
             'bloggable_id' => 'required|integer',
         ];

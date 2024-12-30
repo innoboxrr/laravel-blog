@@ -1,6 +1,6 @@
 import makeHttpRequest from 'innoboxrr-http-request'
 
-export const API_ROUTE_PREFIX = 'api.blog.'; // Reemplaza con la ruta adecuada
+export const API_ROUTE_PREFIX = 'api.larablog.blog.'; // Reemplaza con la ruta adecuada
 
 export const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Reemplaza con el token adecuado
 
@@ -60,7 +60,7 @@ export const dataTableHead = () => {
 			sortable: true,
 			html: false,
 		},
-//DATA_TABLE_COLUMNS//
+        
 		/*
 		{
 			id: 'column',
@@ -80,7 +80,7 @@ export const dataTableHead = () => {
 export const dataTableSort = () => {
 	return {
 		id: 'asc',
-//DATA_TABLE_SORT//
+        //DATA_TABLE_SORT//
 	};
 };
 

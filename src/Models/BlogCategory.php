@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Innoboxrr\Traits\MetaOperations;
 use Innoboxrr\Traits\ModelAppendsTrait;
+use Innoboxrr\LaravelAudit\Support\Traits\Auditable;
 use Innoboxrr\LaravelBlog\Models\Traits\Relations\BlogCategoryRelations;
 use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogCategoryStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogCategoryAssignment;
@@ -20,6 +21,7 @@ class BlogCategory extends Model
         SoftDeletes,
         MetaOperations,
         ModelAppendsTrait,
+        Auditable,
         BlogCategoryRelations,
         BlogCategoryStorage,
         BlogCategoryAssignment,

@@ -24,6 +24,6 @@ trait Bloggable
 
     public function createBlog(BlogDto $blogDto)
     {
-        return $this->blog()->create($blogDto->toArray());
+        return $this->blog()->createModel($blogDto->toArray());
     }
 }

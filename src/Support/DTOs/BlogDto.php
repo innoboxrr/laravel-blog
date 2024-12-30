@@ -10,12 +10,8 @@ class BlogDto
     public string $status;
     public ?string $domain;
     public ?string $domain_verified_at;
-    public ?array $payload;
     public string $bloggable_type;
     public int $bloggable_id;
-    public string $created_at;
-    public string $updated_at;
-    public ?string $deleted_at;
 
     public function __construct(array $attributes = [])
     {
@@ -25,12 +21,8 @@ class BlogDto
         $this->status = $attributes['status'] ?? 'active';
         $this->domain = $attributes['domain'] ?? null;
         $this->domain_verified_at = $attributes['domain_verified_at'] ?? null;
-        $this->payload = isset($attributes['payload']) ? json_decode($attributes['payload'], true) : null;
         $this->bloggable_type = $attributes['bloggable_type'] ?? '';
         $this->bloggable_id = $attributes['bloggable_id'] ?? 0;
-        $this->created_at = $attributes['created_at'] ?? '';
-        $this->updated_at = $attributes['updated_at'] ?? '';
-        $this->deleted_at = $attributes['deleted_at'] ?? null;
     }
 
     /**
@@ -47,12 +39,8 @@ class BlogDto
             'status' => $this->status,
             'domain' => $this->domain,
             'domain_verified_at' => $this->domain_verified_at,
-            'payload' => $this->payload,
             'bloggable_type' => $this->bloggable_type,
             'bloggable_id' => $this->bloggable_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
         ];
     }
 

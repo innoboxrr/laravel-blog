@@ -23,8 +23,8 @@ class RouteServiceProvider extends ServiceProvider
             $name = basename($file, '.php');
 
             Route::middleware('api')
-                ->prefix('api/innoboxrr/laravelblog/' . $name)
-                ->as('api.innoboxrr.laravelblog.' . $name . '.')
+                ->prefix('api/larablog/' . $name)
+                ->as('api.larablog.' . $name . '.')
                 ->namespace('Innoboxrr\LaravelBlog\Http\Controllers')
                 ->group($file);
 

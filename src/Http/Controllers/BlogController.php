@@ -12,7 +12,7 @@ use Innoboxrr\LaravelBlog\Http\Requests\Blog\{
     DeleteRequest,
     RestoreRequest,
     ForceDeleteRequest,
-    ExportRequest
+    ExportRequest,
 };
 
 class BlogController extends Controller

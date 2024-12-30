@@ -1,3 +1,3 @@
-import LaravelBlog from './components/LaravelBlog.vue';
+import BlogApp from './components/BlogApp.vue';
 
-export default LaravelBlog;
+export default BlogApp;

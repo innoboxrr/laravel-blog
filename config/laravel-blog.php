@@ -8,6 +8,10 @@ return [
 
 	'author_class' => 'App\Models\User',
 
+	'bloggable' => [
+		'create' => true,
+	],
+
 	'image_crop' => [
 		'original' => [
 			'width' => 1920,

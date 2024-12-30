@@ -29,7 +29,7 @@ return [
 
 	'user_class' => 'App\Models\User',
 
-	'excel_view' => 'innoboxrrlaravelblog::excel.',
+	'excel_view' => 'laravel-blog::excel.',
 
 	'notification_via' => ['mail', 'database'],
 

@@ -21,8 +21,8 @@ class BlogCategoriesExports implements FromView
     {
         return view(
             config(
-                'innoboxrrlaravelblog.excel_view', 
-                'innoboxrrlaravelblog::excel.'
+                'laravel-blog.excel_view', 
+                'laravel-blog::excel.'
             ) . 'blog_category', 
             [
                 'blog_categories' => $this->getQuery(),

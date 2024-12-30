@@ -21,8 +21,8 @@ class BlogPostsExports implements FromView
     {
         return view(
             config(
-                'innoboxrrlaravelblog.excel_view', 
-                'innoboxrrlaravelblog::excel.'
+                'laravel-blog.excel_view', 
+                'laravel-blog::excel.'
             ) . 'blog_post', 
             [
                 'blog_posts' => $this->getQuery(),

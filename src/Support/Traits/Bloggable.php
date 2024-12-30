@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Support\Traits;
 
+use Innoboxrr\LaravelBlog\Support\DTOs\BlogDto;
 use Innoboxrr\LaravelBlog\Models\Blog;
 
 trait Bloggable
@@ -14,5 +15,15 @@ trait Bloggable
     public function blog()
     {
         return $this->morphOne(Blog::class, 'bloggable');
+    }
+
+    public function hasBlog()
+    {
+        return $this->blog()->exists();
+    }
+
+    public function createBlog(BlogDto $blogDto)
+    {
+        return $this->blog()->create($blogDto->toArray());
     }
 }

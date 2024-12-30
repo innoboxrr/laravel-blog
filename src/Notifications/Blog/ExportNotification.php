@@ -25,7 +25,7 @@ class ExportNotification extends Notification
 
     public function via($notifiable)
     {
-        return config('innoboxrrlaravelblog.notification_via', ['mail', 'database']);
+        return config('laravel-blog.notification_via', ['mail', 'database']);
     }
 
     public function toMail($notifiable)
@@ -55,7 +55,7 @@ class ExportNotification extends Notification
         Excel::store(
             new BlogsExports($this->data), 
             $this->path, 
-            config('innoboxrrlaravelblog.export_disk', 's3')
+            config('laravel-blog.export_disk', 's3')
         );
     }
 

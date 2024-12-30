@@ -5,6 +5,7 @@ namespace Innoboxrr\LaravelBlog\Models\Traits\Relations;
 use Innoboxrr\LaravelBlog\Models\BlogCategory;
 use Innoboxrr\LaravelBlog\Models\BlogTag;
 use Innoboxrr\LaravelBlog\Models\BlogPost;
+use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
 // use \Znck\Eloquent\Traits\BelongsToThrough; // Docs: https://github.com/staudenmeir/belongs-to-through
 // use \Staudenmeir\EloquentHasManyDeep\HasRelationships; // Docs: https://github.com/staudenmeir/eloquent-has-many-deep
 
@@ -28,5 +29,10 @@ trait BlogRelations
     public function posts()
     {
         return $this->hasMany(BlogPost::class);
+    }
+
+    public function subscribers()
+    {
+        return $this->hasMany(BlogSubscriber::class);
     }
 }

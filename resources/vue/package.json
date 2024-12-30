@@ -1,6 +1,6 @@
 {
   "name": "innoboxrr-vue-blog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Paquete de Vue para trabajar de la mano con el paquete innoboxrr/laravel-blog",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,13 @@
   "author": "Homero Raul Vargas Cruz",
   "license": "MIT",
   "dependencies": {
-    "innoboxrr-http-request": "^1.1.0"
+    "innoboxrr-http-request": "^1.1.0",
+    "innoboxrr-vue-utils": "^1.0.0",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.6"
   }
 }

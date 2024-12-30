@@ -1,19 +1,35 @@
 <template>
-    <p>Blog app</p>
+    <router-view />
 </template>
 
 <script>
-    import { indexModel } from '../api/blog';
-    export default {
-        name: 'BlogApp',
-        props: {
-            blogId: {
-                type: Number,
-                default: 0
-            }
+import { watch } from 'vue';
+import { useGlobalStore } from '../store/globalStore'; // Ajusta la ruta según tu estructura
+
+export default {
+    name: 'BlogApp',
+    props: {
+        blog: {
+            type: Object,
+            required: true, // Asegúrate de pasar el blog desde el componente padre
         },
-        created() {
-            this.fetchBlogs();
-        },
-    }
+    },
+    setup(props) {
+        const globalStore = useGlobalStore();
+
+        // Actualiza la tienda global con el blog inicial
+        globalStore.setBlog(props.blog);
+
+        // Observa cambios en el prop `blog` y actualiza la tienda global si cambia
+        watch(
+            () => props.blog,
+            (newBlog) => {
+                globalStore.setBlog(newBlog);
+            },
+            { immediate: true } // Ejecuta inmediatamente al montar
+        );
+
+        return {};
+    },
+};
 </script>

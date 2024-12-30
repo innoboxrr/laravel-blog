@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_post_tags', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_post_tags', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blog_post_id')->constrained()->onDelete('cascade');
             $table->foreignId('blog_tag_id')->constrained()->onDelete('cascade');

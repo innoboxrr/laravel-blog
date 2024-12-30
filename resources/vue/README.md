@@ -2,6 +2,7 @@
 
 Administration (VueJS Component)
     BlogDashboard
+    BlogSettingsView (SEO, Configuration)
     BlogPostDataTable
     BlogCategoryModal
         BlogCategoryCreateForm
@@ -14,3 +15,8 @@ Administration (VueJS Component)
         BlogPostPreview
 
 Site
+    HomePageView
+    SearchView
+    PostView
+    RSSFeed
+    SubscriptionModal

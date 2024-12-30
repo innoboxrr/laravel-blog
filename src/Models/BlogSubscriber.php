@@ -27,44 +27,68 @@ class BlogSubscriber extends Model
         BlogSubscriberMutators;
         
     protected $fillable = [
-        //FILLABLE//
+        'status',
+        'email',
+        'token',
+        'verified_at',
+        'name',
+        'phone',
+        'payload',
+        'blog_id',
     ];
 
     protected $creatable = [
-        //CREATABLE//
+        'status',
+        'email',
+        'token',
+        'name',
+        'phone',
+        'blog_id',
     ];
 
     protected $updatable = [
-        //UPDATABLE//
+        'status',
+        'email',
+        'name',
+        'phone',
     ];
 
     protected $casts = [
-        //CASTS//
+        'verified_at' => 'datetime',
+        'payload' => 'array',
     ];
 
     protected $protected_metas = [];
 
     protected $editable_metas = [
-        //EDITABLEMETAS//
+        'ip',
+        'user_agent',
+        'referrer',
     ];
 
     public static $export_cols = [
-        //EXPORTCOLS//
+        'status',
+        'email',
+        'token',
+        'verified_at',
+        'name',
+        'phone',
+        'blog_id',
     ];
 
     public static $loadable_relations = [
-        //LOADABLERELATIONS//
+        'metas',
+        'blog'
     ];
 
     public static $loadable_counts = [
-        //LOADABLECOUNTS//
+        'metas',
+        'blog'
     ];
 
-    /*
     protected static function newFactory()
     {
         return \Innoboxrr\LaravelBlog\Database\Factories\BlogSubscriberFactory::new();
     }
-    */
 
 }

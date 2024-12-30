@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Models\Traits\Relations;
 
+use Innoboxrr\LaravelBlog\Models\BlogMeta;
 use Innoboxrr\LaravelBlog\Models\BlogCategory;
 use Innoboxrr\LaravelBlog\Models\BlogTag;
 use Innoboxrr\LaravelBlog\Models\BlogPost;
@@ -11,6 +12,12 @@ use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
 
 trait BlogRelations
 {
+
+    public function metas()
+    {
+        return $this->hasMany(BlogMeta::class);
+    }
+
     public function bloggable()
     {
         return $this->morphTo();

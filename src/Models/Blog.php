@@ -33,6 +33,7 @@ class Blog extends Model
         'status',
         'domain',
         'domain_verified_at',
+        'payload',
         'bloggable_type',
         'bloggable_id',
     ];

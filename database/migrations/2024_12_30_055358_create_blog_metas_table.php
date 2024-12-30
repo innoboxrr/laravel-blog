@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection(config('laravel-blog.database.connection'))->create('blog_subscribers', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_metas', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default('pending');
-            $table->string('email');
-            $table->string('token');
-            $table->timestamp('verified_at')->nullable();
-            $table->string('name')->nullable();
-            $table->string('phone')->nullable();
-            $table->json('payload')->nullable();
+            $table->string('key');
+            $table->longText('value');
             $table->foreignId('blog_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_subscribers');
+        Schema::dropIfExists('blog_metas');
     }
 };

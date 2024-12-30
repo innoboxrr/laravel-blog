@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog_subscriber_metas', function (Blueprint $table) {
+        Schema::connection(config('laravel-blog.database.connection'))->create('blog_subscriber_metas', function (Blueprint $table) {
             $table->id();
             $table->string('key');
             $table->longText('value');

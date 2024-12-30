@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->string('domain')->unique()->nullable();
             $table->timestamp('domain_verified_at')->nullable();
+            $table->json('payload')->nullable();
             $table->string('bloggable_type');
             $table->foreignId('bloggable_id');
             $table->timestamps();

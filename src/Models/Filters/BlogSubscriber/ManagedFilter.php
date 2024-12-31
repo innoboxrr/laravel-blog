@@ -9,11 +9,9 @@ class ManagedFilter extends Managed
 
     public static function canView($query, $user, array $args = [])
     {   
-
-        // Añadir restricciones de visibilidad
-
+        if(method_exists($user, 'managedBlogSubscriberFilter')) {
+            $query = $user->managedBlogSubscriberFilter($query, $args);
+        }
         return $query;
-
     }
-
 }

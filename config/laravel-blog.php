@@ -31,6 +31,14 @@ return [
 		],
 	],
 
+	'permissions' => [
+		'blog-category-except-abilities' => [],
+		'blog-except-abilities' => [],
+		'blog-post-except-abilities' => [],
+		'blog-subscriber-except-abilities' => [],
+		'blog-tag-except-abilities' => [],
+	],
+
 	'user_class' => 'App\Models\User',
 
 	'excel_view' => 'laravel-blog::excel.',

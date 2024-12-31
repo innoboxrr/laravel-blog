@@ -156,7 +156,7 @@
 
 <script>
     import { toRefs } from 'vue';
-    import { useGlobalStore } from '@blogStore/globalStore'; // Alias para la tienda global
+    import { useGlobalStore } from '@blogStore/globalStore'; 
     import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
     import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 

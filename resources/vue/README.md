@@ -43,6 +43,7 @@ npm install innoboxrr-vue-blog
 ### 2. Registrar el Paquete en Bootstrap
 
 Agrega `BlogApp` al bootstrap de tu aplicación:
+
 ```javascript
 import { createApp } from 'vue';
 import BlogApp from 'innoboxrr-vue-blog';
@@ -50,6 +51,31 @@ import BlogApp from 'innoboxrr-vue-blog';
 const app = createApp(App);
 app.use(BlogApp);
 ```
+
+### 2.1 Traducciones
+
+Puedes añadir traducciones personalizadas de la siguinte manera
+```javascript
+import { createApp } from 'vue';
+import BlogPackage from 'path/to/your/package';
+
+const customLocales = {
+    es: {
+        Hello: 'Hola personalizado',
+        'Create Blog': 'Crear Blog personalizado',
+    },
+};
+
+const app = createApp(App);
+
+app.use(BlogPackage, {
+    defaultLang: 'es', // Idioma por defecto
+    locales: customLocales, // Locales personalizados
+});
+
+app.mount('#app');
+```
+
 
 ### 3. Configurar la Vista Principal
 

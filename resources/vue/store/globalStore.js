@@ -1,4 +1,5 @@
 import { indexModel as indexCategoryModel } from '@blogModels/blog-category'
+import { __blog } from '../utils/translate';
 import { defineStore } from 'pinia';
 import { 
     Bars4Icon, 
@@ -7,17 +8,15 @@ import {
     TagIcon, 
     UserGroupIcon, 
     CogIcon, 
-    ArrowLeftOnRectangleIcon 
 } from '@heroicons/vue/24/outline'
 
 const navigation = [
-    { name: 'Inicio', href: '#', icon: HomeIcon, current: true },
-    { name: 'Categorías', href: '#', icon: Bars4Icon, current: false },
-    { name: 'Publicaciones', href: '#', icon: ClockIcon, current: false },
-    { name: 'Etiquetas', href: '#', icon: TagIcon, current: false },
-    { name: 'Suscriptores', href: '#', icon: UserGroupIcon, current: false },
-    { name: 'Configuración', href: '#', icon: CogIcon, current: false },
-    { name: 'Salir', href: '#', icon: ArrowLeftOnRectangleIcon, current: false },
+    { name: __blog('Home'), href: '#', icon: HomeIcon, current: true },
+    { name: __blog('Categories'), href: '#', icon: Bars4Icon, current: false },
+    { name: __blog('Posts'), href: '#', icon: ClockIcon, current: false },
+    { name: __blog('Tags'), href: '#', icon: TagIcon, current: false },
+    { name: __blog('Subscribers'), href: '#', icon: UserGroupIcon, current: false },
+    { name: __blog('Settings'), href: '#', icon: CogIcon, current: false },
 ];
 
 export const useGlobalStore = defineStore('blog-global', {

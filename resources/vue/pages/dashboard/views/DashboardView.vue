@@ -1,12 +1,12 @@
 <template>
     <div class="min-h-full">
-
-        <!-- Pinned projects -->
         <div class="mt-6 px-4 sm:px-6 lg:px-8">
             <h2 class="text-sm font-medium text-gray-900">
                 Pinned Projects
             </h2>
-            <ul role="list" class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
+            <ul 
+                role="list" 
+                class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
                 <li 
                     v-for="project in pinnedProjects" 
                     :key="project.id" 
@@ -16,8 +16,12 @@
                     </div>
                     <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
                         <div class="flex-1 truncate px-4 py-2 text-sm">
-                            <a href="#" class="font-medium text-gray-900 hover:text-gray-600">{{ project.title }}</a>
-                            <p class="text-gray-500">{{ project.totalMembers }} Members</p>
+                            <a href="#" class="font-medium text-gray-900 hover:text-gray-600">
+                                {{ project.title }}
+                            </a>
+                            <p class="text-gray-500">
+                                {{ project.totalMembers }} Members
+                            </p>
                         </div>
                         <Menu as="div" class="shrink-0 pr-2">
                             <MenuButton class="inline-flex size-8 items-center justify-center rounded-full bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">

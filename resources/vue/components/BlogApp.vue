@@ -41,7 +41,9 @@
                                         class="relative ml-1 flex size-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" 
                                         @click="sidebarOpen = false">
                                         <span class="absolute -inset-0.5"></span>
-                                        <span class="sr-only">Close sidebar</span>
+                                        <span class="sr-only">
+                                            {{ __blog('Close sidebar') }}
+                                        </span>
                                         <XMarkIcon class="size-6 text-white" aria-hidden="true" />
                                     </button>
                                 </div>
@@ -63,20 +65,20 @@
                                         </a>
                                     </div>
                                     <div class="mt-8">
-                                        <h3 class="px-3 text-sm font-medium text-gray-500" id="mobile-teams-headline">
-                                            Categorías
+                                        <h3 class="px-3 text-sm font-medium text-gray-500" id="mobile-tags-headline">
+                                            {{ __blog('Categories') }}
                                         </h3>
                                         <div 
                                             class="mt-1 space-y-1" 
                                             role="group" 
-                                            aria-labelledby="mobile-teams-headline">
+                                            aria-labelledby="mobile-tags-headline">
                                             <a 
-                                                v-for="team in teams" 
-                                                :key="team.name" 
-                                                :href="team.href" 
+                                                v-for="tag in tags" 
+                                                :key="tag.name" 
+                                                :href="tag.href" 
                                                 class="group flex items-center rounded-md px-3 py-2 text-base/5 font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                                                <span :class="[team.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true" />
-                                                <span class="truncate">{{ team.name }}</span>
+                                                <span :class="[tag.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true" />
+                                                <span class="truncate">{{ tag.name }}</span>
                                             </a>
                                         </div>
                                     </div>
@@ -92,16 +94,24 @@
         <!-- Static sidebar for desktop -->
         <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-gray-100 lg:pb-4 lg:pt-5 mt-4">
             <div class="mt-5 flex h-0 flex-1 flex-col overflow-y-auto pt-1">
-                <Menu as="div" class="relative inline-block px-3 text-left">
+                <!-- Autores -->
+                <Menu v-if="false" as="div" class="relative inline-block px-3 text-left">
                     <div>
                         <MenuButton 
                             class="group w-full rounded-md bg-gray-100 px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100">
                             <span class="flex w-full items-center justify-between">
                                 <span class="flex min-w-0 items-center justify-between space-x-3">
-                                    <img class="size-10 shrink-0 rounded-full bg-gray-300" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" alt="" />
+                                    <img 
+                                        class="size-10 shrink-0 rounded-full bg-gray-300" 
+                                        src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" 
+                                        alt="" />
                                     <span class="flex min-w-0 flex-1 flex-col">
-                                        <span class="truncate text-sm font-medium text-gray-900">Jessy Schwarz</span>
-                                        <span class="truncate text-sm text-gray-500">@jessyschwarz</span>
+                                        <span class="truncate text-sm font-medium text-gray-900">
+                                            Jessy Schwarz
+                                        </span>
+                                        <span class="truncate text-sm text-gray-500">
+                                            @jessyschwarz
+                                        </span>
                                     </span>
                                 </span>
                                 <ChevronUpDownIcon class="size-5 shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
@@ -168,7 +178,7 @@
                     </transition>
                 </Menu>
                 <!-- Sidebar Search -->
-                <div class="mt-6 grid grid-cols-1 px-3">
+                <div class="mt-2 grid grid-cols-1 px-3">
                     <input 
                         type="search" 
                         name="search" 
@@ -192,22 +202,24 @@
                                 :is="item.icon" 
                                 :class="[item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500', 'mr-3 size-6 shrink-0']" 
                                 aria-hidden="true" />
-                            {{ item.name }}
+                            {{ __blog(item.name) }}
                         </a>
                     </div>
                     <div class="mt-8">
                         <!-- Secondary navigation -->
-                        <h3 class="px-3 text-sm font-medium text-gray-500" id="desktop-teams-headline">
-                            Teams
+                        <h3 class="px-3 text-sm font-medium text-gray-500" id="desktop-tags-headline">
+                            {{ __blog('Categories') }}
                         </h3>
-                        <div class="mt-1 space-y-1" role="group" aria-labelledby="desktop-teams-headline">
+                        <div class="mt-1 space-y-1" role="group" aria-labelledby="desktop-tags-headline">
                             <a 
-                                v-for="team in teams" 
-                                :key="team.name" 
-                                :href="team.href" 
+                                v-for="tag in tags" 
+                                :key="tag.name" 
+                                :href="tag.href" 
                                 class="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-                                <span :class="[team.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true"></span>
-                                <span class="truncate">{{ team.name }}</span>
+                                <span :class="[tag.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true"></span>
+                                <span class="truncate">
+                                    {{ tag.name }}
+                                </span>
                             </a>
                         </div>
                     </div>
@@ -344,8 +356,9 @@
 
 
 <script>
-    import { watch, toRefs } from 'vue';
-    import { useGlobalStore } from '@blogStore/globalStore'; // Alias para la tienda global
+    import { watch, toRefs, getCurrentInstance } from 'vue';
+    import { useGlobalStore } from '@blogStore/globalStore';
+    import { useTranslationsStore } from '@blogStore/translationsStore';
     import { Dialog, DialogPanel, Menu, MenuButton, MenuItem, MenuItems, TransitionChild, TransitionRoot } from '@headlessui/vue'
     import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline'
     import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
@@ -357,20 +370,64 @@
                 type: Object,
                 required: true, // Asegúrate de pasar el blog desde el componente padre
             },
+            lang: {
+                type: String,
+                default: 'en',
+            },
         },
         setup(props) {
+            // 1. Importar stores
             const globalStore = useGlobalStore();
+            const translationsStore = useTranslationsStore();
+
+            // 2. Acceder a propiedades globales
+            const instance = getCurrentInstance();
+            const $blogLoadLocale = instance?.appContext.config.globalProperties.$blogLoadLocale;
+
+            // 3. Referenciar datos reactivos del store global
             const { navigation } = toRefs(globalStore);
-            globalStore.setBlog(props.blog);
 
-            watch(() => props.blog, (newBlog) => {
-                    globalStore.setBlog(newBlog);
-                },
-                { immediate: true }
-            );
+            // 4. Establecer el blog inicial
+            const initializeBlog = () => {
+                globalStore.setBlog(props.blog);
+            };
 
+            // 5. Cargar el idioma inicial
+            const initializeLocale = () => {
+                if (translationsStore.currentLang !== props.lang) {
+                    $blogLoadLocale(props.lang);
+                }
+            };
+
+            // 6. Configurar watchers reactivos
+            const setupWatchers = () => {
+                // Vigilar cambios en el blog
+                watch(
+                    () => props.blog,
+                    (newBlog) => {
+                        globalStore.setBlog(newBlog);
+                    },
+                    { immediate: true }
+                );
+
+                // Vigilar cambios en el idioma (lang)
+                watch(
+                    () => props.lang,
+                    (newLang) => {
+                        $blogLoadLocale(newLang);
+                    },
+                    { immediate: true }
+                );
+            };
+
+            // 7. Inicializar lógica
+            initializeBlog();
+            initializeLocale();
+            setupWatchers();
+
+            // 8. Retornar propiedades reactivas
             return {
-                navigation
+                navigation,
             };
         },
         components: {
@@ -396,7 +453,7 @@
                     id: 1,
                     title: 'GraphQL API 123456789',
                     initials: 'GA',
-                    team: 'Engineering',
+                    tag: 'Engineering',
                     members: [
                         {
                         name: 'Dries Vincent',
@@ -430,7 +487,7 @@
                     },
                     // More projects...
                 ],
-                teams: [
+                tags: [
                     { name: 'Engineering', href: '#', bgColorClass: 'bg-indigo-500' },
                     { name: 'Human Resources', href: '#', bgColorClass: 'bg-green-500' },
                     { name: 'Customer Success', href: '#', bgColorClass: 'bg-yellow-500' },

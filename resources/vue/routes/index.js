@@ -16,5 +16,5 @@ export default [{
 	},
 	children: [
 		...appRoutes,
-	], // Agregar rutas dinámicas como hijos
+	],
 }];

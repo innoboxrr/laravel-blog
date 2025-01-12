@@ -69,8 +69,10 @@ const customLocales = {
 const app = createApp(App);
 
 app.use(BlogPackage, {
-    defaultLang: 'es', // Idioma por defecto
-    locales: customLocales, // Locales personalizados
+    translateOptions: {
+        defaultLang: 'es', // Idioma por defecto
+        locales: customLocales, // Locales personalizados
+    }
 });
 
 app.mount('#app');
@@ -132,9 +134,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@blog': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/'),
-            '@blogModels': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/models'),
-            '@blogPages': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/pages'),
-            '@blogStore': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/store'),
+            '@blogComponents': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/src/components'),
+            '@blogModels': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/src/models'),
+            '@blogPages': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/src/pages'),
+            '@blogStore': path.resolve(__dirname, 'node_modules/innoboxrr-vue-blog/src/store'),
         },
     },
 });

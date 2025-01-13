@@ -1,3 +1,3 @@
 <div>
-    <p>Blog Show</p>
+    <p>Blog Show Modern</p>
 </div>

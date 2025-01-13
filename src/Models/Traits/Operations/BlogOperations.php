@@ -16,4 +16,11 @@ trait BlogOperations
         return $this->save();
     }
 
+    public static function resolveBlog($host, $slug = null)
+    {
+        return self::where('domain', $host)
+            ->orWhere('slug', $slug)
+            ->firstOrFail();
+    }
+
 }

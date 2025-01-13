@@ -1,3 +1,3 @@
 <div>
-    <p>Blog Index</p>
+    <p>Blog Index Modern</p>
 </div>

@@ -10,7 +10,8 @@ class RouteServiceProvider extends ServiceProvider
 
     public function map()
     {
-        $this->mapApiRoutes();      
+        $this->mapApiRoutes();     
+        $this->mapWebRoutes(); 
     }
 
     protected function mapApiRoutes()
@@ -28,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         Route::middleware('web')
-            ->namespace('Innoboxrr\LaravelBlog\Http\Controllers')
+            ->as('larablog.')
             ->group(__DIR__ . '/../../routes/web.php');
     }
 

@@ -7,6 +7,8 @@ use Livewire\Livewire;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $livewirePath = __DIR__.'/../Http/Livewire';
         $namespace = 'Innoboxrr\\LaravelBlog\\Http\\Livewire';
-        $viewsPath = __DIR__.'/../../resources/views/livewire';
 
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($livewirePath)
@@ -39,26 +40,32 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
+                // Generar la clase a partir de la ruta
                 $class = $namespace . '\\' . str_replace(
-                    ['/', '.php'],
-                    ['\\', ''],
+                    ['/', '\\', '.php'],
+                    ['\\', '\\', ''],
                     substr($file->getPathname(), strlen($livewirePath) + 1)
                 );
 
                 if (class_exists($class) && is_subclass_of($class, \Livewire\Component::class)) {
-                    $reflection = new ReflectionClass($class);
+                    // Convertir la ruta relativa de la clase a kebab-case
                     $relativePath = str_replace(
                         '\\',
                         '/',
-                        substr($reflection->getName(), strlen($namespace) + 1)
+                        substr($class, strlen($namespace) + 1)
                     );
 
-                    $viewName = 'laravel-blog::livewire.' . str_replace(
-                        '/',
-                        '-',
-                        strtolower($relativePath)
-                    );
+                    // Convertir cada segmento del path a kebab-case
+                    $kebabPath = collect(explode('/', $relativePath))
+                        ->map(fn($segment) => Str::kebab($segment))
+                        ->implode('.');
 
+                    $viewName = 'laravel-blog::livewire.' . $kebabPath;
+
+                    // Log para depurar el registro
+                    Log::info("Registrando componente: $viewName => $class");
+
+                    // Registrar el componente en Livewire
                     Livewire::component($viewName, $class);
                 }
             }

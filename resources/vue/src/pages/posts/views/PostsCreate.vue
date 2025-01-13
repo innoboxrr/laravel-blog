@@ -25,9 +25,11 @@
                 <div class="lg:col-span-2 bg-white border sm:rounded-lg">
                     <div class="px-6 py-8 sm:p-10">
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-4 mb-6">
-                            {{ __blog('Blog Details') }}
+                            {{ __blog('Post Details') }}
                         </h2>
                         <BlogPostCreateForm 
+                            :blog-id="blog.id"
+                            :external-params="externalParams"
                             @change="onChange"
                             @submit="onSubmit" />
                     </div>
@@ -78,7 +80,7 @@
                                 {{ __blog('Featured Image') }}
                             </h3>
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __blog('Upload a featured image for this post.') }}
+                                {{ __blog('Upload a featured image.') }}
                             </p>
                             <!-- Placeholder for featured image -->
                             <div class="mt-4 border-t pt-4">
@@ -95,40 +97,50 @@
 </template>
 
 <script>
-import BlogPostCreateForm from '@blogModels/blog-post/forms/CreateForm.vue';
-import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
+    import { toRefs } from 'vue';
+    import { useGlobalStore } from '@blogStore/globalStore'; 
+    import BlogPostCreateForm from '@blogModels/blog-post/forms/CreateForm.vue';
+    import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
 
-export default {
-    name: 'PostsCreate',
-    components: {
-        BlogPostCreateForm,
-        PostActionsDropdown,
-    },
-    data() {
-        return {
-            title: '',
-        };
-    },
-    methods: {
-        onChange(data) {
-            this.title = data.title;
+    export default {
+        name: 'PostsCreate',
+        components: {
+            BlogPostCreateForm,
+            PostActionsDropdown,
         },
-        onSubmit(result) {
-            console.log('Blog post created:', result);
-            // Redirigir o realizar otra acción después de crear el blog
+        setup() {
+            const globalStore = useGlobalStore();
+            const { blog } = toRefs(globalStore);
+            return {
+                blog,
+            };
         },
-        generateWithAI() {
-            console.log('Generate content with AI');
+        data() {
+            return {
+                title: '',
+                externalParams: {}, // Parámetros externos para la creación de un blog
+            };
         },
-        importBlog() {
-            console.log('Importing blog...');
+        methods: {
+            onChange(data) {
+                this.title = data.title;
+            },
+            onSubmit(result) {
+                console.log('Blog post created:', result);
+                // Redirigir o realizar otra acción después de crear el blog
+            },
+            generateWithAI() {
+                console.log('Generate content with AI');
+            },
+            importBlog() {
+                console.log('Importing blog...');
+            },
+            cancelCreation() {
+                console.log('Cancel creation');
+            },
+            previewPost() {
+                console.log('Previewing post');
+            },
         },
-        cancelCreation() {
-            console.log('Cancel creation');
-        },
-        previewPost() {
-            console.log('Previewing post');
-        },
-    },
-};
+    };
 </script>

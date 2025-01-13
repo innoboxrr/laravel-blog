@@ -34,5 +34,8 @@
         "psr-4": {
             "Innoboxrr\\LaravelBlog\\Tests\\": "tests/"
         }
+    },
+    "require": {
+        "livewire/livewire": "^3.5"
     }
 }

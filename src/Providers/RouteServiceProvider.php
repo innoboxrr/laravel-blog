@@ -17,14 +17,11 @@ class RouteServiceProvider extends ServiceProvider
         $host = request()->getHost();
 
         if ($this->isAppDomain($host)) {
-            // Dominio principal
             $this->mapWebRoutes();
         } elseif ($this->isBlogDomain($host)) {
             // Subdominios personalizados
             $this->mapBlogRoutes($host);
-        } else {
-            abort(404, 'Domain not found');
-        }
+        } 
     }
 
     /**

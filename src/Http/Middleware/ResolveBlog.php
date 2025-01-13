@@ -12,6 +12,9 @@ class ResolveBlog
         $host = $request->getHost();
         $slug = $request->route('slug');
 
+        // Si no es un subdominio de blog, continuar
+        if(!str_starts_with($host, 'blog.')) return $next($request);
+
         // Si el host viene como subdominio, recuperar el dominio principal
         $domainParts = explode('.', $host);
         if (count($domainParts) > 2) {

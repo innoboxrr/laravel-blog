@@ -3,7 +3,7 @@
 namespace Innoboxrr\LaravelBlog\Http\Middleware;
 
 use Closure;
-use App\Models\Blog;
+use Innoboxrr\LaravelBlog\Models\Blog;
 
 class ResolveBlog
 {
@@ -12,7 +12,17 @@ class ResolveBlog
         $host = $request->getHost();
         $slug = $request->route('slug');
 
-        // Resolver el blog basado en el dominio o el slug
+        // Si el host viene como subdominio, recuperar el dominio principal
+        $domainParts = explode('.', $host);
+        if (count($domainParts) > 2) {
+            // Asumimos que el subdominio es el primer elemento
+            $subdomain = array_shift($domainParts);
+            $host = implode('.', $domainParts);
+        } else {
+            $subdomain = null;
+        }
+
+        // Resolver el blog basado en el subdominio, dominio o el slug
         $blog = Blog::resolveBlog($host, $slug);
 
         // Compartir el blog con todas las vistas

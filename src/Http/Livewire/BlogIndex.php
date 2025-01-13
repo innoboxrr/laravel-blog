@@ -2,7 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Http\Livewire;
 
-use Livewire\Component;
+use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
 use Livewire\WithPagination;
 use Innoboxrr\LaravelBlog\Models\BlogPost;
 
@@ -10,22 +10,18 @@ class BlogIndex extends Component
 {
     use WithPagination;
 
-    public $blog;
 
-    public function mount()
-    {
-        $this->blog = view()->shared('currentBlog');
-    }
 
     public function render()
     {
         $posts = BlogPost::where('blog_id', $this->blog->id)
             ->paginate(10);
 
-        $theme = $this->blog->theme;
 
-        return view("themes.$theme.views.blog-index-view")
-            ->extends("themes.$theme.layout.app")
+        return view("$this->themeView.blog-index-view", [
+                'posts' => $posts
+            ])
+            ->extends($this->themeLayout)
             ->section('content');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Http\Livewire\Components;
 
-use Livewire\Component;
+use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
 use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
 
 class SubscribeComponent extends Component
@@ -12,7 +12,7 @@ class SubscribeComponent extends Component
     public function subscribe()
     {
         $this->validate(['email' => 'required|email']);
-        Subscriber::create(['email' => $this->email]);
+        BlogSubscriber::create(['email' => $this->email]);
 
         session()->flash('message', '¡Gracias por suscribirte!');
         $this->reset('email');

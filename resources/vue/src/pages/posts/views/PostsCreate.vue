@@ -37,6 +37,7 @@
 
                 <!-- Right: Sidebar -->
                 <aside class="space-y-6">
+
                     <!-- Categories Section -->
                     <div class="bg-white border sm:rounded-lg">
                         <div class="px-6 py-5 sm:p-6">
@@ -48,9 +49,10 @@
                             </p>
                             <!-- Placeholder for categories -->
                             <div class="mt-4 border-t pt-4">
-                                <p class="text-sm text-gray-400">
-                                    {{ __blog('Categories selector component goes here') }}
-                                </p>
+                                <CategorySelector
+                                    :preselectedCategories="preselected"
+                                    @update:selectedCategories="updateSelectedCategories"
+                                />
                             </div>
                         </div>
                     </div>
@@ -102,11 +104,17 @@
     import BlogPostCreateForm from '@blogModels/blog-post/forms/CreateForm.vue';
     import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
 
+    // Category selector component
+    import CategorySelector from '@blogModels/blog-category/components/category-selector/CategorySelector.vue';
+
     export default {
         name: 'PostsCreate',
         components: {
             BlogPostCreateForm,
             PostActionsDropdown,
+
+            // Category selector component
+            CategorySelector,
         },
         setup() {
             const globalStore = useGlobalStore();
@@ -119,6 +127,22 @@
             return {
                 title: '',
                 externalParams: {}, // Parámetros externos para la creación de un blog
+
+                // Category selector component
+                preselected: [
+                    {
+                        id: 6,
+                        name: "Category 2",
+                        parent_id: null,
+                        children: [
+                            {
+                                id: 7,
+                                name: "Subcategory 2.1",
+                                parent_id: 6,
+                            },
+                        ],
+                    },
+                ],
             };
         },
         methods: {
@@ -140,6 +164,11 @@
             },
             previewPost() {
                 console.log('Previewing post');
+            },
+
+            // Category selector component
+            updateSelectedCategories(selected) {
+                console.log('Selected categories:', selected);
             },
         },
     };

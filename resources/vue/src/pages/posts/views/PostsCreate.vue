@@ -49,10 +49,10 @@
                             </p>
                             <!-- Placeholder for categories -->
                             <div class="mt-4 border-t pt-4">
-                                <CategorySelector
-                                    :preselectedCategories="preselected"
-                                    @update:selectedCategories="updateSelectedCategories"
-                                />
+                                <CategorySelector 
+                                    :blog="blog"
+                                    :preselectedCategories="preselectedCategories"
+                                    @onChangeCategories="categorySelectorChange" />
                             </div>
                         </div>
                     </div>
@@ -112,8 +112,6 @@
         components: {
             BlogPostCreateForm,
             PostActionsDropdown,
-
-            // Category selector component
             CategorySelector,
         },
         setup() {
@@ -126,28 +124,16 @@
         data() {
             return {
                 title: '',
-                externalParams: {}, // Parámetros externos para la creación de un blog
-
-                // Category selector component
-                preselected: [
-                    {
-                        id: 6,
-                        name: "Category 2",
-                        parent_id: null,
-                        children: [
-                            {
-                                id: 7,
-                                name: "Subcategory 2.1",
-                                parent_id: 6,
-                            },
-                        ],
-                    },
-                ],
+                externalParams: {},
+                preselectedCategories: [],
             };
         },
         methods: {
             onChange(data) {
                 this.title = data.title;
+            },
+            categorySelectorChange(data) {
+                console.log('Category selector change:', data);
             },
             onSubmit(result) {
                 console.log('Blog post created:', result);
@@ -164,11 +150,6 @@
             },
             previewPost() {
                 console.log('Previewing post');
-            },
-
-            // Category selector component
-            updateSelectedCategories(selected) {
-                console.log('Selected categories:', selected);
             },
         },
     };

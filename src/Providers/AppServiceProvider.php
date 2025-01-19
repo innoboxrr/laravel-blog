@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                     $viewName = 'laravel-blog::livewire.' . $kebabPath;
 
                     // Log para depurar el registro
-                    Log::info("Registrando componente: $viewName => $class");
+                    // Log::info("Registrando componente: $viewName => $class");
 
                     // Registrar el componente en Livewire
                     Livewire::component($viewName, $class);

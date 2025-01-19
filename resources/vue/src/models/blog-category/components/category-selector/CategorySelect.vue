@@ -8,7 +8,7 @@
                 v-model="selectedCategoryId"
                 @change="selectCategory"
                 :class="inputClass">
-                <option value="">{{ __('Selecciona una categoría') }}</option>
+                <option value="">{{ __blog('Selecciona una categoría') }}</option>
                 <option
                     v-for="category in categories"
                     :key="category.id"
@@ -23,11 +23,17 @@
 </template>
 
 <script>
-    import { categoryDashIndentation} from '@blogModels/blog-category/helpers/utils';
+    import { 
+        indexModel 
+    } from '@blogModels/blog-category'
+    import { 
+        createFlattenedCategories, 
+        categoryDashIndentation
+    } from '@blogModels/blog-category/helpers/utils';
     export default {
         props: {
-            categories: {
-                type: Array,
+            blogId: {
+                type: Number,
                 required: true,
             },
             preselected: {
@@ -35,42 +41,39 @@
                 default: () => [],
             },
         },
+        emits: ['categoriesLoaded', 'categorySelected'],
         data() {
             return {
+                categories: [],
                 selectedCategoryId: '',
                 selectedCategories: this.preselected,
             };
         },
+        mounted() {
+            this.fetchData();
+        },
         methods: {
+            createFlattenedCategories,
             categoryDashIndentation,
-            selectCategory() {
-                const category = this.categories.find(
-                    (cat) => cat.id === parseInt(this.selectedCategoryId)
-                );
-
-                if (category) {
-                    this.addToSelectedCategories(category);
-                }
-
-                this.selectedCategoryId = '';
+            async fetchData() {
+                await this.fetchCategories();
             },
-            addToSelectedCategories(category) {
-                if (!this.isCategorySelected(category.id)) {
-                    this.selectedCategories.push({ ...category });
+            async fetchCategories() {
+                let categories = await indexModel({
+                    paginate: 0,
+                    only_parents: true,
+                    blog_id: this.blogId,
+                    load_children: true,
+                });
+                this.categories = this.createFlattenedCategories(categories);
+                this.$emit('categoriesLoaded', this.categories);
+            },
+            selectCategory() {
+                let category = this.categories.find((cat) => cat.id === this.selectedCategoryId);
+                if (category) {
+                    this.$emit('categorySelected', category);
+                    this.selectedCategoryId = '';
                 }
-
-                let parentId = category.parent_id;
-                while (parentId) {
-                    const parent = this.categories.find((cat) => cat.id === parentId);
-                    if (parent && !this.isCategorySelected(parent.id)) {
-                        this.selectedCategories.push({ ...parent });
-                    }
-                    parentId = parent?.parent_id || null;
-                }
-
-                this.reorderSelectedCategories();
-
-                console.log('Selected Categories:', this.selectedCategories); // Debugging
             },
             isCategorySelected(id) {
                 return this.selectedCategories.some((cat) => cat.id === id);

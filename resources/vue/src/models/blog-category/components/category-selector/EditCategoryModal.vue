@@ -1,6 +1,6 @@
 <template>
     <!-- Modal de edición -->
-    <div class="fixed inset-0 z-10 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="fixed inset-0 z-999 flex items-center justify-center bg-gray-900 bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 space-y-4 max-w-sm w-full">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('Editar Categoría') }}</h3>
             <div>
@@ -18,7 +18,7 @@
                     :class="inputClass">
                     <option value="">{{ __('Sin categoría superior') }}</option>
                     <option
-                        v-for="category in flattenedCategories"
+                        v-for="category in categories"
                         :key="category.id"
                         :value="category.id"
                         :disabled="category.id === categoryBeingEdited.id">
@@ -43,8 +43,15 @@
 </template>
 
 <script>
+    import { 
+        categoryDashIndentation
+    } from '@blogModels/blog-category/helpers/utils';
     export default {
         props: {
+            categories: {
+                type: Array,
+                required: true,
+            },
             categoryBeingEdited: {
                 type: Object,
                 required: true,
@@ -57,6 +64,7 @@
             }
         },
         methods: {
+            categoryDashIndentation,
             cancelEdit() {
                 this.$emit('cancelEdit');
             },

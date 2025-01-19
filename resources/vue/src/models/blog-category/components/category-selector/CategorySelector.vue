@@ -1,28 +1,39 @@
 <template>
     <div class="max-w-md mx-auto bg-white rounded-lg">
 
-        <create-category-form 
-            :categories="flattenedCategories"
-            @addCategory="addCategory" />
+        <create-category 
+            :key="'create-category-' + key"
+            :blog-id="blog.id"
+            @categoryCreated="addCategory" />
 
         <category-select
-            :categories="flattenedCategories"
+            :key="'category-select-' + key"
+            :blog-id="blog.id"
             :preselected="selectedCategories"
-            @select="appendCategory" />
+            @categoriesLoaded="categories = $event"
+            @categorySelected="addCategory" />
 
         <selected-categories 
-            :preselected="selectedCategories" />
+            v-if="selectedCategories.length"
+            :key="'selected-categories-' + key"
+            :preselected="selectedCategories"
+            @editCategory="editCategory"
+            @removeCategory="removeCategory" />
         
         <edit-category-modal 
             v-if="categoryBeingEdited"
-            :category-being-edited="categoryBeingEdited" />
+            :key="'edit-category-modal-' + key"
+            :categories="categories"
+            :category-being-edited="categoryBeingEdited"
+            @cancelEdit="cancelEdit"
+            @saveCategoryEdit="saveCategoryEdit" />
 
     </div>
 </template>
 
 <script>
-    import { categoryDashIndentation} from '@blogModels/blog-category/helpers/utils';
-    import CreateCategoryForm from './CreateCategoryForm.vue';
+
+    import CreateCategory from './CreateCategory.vue';
     import CategorySelect from './CategorySelect.vue';
     import SelectedCategories from './SelectedCategories.vue';
     import EditCategoryModal from './EditCategoryModal.vue';
@@ -30,254 +41,61 @@
     export default {
         name: 'CompactCategorySelector',
         components: {
-            CreateCategoryForm,
+            CreateCategory,
             CategorySelect,
             SelectedCategories,
             EditCategoryModal,
         },
         props: {
+            blog: {
+                type: Object,
+                required: true,
+            },
             preselectedCategories: {
                 type: Array,
                 default: () => [],
             },
         },
+        emits: ['onChangeCategories'],
         data() {
             return {
-                categories: [
-                    {
-                        id: 1,
-                        name: "Category 1",
-                        parent_id: null,
-                        children: [
-                            {
-                                id: 2,
-                                name: "Subcategory 1.1",
-                                parent_id: 1,
-                                children: [
-                                    {
-                                        id: 3,
-                                        name: "Subcategory 1.1.1",
-                                        parent_id: 2,
-                                        children: [],
-                                    },
-                                    {
-                                        id: 4,
-                                        name: "Subcategory 1.1.2",
-                                        parent_id: 2,
-                                        children: [],
-                                    },
-                                ],
-                            },
-                            {
-                                id: 5,
-                                name: "Subcategory 1.2",
-                                parent_id: 1,
-                                children: [],
-                            },
-                        ],
-                    },
-                    {
-                        id: 6,
-                        name: "Category 2",
-                        parent_id: null,
-                        children: [
-                            {
-                                id: 7,
-                                name: "Subcategory 2.1",
-                                parent_id: 6,
-                                children: [],
-                            },
-                        ],
-                    },
-                ],
-            
+                key: 0,
+                categories: [],
                 selectedCategories: [...this.preselectedCategories],
-                flattenedCategories: [],
                 categoryBeingEdited: null,
             };
         },
-        mounted() {
-            this.flattenedCategories = this.createFlattenedCategories(this.categories);
-        },
-        watch: {
-            categories: {
-                handler() {
-                    this.updateFlattenedCategories();
-                    this.reorderSelectedCategories();
-                },
-                deep: true,
-            },
-        },
         methods: {
-            categoryDashIndentation,
-            createFlattenedCategories(categories, level = 0) {
-                return categories.reduce((acc, category) => {
-                    acc.push({ ...category, level });
-                    if (category.children && category.children.length) {
-                        acc.push(...this.createFlattenedCategories(category.children, level + 1));
-                    }
-                    return acc;
-                }, []);
-            },
-
             addCategory(category) {
-                this.addToHierarchy(category);
-                this.updateFlattenedCategories();
-                // this.addToSelectedCategories(newCategory); // Este método se pasó a CategorySelect
-            },
-
-            appendCategory(category) {
-                // this.addToSelectedCategories(category);
-            },
+                
+                // Primero añadimos la categoría a la lista
+                this.selectedCategories.push(category);
 
 
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            
+                // 5. Emitir un evento para notificar los cambios
+                this.$emit('onChangeCategories', this.selectedCategories);
 
-            addToHierarchy(category) {
-                if (category.parent_id) {
-                    const parent = this.categories.find((cat) => cat.id === category.parent_id);
-                    if (parent) {
-                        parent.children = parent.children || [];
-                        parent.children.push(category);
-                    }
-                } else {
-                    this.categories.push(category);
-                }
-                this.$emit('update:categories', this.categories); // Notifica al padre sobre el cambio
+                // 6. Incrementar la clave para forzar la actualización visual si es necesario
+                ++this.key;
             },
-            updateFlattenedCategories() {
-                this.flattenedCategories = this.createFlattenedCategories(this.categories);
+            editCategory(category) {
+                this.categoryBeingEdited = category;
             },
-            
-            
-            reorderSelectedCategories() {
-                const reorder = (categories, level = 0) => {
-                    const selectedIds = new Set(this.selectedCategories.map((cat) => cat.id));
-                    return categories.reduce((acc, category) => {
-                        if (selectedIds.has(category.id)) {
-                            acc.push({ ...category, level });
-                        }
-                        if (category.children && category.children.length) {
-                            acc.push(...reorder(category.children, level + 1));
-                        }
-                        return acc;
-                    }, []);
-                };
-
-                this.selectedCategories = reorder(this.categories);
-            },
-            removeCategory(id) {
-                const descendantIds = this.getDescendantIds(this.flattenedCategories, id);
-
-                this.selectedCategories = this.selectedCategories.filter(
-                    (cat) => cat.id !== id && !descendantIds.includes(cat.id)
-                );
-            },
-            getDescendantIds(categories, parentId) {
-                return categories.reduce((acc, category) => {
-                    if (category.parent_id === parentId) {
-                        acc.push(category.id, ...this.getDescendantIds(categories, category.id));
-                    }
-                    return acc;
-                }, []);
+            removeCategory(categoryId) {
+                this.selectedCategories = this.selectedCategories.filter(category => category.id !== categoryId);
+                this.key++;
+                this.$emit('onChangeCategories', this.selectedCategories);
             },
             cancelEdit() {
                 this.categoryBeingEdited = null;
             },
-            editCategory(category) {
-                // Copia de la categoría para editar sin afectar el original hasta confirmar
-                this.categoryBeingEdited = { ...category };
-            },
-            saveCategoryEdit() {
-                const { id, parent_id, name } = this.categoryBeingEdited;
-
-                console.log('Saving Category Edit:', id, parent_id, name);
-
-                // Actualizar el nombre en flattenedCategories
-                this.flattenedCategories = this.flattenedCategories.map((category) => {
-                    if (category.id === id) {
-                        return { ...category, name };
-                    }
-                    return category;
-                });
-
-                // Actualizar el nombre en selectedCategories
-                this.selectedCategories = this.selectedCategories.map((category) => {
-                    if (category.id === id) {
-                        return { ...category, name };
-                    }
-                    return category;
-                });
-
-                // Verificar si cambió el parent_id
-                const originalCategory = this.flattenedCategories.find((cat) => cat.id === id);
-                if (originalCategory?.parent_id !== parent_id) {
-                    // Remover de la jerarquía actual
-                    this.removeFromHierarchy(id);
-
-                    // Actualizar el parent_id
-                    const updatedCategory = { ...originalCategory, parent_id };
-
-                    // Reinsertar en la nueva ubicación jerárquica
-                    this.addToHierarchy(updatedCategory);
-
-                    // Actualizar en flattenedCategories
-                    this.flattenedCategories = this.createFlattenedCategories(this.categories);
-                }
-
-                // Actualizar las listas seleccionadas y jerarquizadas
-                this.updateFlattenedCategories();
-                this.updateSelectedCategories();
-
-                // Limpiar el estado de edición
+            saveCategoryEdit(category) {
+                const index = this.selectedCategories.findIndex(c => c.id === category.id);
+                this.selectedCategories[index] = category;
                 this.categoryBeingEdited = null;
-
-                console.log('Updated Flattened Categories:', this.flattenedCategories);
-                console.log('Updated Selected Categories:', this.selectedCategories);
+                this.key++;
+                this.$emit('onChangeCategories', this.selectedCategories);
             },
-            removeFromHierarchy(categoryId) {
-                // Recursivamente buscar y eliminar la categoría de la jerarquía
-                const removeCategory = (categories, id) => {
-                    for (let i = 0; i < categories.length; i++) {
-                        if (categories[i].id === id) {
-                            categories.splice(i, 1);
-                            return true;
-                        }
-                        if (categories[i].children) {
-                            if (removeCategory(categories[i].children, id)) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                };
-
-                removeCategory(this.categories, categoryId);
-            },
-            updateSelectedCategories() {
-                const reorder = (categories, level = 0) => {
-                    const selectedIds = new Set(this.selectedCategories.map((cat) => cat.id));
-                    return categories.reduce((acc, category) => {
-                        if (selectedIds.has(category.id)) {
-                            const selected = this.selectedCategories.find((cat) => cat.id === category.id);
-                            if (selected) {
-                                selected.name = category.name; // Actualizar el nombre en las seleccionadas
-                            }
-                            acc.push({ ...category, level });
-                        }
-                        if (category.children && category.children.length) {
-                            acc.push(...reorder(category.children, level + 1));
-                        }
-                        return acc;
-                    }, []);
-                };
-
-                this.selectedCategories = reorder(this.categories);
-            },
-            
         },
     };
 </script>

@@ -29,8 +29,13 @@
 </template>
 
 <script>
+    
     export default {
         props: {
+            categories: {
+                type: Array,
+                default: () => [],
+            },
             preselected: {
                 type: Array,
                 default: () => [],
@@ -47,7 +52,7 @@
             },
             removeCategory(categoryId) {
                 this.$emit('removeCategory', categoryId);
-            },
+            }
         },
     }
 </script>

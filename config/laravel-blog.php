@@ -39,6 +39,11 @@ return [
 		'blog-tag-except-abilities' => [],
 	],
 
+	'search-options' => [
+		'filtersPath' => 'vendor' . DIRECTORY_SEPARATOR . 'innoboxrr' . DIRECTORY_SEPARATOR . 'laravel-blog' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . 'Filters',
+		'filtersNamespace' => 'Innoboxrr\LaravelBlog\Models\Filters',
+	],
+
 	'user_class' => 'App\Models\User',
 
 	'excel_view' => 'laravel-blog::excel.',

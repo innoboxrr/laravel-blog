@@ -31,38 +31,12 @@
                 class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
             >
                 <div class="py-1">
-                    <MenuItem v-slot="{ active }">
+                    <MenuItem v-slot="{ active }" v-for="(item, index) in actions" :key="index">
                         <button
-                            @click="$emit('generateWithAI')"
-                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-sm text-left']"
+                            @click="selectAction(item.value)"
+                            :class="getButtonClasses(active, item.value)"
                         >
-                            {{ __blog('Generate with AI') }}
-                        </button>
-                    </MenuItem>
-                    <MenuItem v-slot="{ active }">
-                        <button
-                            @click="$emit('previewPost')"
-                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-sm text-left']"
-                        >
-                            {{ __blog('Preview Post') }}
-                        </button>
-                    </MenuItem>
-                    <MenuItem v-slot="{ active }">
-                        <button
-                            @click="$emit('importBlog')"
-                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-sm text-left']"
-                        >
-                            {{ __blog('Import Post') }}
-                        </button>
-                    </MenuItem>
-                </div>
-                <div class="py-1">
-                    <MenuItem v-slot="{ active }">
-                        <button
-                            @click="$emit('cancelCreation')"
-                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-sm text-left']"
-                        >
-                            {{ __blog('Cancel') }}
+                            {{ item.label }}
                         </button>
                     </MenuItem>
                 </div>
@@ -70,7 +44,6 @@
         </transition>
     </Menu>
 </template>
-
 
 <script>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
@@ -82,6 +55,34 @@ export default {
         MenuButton,
         MenuItem,
         MenuItems,
+    },
+    emits: ['actionSelected'],
+    data() {
+        return {
+            action: 'normalPost', // Acción seleccionada por defecto
+            actions: [
+                { value: 'normalPost', label: this.__blog('Normal Post Creation') },
+
+                { value: 'generateWithAI', label: this.__blog('Generate with AI') },
+                { value: 'transcriptWithAI', label: this.__blog('Transcript with AI') },
+                { value: 'videoToTextAI', label: this.__blog('Video to Text With AI') },
+                { value: 'translateWithAI', label: this.__blog('Translate with AI') },
+            ],
+        };
+    },
+    methods: {
+        selectAction(action) {
+            this.action = action; // Actualizar acción seleccionada
+            this.$emit('actionSelected', action); // Emitir evento
+        },
+        getButtonClasses(active, value) {
+            const isSelected = this.action === value;
+            return [
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                isSelected ? 'font-semibold bg-indigo-100 text-indigo-700' : '',
+                'block w-full px-4 py-2 text-sm text-left',
+            ].join(' ');
+        },
     },
 };
 </script>

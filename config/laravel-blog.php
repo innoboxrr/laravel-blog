@@ -2,6 +2,8 @@
 
 return [
 
+	'lambda_token' => env('LARAVEL_BLOG_LAMBDA_TOKEN', 'lambda_token'),
+
 	'database' => [
 		'connection' => 'mysql',
 	],

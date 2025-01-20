@@ -2,11 +2,11 @@
     <!-- Modal de edición -->
     <div class="fixed inset-0 z-999 flex items-center justify-center bg-gray-900 bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 space-y-4 max-w-sm w-full">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('Editar Categoría') }}</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __blog('Editar Categoría') }}</h3>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la categoría</label>
                 <input
-                    v-model="categoryBeingEdited.name"
+                    v-model="category.name"
                     type="text"
                     placeholder="Ej. Editar Categoría"
                     :class="inputClass">
@@ -14,17 +14,29 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Categoría superior</label>
                 <select
-                    v-model="categoryBeingEdited.parent_id"
+                    v-model="category.parent_id"
                     :class="inputClass">
-                    <option value="">{{ __('Sin categoría superior') }}</option>
+                    <option value="">{{ __blog('Sin categoría superior') }}</option>
                     <option
-                        v-for="category in categories"
-                        :key="category.id"
-                        :value="category.id"
-                        :disabled="category.id === categoryBeingEdited.id">
-                        {{ categoryDashIndentation(category.level) + category.name }}
+                        v-for="cat in categories"
+                        :key="cat.id"
+                        :value="cat.id"
+                        :disabled="cat.id === category.id">
+                        {{ categoryDashIndentation(cat.level) + cat.name }}
                     </option>
                 </select>
+            </div>
+            <div>
+                <textarea-input-component
+                    :label="__blog('Description')"
+                    :placeholder="__blog('Describe the category to improve SEO')"
+                    name="description"
+                    v-model="category.description"
+                    :custom-class="inputClass"
+                    validators="required length"
+                    min_length="3"
+                    max_length="255"
+                    required />
             </div>
             <div class="flex justify-end space-x-2">
                 <button
@@ -43,10 +55,19 @@
 </template>
 
 <script>
+    import {
+        updateModel as updateCategoryModel
+    } from '@blogModels/blog-category'
     import { 
         categoryDashIndentation
     } from '@blogModels/blog-category/helpers/utils';
+    import {
+        TextareaInputComponent,
+    } from 'innoboxrr-form-elements'
     export default {
+        components: {
+            TextareaInputComponent,
+        },
         props: {
             categories: {
                 type: Array,
@@ -60,7 +81,7 @@
         emits: ['saveCategoryEdit', 'cancelEdit'],
         data() {
             return {
-                category: this.categoryBeingEdited,
+                category: {...this.categoryBeingEdited},
             }
         },
         methods: {
@@ -68,7 +89,8 @@
             cancelEdit() {
                 this.$emit('cancelEdit');
             },
-            saveCategoryEdit() {
+            async saveCategoryEdit() {
+                await updateCategoryModel(this.category.id, this.category);
                 this.$emit('saveCategoryEdit', this.category);
             },
         }

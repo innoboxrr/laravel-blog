@@ -4,35 +4,38 @@
         <create-category 
             :key="'create-category-' + key"
             :blog-id="blog.id"
+            @showCreateForm="showCreateForm = $event"
             @categoryCreated="addCategory" />
 
-        <category-select
-            :key="'category-select-' + key"
-            :blog-id="blog.id"
-            :preselected="selectedCategories"
-            @categoriesLoaded="categories = $event"
-            @categorySelected="addCategory" />
+        <div v-show="!showCreateForm">
+            <category-select
+                :key="'category-select-' + key"
+                :blog-id="blog.id"
+                :preselected="selectedCategories"
+                @categoriesLoaded="categories = $event"
+                @categorySelected="selectCategory" />
 
-        <selected-categories 
-            v-if="selectedCategories.length"
-            :key="'selected-categories-' + key"
-            :preselected="selectedCategories"
-            @editCategory="editCategory"
-            @removeCategory="removeCategory" />
-        
-        <edit-category-modal 
-            v-if="categoryBeingEdited"
-            :key="'edit-category-modal-' + key"
-            :categories="categories"
-            :category-being-edited="categoryBeingEdited"
-            @cancelEdit="cancelEdit"
-            @saveCategoryEdit="saveCategoryEdit" />
+            <selected-categories 
+                v-if="selectedCategories.length"
+                :key="'selected-categories-' + key"
+                :preselected="selectedCategories"
+                @editCategory="editCategory"
+                @removeCategory="removeCategory" />
+            
+            <edit-category-modal 
+                v-if="categoryBeingEdited"
+                :key="'edit-category-modal-' + key"
+                :categories="categories"
+                :category-being-edited="categoryBeingEdited"
+                @cancelEdit="cancelEdit"
+                @saveCategoryEdit="saveCategoryEdit" />
+        </div>
 
     </div>
 </template>
 
 <script>
-
+    import { sortCategories } from '@blogModels/blog-category/helpers/utils';
     import CreateCategory from './CreateCategory.vue';
     import CategorySelect from './CategorySelect.vue';
     import SelectedCategories from './SelectedCategories.vue';
@@ -60,22 +63,30 @@
         data() {
             return {
                 key: 0,
+                showCreateForm: false,
                 categories: [],
                 selectedCategories: [...this.preselectedCategories],
                 categoryBeingEdited: null,
             };
         },
+        watch: {
+            selectedCategories: {
+                handler(categories) {
+                    this.$emit('onChangeCategories', categories);
+                },
+                deep: true,
+            },
+        },
         methods: {
             addCategory(category) {
-                
-                // Primero añadimos la categoría a la lista
-                this.selectedCategories.push(category);
-
-
-                // 5. Emitir un evento para notificar los cambios
-                this.$emit('onChangeCategories', this.selectedCategories);
-
-                // 6. Incrementar la clave para forzar la actualización visual si es necesario
+                this.showCreateForm = false;
+                ++this.key;
+            },
+            selectCategory(category) {
+                if (!this.selectedCategories.some(cat => cat.id === category.id)) {
+                    this.selectedCategories.push(category); 
+                }
+                this.selectedCategories = sortCategories(this.selectedCategories, this.categories);
                 ++this.key;
             },
             editCategory(category) {
@@ -84,7 +95,6 @@
             removeCategory(categoryId) {
                 this.selectedCategories = this.selectedCategories.filter(category => category.id !== categoryId);
                 this.key++;
-                this.$emit('onChangeCategories', this.selectedCategories);
             },
             cancelEdit() {
                 this.categoryBeingEdited = null;
@@ -94,7 +104,6 @@
                 this.selectedCategories[index] = category;
                 this.categoryBeingEdited = null;
                 this.key++;
-                this.$emit('onChangeCategories', this.selectedCategories);
             },
         },
     };

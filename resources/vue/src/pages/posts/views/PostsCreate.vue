@@ -9,25 +9,47 @@
                     </h1>
                     <!-- Dropdown for actions -->
                     <PostActionsDropdown 
-                        @generateWithAI="generateWithAI"
-                        @importBlog="importBlog"
-                        @cancelCreation="cancelCreation"
-                        @previewPost="previewPost"
+                        @actionSelected="dropdownActionSelected"
                     />
                 </div>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="py-10">
+        <main class="py-8">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
                 <!-- Left: Form Container -->
                 <div class="lg:col-span-2 bg-white border sm:rounded-lg">
                     <div class="px-6 py-8 sm:p-10">
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-4 mb-6">
                             {{ __blog('Post Details') }}
                         </h2>
-                        <BlogPostCreateForm 
+                        <blog-post-create-form 
+                            v-if="createAction === 'normalPost'"
+                            :blog-id="blog.id"
+                            :external-params="externalParams"
+                            @change="onChange"
+                            @submit="onSubmit" />
+                        <translate-with-ai-form 
+                            v-else-if="createAction === 'translateWithAI'"
+                            :blog-id="blog.id"
+                            :external-params="externalParams"
+                            @change="onChange"
+                            @submit="onSubmit" />
+                        <generate-with-ai-form
+                            v-else-if="createAction === 'generateWithAI'"
+                            :blog-id="blog.id"
+                            :external-params="externalParams"
+                            @change="onChange"
+                            @submit="onSubmit" />
+                        <transcript-with-ai-form
+                            v-else-if="createAction === 'transcriptWithAI'"
+                            :blog-id="blog.id"
+                            :external-params="externalParams"
+                            @change="onChange"
+                            @submit="onSubmit" />
+                        <video-to-text-ai-form
+                            v-else-if="createAction === 'videoToTextAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
@@ -68,9 +90,9 @@
                             </p>
                             <!-- Placeholder for tags -->
                             <div class="mt-4 border-t pt-4">
-                                <p class="text-sm text-gray-400">
-                                    {{ __blog('Tags input component goes here') }}
-                                </p>
+                                <TagSelector 
+                                    :preselectedTags="preselectedTags"
+                                    @onChangeTags="tagsChange" />
                             </div>
                         </div>
                     </div>
@@ -86,12 +108,13 @@
                             </p>
                             <!-- Placeholder for featured image -->
                             <div class="mt-4 border-t pt-4">
-                                <p class="text-sm text-gray-400">
-                                    {{ __blog('Image uploader component goes here') }}
-                                </p>
+                                <FeaturedImage 
+                                    :preview-image="null"
+                                    @onFeaturedImageChange="featuredImageChange" />
                             </div>
                         </div>
                     </div>
+
                 </aside>
             </div>
         </main>
@@ -101,18 +124,31 @@
 <script>
     import { toRefs } from 'vue';
     import { useGlobalStore } from '@blogStore/globalStore'; 
+    
     import BlogPostCreateForm from '@blogModels/blog-post/forms/CreateForm.vue';
-    import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
+    import GenerateWithAiForm from '@blogModels/blog-post/forms/GenerateWithAiForm.vue';
+    import TranscriptWithAiForm from '@blogModels/blog-post/forms/TranscriptWithAiForm.vue';
+    import TranslateWithAiForm from '@blogModels/blog-post/forms/TranslateWithAiForm.vue';
+    import VideoToTextAiForm from '@blogModels/blog-post/forms/VideoToTextAiForm.vue';
 
-    // Category selector component
+    import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
     import CategorySelector from '@blogModels/blog-category/components/category-selector/CategorySelector.vue';
+    import TagSelector from '@blogModels/blog-tag/components/tag-selector/TagSelector.vue';
+    import FeaturedImage from '@blogModels/blog-post/components/featured-image/FeaturedImage.vue';
 
     export default {
         name: 'PostsCreate',
         components: {
             BlogPostCreateForm,
+            GenerateWithAiForm,
+            TranscriptWithAiForm,
+            TranslateWithAiForm,
+            VideoToTextAiForm,
+
             PostActionsDropdown,
             CategorySelector,
+            TagSelector,
+            FeaturedImage,
         },
         setup() {
             const globalStore = useGlobalStore();
@@ -126,6 +162,8 @@
                 title: '',
                 externalParams: {},
                 preselectedCategories: [],
+                preselectedTags: [],
+                createAction: 'normalPost',
             };
         },
         methods: {
@@ -133,23 +171,29 @@
                 this.title = data.title;
             },
             categorySelectorChange(data) {
-                console.log('Category selector change:', data);
+                const categoriesIds = data.map((category) => category.id);
+                this.externalParams = {
+                    ...this.externalParams,
+                    categories: categoriesIds,
+                };
+            },
+            tagsChange(data) {
+                this.externalParams = {
+                    ...this.externalParams,
+                    tags: data,
+                };
+            },
+            featuredImageChange(data) {
+                this.externalParams = {
+                    ...this.externalParams,
+                    featured_image: data,
+                };
             },
             onSubmit(result) {
-                console.log('Blog post created:', result);
-                // Redirigir o realizar otra acción después de crear el blog
+                
             },
-            generateWithAI() {
-                console.log('Generate content with AI');
-            },
-            importBlog() {
-                console.log('Importing blog...');
-            },
-            cancelCreation() {
-                console.log('Cancel creation');
-            },
-            previewPost() {
-                console.log('Previewing post');
+            dropdownActionSelected(action) {
+                this.createAction = action;
             },
         },
     };

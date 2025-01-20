@@ -1,0 +1,33 @@
+{
+    "name": "laravel-blog-post-ai",
+    "version": "1.0.0",
+    "description": "A Lambda function with multiple handlers",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "token": "node test/generateToken.js",
+        "test-generate-with-ai": "node test/testGenerateWithAI.js",
+        "test-improve-post": "node test/testImprovePost.js",
+        "test-transcript-with-ai": "node test/testTranscriptWithAI.js",
+        "test-translate-with-ai": "node test/testTranslateWithAI.js",
+        "test-video-to-text-ai": "node test/testVideoToTextAI.js",
+        "test-video-upload": "node test/testVideoUpload.js",
+        "test-all": "npm run test-improve-post && npm run test-generate-with-ai && npm run test-transcript-with-ai && npm run translate-with-ai && npm run video-to-text-ai",
+        "deploy": "node src/scripts/packageAndDeploy.js"
+    },
+    "dependencies": {
+        "@mozilla/readability": "^0.5.0",
+        "aws-sdk": "^2.1692.0",
+        "axios": "^1.7.9",
+        "dotenv": "^16.4.7",
+        "ffmpeg": "^0.0.4",
+        "fluent-ffmpeg": "^2.1.3",
+        "jsdom": "^26.0.0",
+        "jsonwebtoken": "^9.0.2",
+        "openai": "^4.79.1",
+        "ytdl-core": "^4.11.1"
+    },
+    "devDependencies": {
+        "archiver": "^7.0.1"
+    }
+}

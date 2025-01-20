@@ -117,18 +117,23 @@ export const indexModel = (filters = {}) => {
 };
 
 export const createModel = (data) => {
-    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'create'), {
-        _token: CSRF_TOKEN,
-        ...data,
-    }, {}, 1, 1500);
+    const headers = data instanceof FormData
+        ? { 'Content-Type': 'multipart/form-data' }
+        : {};
+    const payload = data instanceof FormData ? data : { _token: CSRF_TOKEN, ...data };
+
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'create'), payload, headers, 1, 1500);
 };
 
 export const updateModel = (modelId, data) => {
-    return makeHttpRequest('put', route(API_ROUTE_PREFIX + 'update'), {
-        _token: CSRF_TOKEN,
-        ...data,
-        blog_post_id: modelId,
-    }, {}, 1, 1500);
+    const headers = data instanceof FormData
+        ? { 'Content-Type': 'multipart/form-data' }
+        : {};
+    const payload = data instanceof FormData
+        ? data
+        : { _token: CSRF_TOKEN, ...data, blog_post_id: modelId };
+
+    return makeHttpRequest('put', route(API_ROUTE_PREFIX + 'update'), payload, headers, 1, 1500);
 };
 
 export const deleteModel = (data) => {

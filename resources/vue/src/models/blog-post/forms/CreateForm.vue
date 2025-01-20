@@ -101,17 +101,21 @@
                 type: Object,
                 default: () => ({}),
             },
-        },
-        emits: ['submit', 'change'],
-        data() {
-            return {
-                post: {
+            preloadPost: {
+                type: Object,
+                default: () => ({
                     title: '',
                     slug: '',
                     status: 'draft',
                     content: '',
                     publish_at: '',
-                },
+                }),
+            },
+        },
+        emits: ['submit', 'change'],
+        data() {
+            return {
+                post: this.preloadPost,
                 disabled: false,
                 JSValidator: undefined,
             }
@@ -137,6 +141,13 @@
             validForm() {
                 return this.JSValidator.status;
             },
+            submitData() {
+                return {
+                    ...this.post,
+                    ...this.externalParams,
+                    blog_id: this.blogId,
+                }
+            },
         },
         methods: {
 
@@ -145,11 +156,7 @@
             onSubmit() {
                 if(this.JSValidator.status) {
                     this.disabled = true;
-                    createModel({
-                        ...this.post,
-                        ...this.externalParams,
-                        blog_id: this.blogId,
-                    }).then( res => {
+                    createModel(this.getSubmitData()).then(res => {
                         this.$emit('submit', res);
                         setTimeout(() => { this.disabled = false; }, 2500);
                     }).catch(error => {
@@ -161,7 +168,21 @@
                 } else {
                     this.disabled = false;
                 }
-            }
+            },
+            getSubmitData() {
+                let submitData;
+                if (this.externalParams.featured_image) {
+                    submitData = new FormData();
+                    Object.keys(this.submitData).forEach(key => {
+                        submitData.append(key, this.submitData[key]);
+                    });
+                    submitData.append('featured_image', this.externalParams.featured_image);
+
+                } else {
+                    submitData = this.submitData;
+                }
+                return submitData;
+            },
         }
 	}
 </script>

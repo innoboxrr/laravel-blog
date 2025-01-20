@@ -36,6 +36,7 @@
         }
     },
     "require": {
-        "livewire/livewire": "^3.5"
+        "livewire/livewire": "^3.5",
+        "innoboxrr/s3-resumable-uploads": "^1.0"
     }
 }

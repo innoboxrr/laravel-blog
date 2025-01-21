@@ -34,7 +34,7 @@
             :id="`content-${formId}`"
             :file="false"
             name="content"
-            :height="300"
+            :height="500"
             :label="__blog('Content')"
             :placeholder="__blog('Content')"
             validators="required"
@@ -71,6 +71,7 @@
 
 <script>
 
+    import dayjs from 'dayjs';
     import { slugify } from 'innoboxrr-js-libs/libs/string';
     import { createModel } from '@blogModels/blog-post'
     import JSValidator from 'innoboxrr-js-validator'
@@ -122,6 +123,7 @@
         },
         mounted() {
             this.fetchData();
+            this.post.publish_at = dayjs().format('YYYY-MM-DDTHH:mm');
             this.JSValidator = new JSValidator(this.formId).init();
         },
         watch: {

@@ -28,6 +28,7 @@
                             v-if="createAction === 'normalPost'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
+                            :preload-post="preloadPost"
                             @change="onChange"
                             @submit="onSubmit" />
                         <translate-with-ai-form 
@@ -35,25 +36,25 @@
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
-                            @submit="onSubmit" />
+                            @submit="setPreloadPost" />
                         <generate-with-ai-form
                             v-else-if="createAction === 'generateWithAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
-                            @submit="onSubmit" />
+                            @submit="setPreloadPost" />
                         <transcript-with-ai-form
                             v-else-if="createAction === 'transcriptWithAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
-                            @submit="onSubmit" />
+                            @submit="setPreloadPost" />
                         <video-to-text-ai-form
                             v-else-if="createAction === 'videoToTextAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
-                            @submit="onSubmit" />
+                            @submit="setPreloadPost" />
                     </div>
                 </div>
 
@@ -161,6 +162,7 @@
             return {
                 title: '',
                 externalParams: {},
+                preloadPost: {},
                 preselectedCategories: [],
                 preselectedTags: [],
                 createAction: 'normalPost',
@@ -189,8 +191,14 @@
                     featured_image: data,
                 };
             },
-            onSubmit(result) {
+            onSubmit(data) {
                 
+            },
+            setPreloadPost(data) {
+                this.preloadPost = data;
+                this.preloadPost.status = 'draft';
+                console.log(this.preloadPost);
+                this.dropdownActionSelected('normalPost');
             },
             dropdownActionSelected(action) {
                 this.createAction = action;

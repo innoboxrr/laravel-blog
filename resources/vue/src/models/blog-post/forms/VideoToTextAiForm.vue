@@ -15,60 +15,111 @@
             </div>
         </div>
 
-        <div class="my-4">
-            <div 
-                v-if="!isUploading"
-                @click="openFileDialog"
-                @drop.prevent="handleDrop" 
-                @dragover.prevent 
-                class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-50 dark:hover:border-slate-400 dark:hover:bg-gray-500 pointer">
-                <i class="fa-solid fa-file-video fa-2xl text-gray-500 my-3 dark:text-slate-400"></i>
-                <p class="text-gray-700 text-sm pt-4 dark:text-slate-300 pointer">
-                    {{ __('Drag and drop a video file here in MP4 format') }}
-                </p>
-                <p class="text-gray-400 text-xs pt-2 dark:text-slate-400 pointer">
-                    {{ __('or click to select a file') }}
-                </p>
-                <input 
-                    type="file" 
-                    ref="fileInput" 
-                    class="hidden" 
-                    @change="handleFileChange" 
-                    accept="video/mp4">
-            </div>
+        <div v-if="!content" class="my-4">
 
-            <div v-else>
-                <!-- Vista previa del video (ajustar el tamaño aquí) -->
-                <div class="preview-container mx-auto shadow-lg" style="max-width: 50%;">
-                    <video 
-                        class="mx-auto rounded-lg shadow-lg"
-                        :src="videoPreview" 
-                        controls></video>
+            <div v-if="!isProcessing">
+                <div 
+                    v-if="!isUploading"
+                    @click="openFileDialog"
+                    @drop.prevent="handleDrop" 
+                    @dragover.prevent 
+                    class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-50 dark:hover:border-slate-400 dark:hover:bg-gray-500 pointer">
+                    <i class="fa-solid fa-file-video fa-2xl text-gray-500 my-3 dark:text-slate-400"></i>
+                    <p class="text-gray-700 text-sm pt-4 dark:text-slate-300 pointer">
+                        {{ __blog('Drag and drop a video file here in MP4 format') }}
+                    </p>
+                    <p class="text-gray-400 text-xs pt-2 dark:text-slate-400 pointer">
+                        {{ __blog('or click to select a file') }}
+                    </p>
+                    <input 
+                        type="file" 
+                        ref="fileInput" 
+                        class="hidden" 
+                        @change="handleFileChange" 
+                        accept="video/mp4">
                 </div>
 
-                <!-- Barra de progreso (usando UIkit) -->
-                <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-4">
-                    <div 
-                        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" 
-                        :style="`width: ${uploadProgress}%`"> 
-                        {{ uploadProgress.toFixed(2) }}%
+                <div v-else>
+                    <!-- Vista previa del video (ajustar el tamaño aquí) -->
+                    <div class="preview-container mx-auto shadow-lg" style="max-width: 50%;">
+                        <video 
+                            class="mx-auto rounded-lg shadow-lg"
+                            :src="videoPreview" 
+                            controls></video>
                     </div>
+
+                    <!-- Barra de progreso (usando UIkit) -->
+                    <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-4">
+                        <div 
+                            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" 
+                            :style="`width: ${uploadProgress}%`"> 
+                            {{ uploadProgress.toFixed(2) }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="isProcessing" class="mt-4">
+                <div class="flex flex-col items-center justify-center space-y-2">
+                    <!-- Icono animado -->
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+                    
+                    <!-- Mensaje dinámico -->
+                    <p class="text-blue-500 text-base font-semibold text-center">
+                        {{ __blog('Processing your video, this may take a moment...') }}
+                    </p>
+                    <p class="text-blue-500 text-base font-semibold text-center">
+                        {{ __blog('Do not close this window') }}
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <button @click="uploadCompleted" class="btn btn-primary">
-                {{ __('Test') }}
-            </button>
+        <div v-else class="mt-6">
+
+            <text-input-component
+                :label="__blog('Title')"
+                type="text"
+                name="title"
+                :required="true"
+                validators="required"
+                :custom-class="inputClass"
+                v-model="title" />
+
+            <editor-input-component
+                class="mt-4"
+                id="video-content"
+                :file="false"
+                name="content"
+                :height="500"
+                :label="__blog('Content')"
+                :placeholder="__blog('Content')"
+                validators="required"
+                v-model="content" />
+
+            <button-component
+                @click="submit"
+                :custom-class="buttonClass"
+                :value="__blog('Continue')" />
         </div>
     </div>
 </template>
 
 <script>
+    import { slugify } from 'innoboxrr-js-libs/libs/string';
     import { makeHttpRequest } from 'innoboxrr-http-request';
     import MultipartUploader from 'innoboxrr-multipart-uploader';
+    import {
+        TextInputComponent,
+        EditorInputComponent,
+        ButtonComponent,
+    } from 'innoboxrr-form-elements'
     export default {
+        components: {
+            TextInputComponent,
+            EditorInputComponent,
+            ButtonComponent,
+        },
         props: {
             blogId: {
                 type: [String, Number],
@@ -93,6 +144,11 @@
                 // Lambda Vars
                 token: undefined,
                 s3Url: undefined,
+                isProcessing: false,
+
+                // Content
+                title: undefined,
+                content: undefined,
             };
         },
 
@@ -194,10 +250,8 @@
             },
 
             async uploadCompleted() {
-
-                this.s3Url = 'https://seguros-crm.s3.amazonaws.com/tmp/uploads/u00k2h52jtzpceov2cvf/apa80w2sjqhkms4k4bzs.mp4';
-
-                let {message, data} = await makeHttpRequest(
+                this.isProcessing = true;
+                let {message, title, content} = await makeHttpRequest(
                     'POST', 
                     route('api.larablog.blog.lambda'),
                     {
@@ -206,12 +260,13 @@
                         payload: {
                             s3Url: this.s3Url,
                             rewrite: true,
-                            useHTML: true,
-                            token: this.token,
+                            useHtml: true,
                         }
                     }
                 );
-                console.log(data);
+                this.title = title;
+                this.content = content;
+                this.isProcessing = false;
             },
 
             async getLambdaToken() {
@@ -225,7 +280,15 @@
                     }
                 );
                 this.token = token;
-            }
+            },
+
+            submit() {
+                this.$emit('submit', {
+                    title: this.title,
+                    slug: slugify(this.title),
+                    content: this.content,
+                });
+            },
         },
     }
 </script>

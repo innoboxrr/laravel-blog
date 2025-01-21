@@ -37,25 +37,29 @@ class LambdaService
     protected function process()
     {
         $type = $this->data['action'];
-
         // Buscar la clase que corresponda al tipo de acción
         $class = __NAMESPACE__ . '\\Actions\\' . ucfirst($type) . 'Action';
-
         if (!class_exists($class)) {
             return response()->json([
                 'message' => 'Action not found',
             ], 404);
         }
-
         $this->payload = $class::handle($this->data);
 
-        return $this->callLambda();
+        $response = $this->callLambda();
+
+        if(method_exists($class, 'after')) {
+            $class::after($this->data, $this->payload, $response);
+        }
+
+        return $response;
     }
 
     private function callLambda()
     {
-        return Http::withHeaders([
-            'Authorization' => $this->token,
-        ])->post($this->endpoint, $this->payload);
+        return Http::timeout(600)
+            ->withHeaders([
+                'Authorization' => $this->token,
+            ])->post($this->endpoint, $this->payload);
     }
 }

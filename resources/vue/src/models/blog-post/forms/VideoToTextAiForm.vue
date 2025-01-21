@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="mt-4">
+        <div class="my-4">
             <div 
                 v-if="!isUploading"
                 @click="openFileDialog"
@@ -56,12 +56,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="mt-4">
+            <button @click="uploadCompleted" class="btn btn-primary">
+                {{ __('Test') }}
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
+    import { makeHttpRequest } from 'innoboxrr-http-request';
     import MultipartUploader from 'innoboxrr-multipart-uploader';
     export default {
+        props: {
+            blogId: {
+                type: [String, Number],
+                required: true,
+            },
+        },
 
         emits: ['submit'],
 
@@ -76,6 +89,10 @@
                 videoPreview: null, // Blop video
                 uploadProgress: 0,
                 isUploading: false,
+
+                // Lambda Vars
+                token: undefined,
+                s3Url: undefined,
             };
         },
 
@@ -103,7 +120,6 @@
                 this.file = file;
                 this.fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.mp4';
                 this.fileSize = this.file.size;
-
                 this.startUpload();
             },
 
@@ -133,8 +149,9 @@
                     console.error('Error al subir el archivo', error);
                 });
 
-                this.uploader.on('complete', status => {
-                    console.log('status', status);
+                this.uploader.on('complete', event => {
+                    this.s3Url = event.response.data.url;
+                    this.uploadCompleted();
                 });
 
             },
@@ -175,6 +192,40 @@
                     this.uploadProgress = currentProgress;
                 }, stepTime);
             },
+
+            async uploadCompleted() {
+
+                this.s3Url = 'https://seguros-crm.s3.amazonaws.com/tmp/uploads/u00k2h52jtzpceov2cvf/apa80w2sjqhkms4k4bzs.mp4';
+
+                let {message, data} = await makeHttpRequest(
+                    'POST', 
+                    route('api.larablog.blog.lambda'),
+                    {
+                        blog_id: this.blogId,
+                        action: 'videoToTextAI',
+                        payload: {
+                            s3Url: this.s3Url,
+                            rewrite: true,
+                            useHTML: true,
+                            token: this.token,
+                        }
+                    }
+                );
+                console.log(data);
+            },
+
+            async getLambdaToken() {
+                let {message, token } = await makeHttpRequest(
+                    'POST', 
+                    route('api.larablog.blog.lambda'),
+                    {
+                        blog_id: this.blogId,
+                        action: 'getToken',
+                        payload: {}
+                    }
+                );
+                this.token = token;
+            }
         },
     }
 </script>

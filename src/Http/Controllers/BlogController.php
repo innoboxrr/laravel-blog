@@ -13,6 +13,7 @@ use Innoboxrr\LaravelBlog\Http\Requests\Blog\{
     RestoreRequest,
     ForceDeleteRequest,
     ExportRequest,
+    LambdaRequest
 };
 
 class BlogController extends Controller
@@ -68,6 +69,11 @@ class BlogController extends Controller
     }
 
     public function export(ExportRequest $request)
+    {
+        return $request->handle();   
+    }
+
+    public function lambda(LambdaRequest $request)
     {
         return $request->handle();   
     }

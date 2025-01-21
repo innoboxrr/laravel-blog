@@ -4,6 +4,12 @@ return [
 
 	'lambda_token' => env('LARAVEL_BLOG_LAMBDA_TOKEN', 'lambda_token'),
 
+	'lambda_endpoint' => env('LARAVEL_BLOG_LAMBDA_ENDPOINT', 'lambda_endpoint'),
+
+	'ffmpeg' => env('FFMPEG_PATH', 'ffmpeg'),
+
+	'ffprobe' => env('FFPROBE_PATH', 'ffprobe'),
+
 	'database' => [
 		'connection' => 'mysql',
 	],

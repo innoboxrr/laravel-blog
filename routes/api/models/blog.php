@@ -31,3 +31,6 @@ Route::delete('force-delete', 'BlogController@forceDelete')
 
 Route::post('export', 'BlogController@export')
 	->name('export');
+
+Route::post('lambda', 'BlogController@lambda')
+	->name('lambda');

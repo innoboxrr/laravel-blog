@@ -37,6 +37,7 @@
     },
     "require": {
         "livewire/livewire": "^3.5",
-        "innoboxrr/s3-resumable-uploads": "^1.0"
+        "innoboxrr/s3-resumable-uploads": "^1.0",
+        "php-ffmpeg/php-ffmpeg": "^1.3"
     }
 }

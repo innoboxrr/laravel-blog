@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Models\Traits\Storage;
 
+use Illuminate\Support\Facades\DB;
 use Innoboxrr\LaravelBlog\Models\BlogTag;
 use Innoboxrr\LaravelBlog\Models\BlogPostMeta;
 
@@ -10,19 +11,32 @@ trait BlogPostStorage
 
     public function createModel($request)
     {
-        $blogPost = $this->create($request->only($this->creatable));
-        $blogPost->updateModelMetas($request);
-        if($request->has('tags')) {
-            $tags = collect($request->tags)->map(function($tag) {
-                return BlogTag::firstOrCreate(['name' => $tag]);
+        try {
+            return DB::transaction(function () use ($request) {
+                $blogPost = $this->create($request->only($this->creatable));
+                $blogPost->updateModelMetas($request);
+
+                if ($request->has('tags')) {
+                    $tags = collect(explode(',', $request->tags ?? ''))->map(function ($tag) use ($blogPost) {
+                        return BlogTag::firstOrCreate([
+                            'name' => $tag,
+                            'blog_id' => $blogPost->blog_id,
+                        ]);
+                    });
+                    $blogPost->tags()->sync($tags->pluck('id'));
+                }
+
+                if ($request->has('categories')) {
+                    $blogPost->categories()->sync(explode(',', $request->categories ?? ''));
+                }
+
+                $blogPost->setFeaturedImage($request);
+
+                return $blogPost;
             });
-            $blogPost->tags()->sync($tags->pluck('id'));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un problema al guardar el blog post.'], 500);
         }
-        if($request->has('categories')) {
-            $blogPost->categories()->sync($request->categories);
-        }
-        $blogPost->setFeaturedImage($request);
-        return $blogPost;
     }
 
     public function updateModel($request)

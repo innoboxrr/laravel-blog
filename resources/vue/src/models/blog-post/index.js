@@ -122,7 +122,7 @@ export const createModel = (data) => {
         : {};
     const payload = data instanceof FormData ? data : { _token: CSRF_TOKEN, ...data };
 
-    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'create'), payload, headers, 1, 1500);
+    return makeHttpRequest('post', route(API_ROUTE_PREFIX + 'create'), payload, headers, 0, 1500);
 };
 
 export const updateModel = (modelId, data) => {

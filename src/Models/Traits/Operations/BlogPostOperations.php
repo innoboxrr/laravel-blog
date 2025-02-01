@@ -3,7 +3,7 @@
 namespace Innoboxrr\LaravelBlog\Models\Traits\Operations;
 
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 trait BlogPostOperations
 {
@@ -48,6 +48,11 @@ trait BlogPostOperations
         if (!$request->hasFile('featured_image')) {
             return false;
         }
+
+        // Validar que el archivo sea una imagen y no exceda el tamaño permitido
+        $request->validate([
+            'featured_image' => 'image|max:1024', // 2MB
+        ]);
 
         $file = $request->file('featured_image');
         $extension = $file->getClientOriginalExtension();

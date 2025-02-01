@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Models\Traits\Storage;
 
+use Innoboxrr\LaravelBlog\Models\BlogTag;
 use Innoboxrr\LaravelBlog\Models\BlogPostMeta;
 
 trait BlogPostStorage
@@ -11,6 +12,16 @@ trait BlogPostStorage
     {
         $blogPost = $this->create($request->only($this->creatable));
         $blogPost->updateModelMetas($request);
+        if($request->has('tags')) {
+            $tags = collect($request->tags)->map(function($tag) {
+                return BlogTag::firstOrCreate(['name' => $tag]);
+            });
+            $blogPost->tags()->sync($tags->pluck('id'));
+        }
+        if($request->has('categories')) {
+            $blogPost->categories()->sync($request->categories);
+        }
+        $blogPost->setFeaturedImage($request);
         return $blogPost;
     }
 

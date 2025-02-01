@@ -8,7 +8,7 @@
                         {{ title !== '' ? title : __blog('Create Blog Post') }}
                     </h1>
                     <!-- Dropdown for actions -->
-                    <PostActionsDropdown 
+                    <post-actions-dropdown 
                         @actionSelected="dropdownActionSelected"
                     />
                 </div>

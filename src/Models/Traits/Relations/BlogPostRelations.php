@@ -3,6 +3,7 @@
 namespace Innoboxrr\LaravelBlog\Models\Traits\Relations;
 
 use Innoboxrr\LaravelBlog\Models\Blog;
+use Innoboxrr\LaravelBlog\Models\BlogPostMeta;
 use Innoboxrr\LaravelBlog\Models\BlogCategory;
 use Innoboxrr\LaravelBlog\Models\BlogTag;
 
@@ -11,6 +12,12 @@ use Innoboxrr\LaravelBlog\Models\BlogTag;
 
 trait BlogPostRelations
 {
+
+    public function metas()
+    {
+        return $this->hasMany(BlogPostMeta::class);
+    }
+
     public function blog()
     {
         return $this->belongsTo(Blog::class);

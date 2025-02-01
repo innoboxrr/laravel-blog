@@ -137,7 +137,13 @@
                 handler() {
                     this.post.slug = slugify(this.post.title);
                 }
-            }
+            },
+            submitData: {
+                handler() {
+                    console.log(this.submitData);
+                },
+                deep: true,
+            },
         },
         computed: {
             validForm() {

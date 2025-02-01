@@ -143,6 +143,31 @@ export default defineConfig({
 });
 ```
 
+### 6. Configurar tailwind.config.js
+
+Añade los contenidos que tienen que ser analizados por tailwind
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+const {addDynamicIconSelectors} = require('@iconify/tailwind');
+const colors = require('tailwindcss/colors');
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+module.exports = {
+  content: [
+    // ...
+    "./node_modules/innoboxrr-vue-blog/**/*.vue",
+    "./node_modules/innoboxrr-vue-blog/**/*.js",
+    "./node_modules/innoboxrr-vue-blog/**/*.blade.php",
+    // ...
+  ],
+  darkMode: "class",
+  theme: {/*...*/},
+  plugins: [/*...*/],
+}
+
+```
+
 ---
 
 ## Uso del Paquete

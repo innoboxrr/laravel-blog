@@ -9,19 +9,11 @@ export default [
 		},
 		children: [
 			{
-				path: 'create',
-				name: "BlogPostsCreate",
-				component: () => import("./../views/PostsCreate.vue"),
+				path: 'editor/:id?',
+				name: "BlogPostsEditor",
+				component: () => import("./../views/PostsEditor.vue"),
 				meta: {
-					title: "PostsCreate",
-				},
-			},
-			{
-				path: ':id/edit',
-				name: "BlogPostsEdit",
-				component: () => import("./../views/PostsEdit.vue"),
-				meta: {
-					title: "PostsEdit",
+					title: "Posts Editor",
 				},
 			},
 			{

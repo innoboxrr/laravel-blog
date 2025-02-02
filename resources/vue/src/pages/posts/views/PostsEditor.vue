@@ -1,11 +1,11 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div v-if="dataLoaded" class="min-h-screen bg-gray-50">
         <!-- Header -->
         <header class="sticky top-0 z-10 bg-white border-b border">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between py-4">
                     <h1 class="text-xl font-bold text-gray-900">
-                        {{ title !== '' ? title : __blog('Create Blog Post') }}
+                        {{ title !== '' ? title : (isEdit ? __blog('Edit Blog Post') : __blog('Create Blog Post')) }}
                     </h1>
                     <!-- Dropdown for actions -->
                     <post-actions-dropdown 
@@ -24,37 +24,43 @@
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-4 mb-6">
                             {{ __blog('Post Details') }}
                         </h2>
-                        <blog-post-create-form 
+                        <component 
                             v-if="createAction === 'normalPost'"
+                            :is="formComponent"
                             :blog-id="blog.id"
                             :external-params="externalParams"
-                            :preload-post="preloadPost"
+                            :preload-post="isEdit ? postData : preloadPost"
                             @change="onChange"
                             @submit="onSubmit" />
+
                         <translate-with-ai-form 
                             v-else-if="createAction === 'translateWithAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
                             @submit="setPreloadPost" />
+
                         <generate-with-ai-form
                             v-else-if="createAction === 'generateWithAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
                             @submit="setPreloadPost" />
+
                         <transcript-with-ai-form
                             v-else-if="createAction === 'transcriptWithAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
                             @submit="setPreloadPost" />
+
                         <video-to-text-ai-form
                             v-else-if="createAction === 'videoToTextAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
                             @submit="setPreloadPost" />
+                            
                     </div>
                 </div>
 
@@ -115,7 +121,6 @@
                             </div>
                         </div>
                     </div>
-
                 </aside>
             </div>
         </main>
@@ -127,6 +132,7 @@
     import { useGlobalStore } from '@blogStore/globalStore'; 
     
     import BlogPostCreateForm from '@blogModels/blog-post/forms/CreateForm.vue';
+    import BlogPostEditForm from '@blogModels/blog-post/forms/EditForm.vue';
     import GenerateWithAiForm from '@blogModels/blog-post/forms/GenerateWithAiForm.vue';
     import TranscriptWithAiForm from '@blogModels/blog-post/forms/TranscriptWithAiForm.vue';
     import TranslateWithAiForm from '@blogModels/blog-post/forms/TranslateWithAiForm.vue';
@@ -140,12 +146,18 @@
     export default {
         name: 'PostsCreate',
         components: {
+
+            // Forms
             BlogPostCreateForm,
+            BlogPostEditForm,
+
+            // AI Forms
             GenerateWithAiForm,
             TranscriptWithAiForm,
             TranslateWithAiForm,
             VideoToTextAiForm,
 
+            // Components
             PostActionsDropdown,
             CategorySelector,
             TagSelector,
@@ -160,6 +172,7 @@
         },
         data() {
             return {
+                dataLoaded: true,
                 title: '',
                 externalParams: {},
                 preloadPost: {},
@@ -167,6 +180,14 @@
                 preselectedTags: [],
                 createAction: 'normalPost',
             };
+        },
+        computed: {
+            isEdit() {
+                return this.$route.params.id !== undefined;
+            },
+            formComponent() {
+                return this.isEdit ? 'BlogPostEditForm' : 'BlogPostCreateForm';
+            },
         },
         methods: {
             onChange(data) {

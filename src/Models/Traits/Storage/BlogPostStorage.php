@@ -30,7 +30,7 @@ trait BlogPostStorage
                     $blogPost->categories()->sync(explode(',', $request->categories ?? ''));
                 }
 
-                $blogPost->setFeaturedImage($request);
+                $blogPost->uploadFeaturedImage($request);
 
                 return $blogPost;
             });

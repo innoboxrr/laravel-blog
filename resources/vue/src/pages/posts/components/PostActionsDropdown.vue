@@ -14,8 +14,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                    />
+                        d="M19 9l-7 7-7-7" />
                 </svg>
             </MenuButton>
         </div>
@@ -25,17 +24,13 @@
             enter-to-class="transform opacity-100 scale-100"
             leave-active-class="transition ease-in duration-75"
             leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95"
-        >
-            <MenuItems
-                class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
-            >
+            leave-to-class="transform opacity-0 scale-95">
+            <MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                 <div class="py-1">
                     <MenuItem v-slot="{ active }" v-for="(item, index) in actions" :key="index">
                         <button
                             @click="selectAction(item.value)"
-                            :class="getButtonClasses(active, item.value)"
-                        >
+                            :class="getButtonClasses(active, item.value)" >
                             {{ item.label }}
                         </button>
                     </MenuItem>
@@ -62,7 +57,6 @@ export default {
             action: 'normalPost', // Acción seleccionada por defecto
             actions: [
                 { value: 'normalPost', label: this.__blog('Normal Post Creation') },
-
                 { value: 'generateWithAI', label: this.__blog('Generate with AI') },
                 { value: 'transcriptWithAI', label: this.__blog('Transcript with AI') },
                 { value: 'videoToTextAI', label: this.__blog('Video to Text With AI') },

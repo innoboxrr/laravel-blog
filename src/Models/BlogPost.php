@@ -70,6 +70,13 @@ class BlogPost extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+
+        // Featured images
+        'original_image',
+        'thumbnail_image',
+        'medium_image',
+        'large_image',
+        
         // Más etiquetas para seo
     ];
 

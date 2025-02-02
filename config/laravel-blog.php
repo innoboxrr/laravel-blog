@@ -59,5 +59,9 @@ return [
 	'notification_via' => ['mail', 'database'],
 
 	'export_disk' => 's3',
+
+	'file_disk' => 's3',
+
+	'file_directory' => 'public/blogs',
 	
 ];

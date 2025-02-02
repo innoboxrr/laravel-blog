@@ -58,6 +58,9 @@ class FeaturedImageService
      */
     public static function uploadImage($file, BlogPost $blogPost)
     {
+        if(!$file) {
+            return;
+        }
         $instance = new self();
         $urls = $instance->processFlow($file, $blogPost->id);
         $instance->saveUrls($blogPost, $urls);

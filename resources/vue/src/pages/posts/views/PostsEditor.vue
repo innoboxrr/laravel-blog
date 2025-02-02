@@ -1,16 +1,14 @@
 <template>
-    <div v-if="dataLoaded" class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-50">
         <!-- Header -->
         <header class="sticky top-0 z-10 bg-white border-b border">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between py-4">
                     <h1 class="text-xl font-bold text-gray-900">
-                        {{ title !== '' ? title : (isEdit ? __blog('Edit Blog Post') : __blog('Create Blog Post')) }}
+                        {{ title !== '' ? __blog('Title: ') + title ?? __blog('Create new post') : (isEdit ? __blog('Edit Blog Post') : __blog('Create Blog Post')) }}
                     </h1>
                     <!-- Dropdown for actions -->
-                    <post-actions-dropdown 
-                        @actionSelected="dropdownActionSelected"
-                    />
+                    <post-actions-dropdown @actionSelected="dropdownActionSelected" />
                 </div>
             </div>
         </header>
@@ -28,8 +26,10 @@
                             v-if="createAction === 'normalPost'"
                             :is="formComponent"
                             :blog-id="blog.id"
+                            :blog-post-id="postId"
                             :external-params="externalParams"
-                            :preload-post="isEdit ? postData : preloadPost"
+                            :preload-post="preloadPost"
+                            @blogPostLoaded="loadBlogPost"
                             @change="onChange"
                             @submit="onSubmit" />
 
@@ -65,7 +65,7 @@
                 </div>
 
                 <!-- Right: Sidebar -->
-                <aside class="space-y-6">
+                <aside v-if="dataLoaded" class="space-y-6">
 
                     <!-- Categories Section -->
                     <div class="bg-white border sm:rounded-lg">
@@ -116,7 +116,7 @@
                             <!-- Placeholder for featured image -->
                             <div class="mt-4 border-t pt-4">
                                 <FeaturedImage 
-                                    :preview-image="null"
+                                    :preview-image="previewImage"
                                     @onFeaturedImageChange="featuredImageChange" />
                             </div>
                         </div>
@@ -172,8 +172,10 @@
         },
         data() {
             return {
-                dataLoaded: true,
+                dataLoaded: false,
                 title: '',
+                postId: this.$route.params.id,
+                previewImage: null,
                 externalParams: {},
                 preloadPost: {},
                 preselectedCategories: [],
@@ -181,9 +183,14 @@
                 createAction: 'normalPost',
             };
         },
+        mounted() {
+            if(!this.isEdit) {
+                this.dataLoaded = true;
+            }
+        },
         computed: {
             isEdit() {
-                return this.$route.params.id !== undefined;
+                return this.$route.params.id !== undefined && this.$route.params.id !== '';
             },
             formComponent() {
                 return this.isEdit ? 'BlogPostEditForm' : 'BlogPostCreateForm';
@@ -192,6 +199,12 @@
         methods: {
             onChange(data) {
                 this.title = data.title;
+            },
+            loadBlogPost(blogPost) {
+                this.preselectedCategories = blogPost.categories;
+                this.preselectedTags = blogPost.tags.map((tag) => tag.name);
+                this.previewImage = blogPost.payload.images.original;
+                this.dataLoaded = true;
             },
             categorySelectorChange(data) {
                 const categoriesIds = data.map((category) => category.id);
@@ -212,9 +225,6 @@
                     featured_image: data,
                 };
             },
-            onSubmit(data) {
-                
-            },
             setPreloadPost(data) {
                 this.preloadPost = data;
                 this.preloadPost.status = 'draft';
@@ -223,6 +233,14 @@
             },
             dropdownActionSelected(action) {
                 this.createAction = action;
+            },
+            onSubmit(data) {
+                this.$router.push({
+                    name: 'BlogPostsShow',
+                    params: {
+                        id: data.id
+                    }
+                })
             },
         },
     };

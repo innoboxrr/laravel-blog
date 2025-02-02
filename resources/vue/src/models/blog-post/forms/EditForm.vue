@@ -1,35 +1,90 @@
 <template>
-	
-	<form :id="formId" @submit.prevent="onSubmit">
+    <form :id="formId" @submit.prevent="onSubmit">
+        <text-input-component
+            :label="__blog('Title')"
+            type="text"
+            name="title"
+            :required="true"
+            validators="required"
+            :custom-class="inputClass"
+            v-model="blogPost.title" />
 
-<!-- Add more inputs -->
+        <div>
+            <label for="slug" class="block text-sm/6 font-medium text-gray-900">
+                {{ __blog('Friendly URL') }}
+            </label>
+            <div class="mt-2 flex">
+                <div class="flex shrink-0 items-center rounded-l-md bg-gray-100 px-3 text-base text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 sm:text-sm/6">
+                    https://my-blog.com/
+                </div>
+                <input 
+                    type="text" 
+                    name="slug" 
+                    id="slug" 
+                    validators="required alphanumeric_dash"
+                    :class="inputClassWithUrl"
+                    v-model="blogPost.slug"
+                    data-validators="alphanumeric"
+                    placeholder="custom-code" />
+            </div>
+        </div>
+
+        <editor-input-component
+            :id="`content-${formId}`"
+            :file="false"
+            name="content"
+            :height="500"
+            :label="__blog('Content')"
+            :placeholder="__blog('Content')"
+            validators="required"
+            v-model="blogPost.content" />
+
+        <select-input-component
+            :label="__blog('Status')"
+            name="status"
+            :required="true"
+            validators="required"
+            :custom-class="inputClass"
+            v-model="blogPost.status">
+            <option value="draft">{{ __blog('Draft') }}</option>
+            <option value="published">{{ __blog('Published') }}</option>
+            <option value="archived">{{ __blog('Archived') }}</option>
+        </select-input-component>
+
+        <text-input-component
+            :label="__blog('Publish date')"
+            type="datetime-local"
+            name="publish_at"
+            :required="true"
+            validators="required"
+            :custom-class="inputClass"
+            v-model="blogPost.publish_at" />
 
         <button-component
             :custom-class="buttonClass"
             :disabled="disabled"
-            value="Actualizar" />
-        
+            :value="__blog('Actualizar')" />
     </form>
-
 </template>
 
 <script>
-
-    import { showModel, updateModel} from '@blogModels/blog-post'
+    import dayjs from 'dayjs'; 
+    import { showModel, updateModel } from '@blogModels/blog-post'
     import JSValidator from 'innoboxrr-js-validator'
+    import { slugify } from 'innoboxrr-js-libs/libs/string'
     import {
         TextInputComponent,
+        EditorInputComponent,
+        SelectInputComponent,
         ButtonComponent,
-//import_more_components//
     } from 'innoboxrr-form-elements'
-    
-	
-	export default {
 
+    export default {
         components: {
             TextInputComponent,
+            EditorInputComponent,
+            SelectInputComponent,
             ButtonComponent,
-//register_more_components//
         },
 
         props: {
@@ -41,57 +96,84 @@
                 type: [Number, String],
                 required: true
             },
-//props//
         },
 
-        emits: ['submit'],
-
-        mounted() {
-            this.fetchData(); 
-            this.JSValidator = new JSValidator(this.formId).init();
-            this.JSValidator.status = true;
-        },
+        emits: ['submit', 'blogPostLoaded'],
 
         data() {
             return {
                 blogPost: {
-//model_data//
+                    title: '',
+                    slug: '',
+                    content: '',
+                    status: 'draft',
+                    publish_at: ''
                 },
                 disabled: false,
                 JSValidator: undefined,
             }
         },
 
+        computed: {
+            validForm() {
+                return this.JSValidator ? this.JSValidator.status : false;
+            },
+        },
+
+        watch: {
+            'blogPost.title': {
+                handler(newTitle) {
+                    this.blogPost.slug = slugify(newTitle);
+                }
+            }
+        },
+
+        mounted() {
+            this.fetchData();
+            this.JSValidator = new JSValidator(this.formId).init();
+            this.JSValidator.status = true;
+        },
+
         methods: {
-
-            fetchData() {
-                this.fetchBlogPost();
+            async fetchData() {
+                await this.fetchBlogPost();
             },
-
-            fetchBlogPost() {
-                showModel(this.blogPostId).then( res => {
+            async fetchBlogPost() {
+                try {
+                    const res = await showModel(this.blogPostId, [
+                        'tags',
+                        'categories'
+                    ]);
+                    if (res.published_at) {
+                        res.published_at = dayjs(res.published_at).format('YYYY-MM-DDTHH:mm');
+                    } else {
+                        res.published_at = dayjs(new Date()).format('YYYY-MM-DDTHH:mm');
+                    }
                     this.blogPost = res;
-                });
+                    this.$emit('blogPostLoaded', this.blogPost);
+                } catch (error) {
+                    console.error("Error al cargar el blog post:", error);
+                }
             },
-
-            onSubmit() {
-                if(this.JSValidator.status) {
+            async onSubmit() {
+                if (this.JSValidator.status) {
                     this.disabled = true;
-                    updateModel(this.blogPost.id, {
-//submit_data//
-                    }).then( res => {
+                    try {
+                        const res = await updateModel(this.blogPost.id, this.blogPost);
                         this.$emit('submit', res);
-                        setTimeout(() => { this.disabled = false; }, 2500);
-                    }).catch(error => {
+                        setTimeout(() => {
+                            this.disabled = false;
+                        }, 2500);
+                    } catch (error) {
                         this.disabled = false;
-                        if(error.response.status == 422)
-                            this.JSValidator
-                                .appendExternalErrors(error.response.data.errors);
-                    });
+                        if (error.response && error.response.status === 422) {
+                            this.JSValidator.appendExternalErrors(error.response.data.errors);
+                        }
+                    }
                 } else {
                     this.disabled = false;
                 }
             }
         }
-	}
+    }
 </script>

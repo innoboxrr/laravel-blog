@@ -23,6 +23,7 @@
         emits: ['onChangeTags'],
         data() {
             return {
+                
                 tags: (this.preselectedTags) ? (Array.isArray(this.preselectedTags) ? this.preselectedTags : this.preselectedTags.split(',')) : [],
             }
         },

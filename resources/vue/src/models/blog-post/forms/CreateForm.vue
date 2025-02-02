@@ -55,16 +55,16 @@
         <text-input-component
             :label="__blog('Publish date')"
             type="datetime-local"
-            name="publish_at"
+            name="published_at"
             :required="true"
             validators="required"
             :custom-class="inputClass"
-            v-model="post.publish_at" />
+            v-model="post.published_at" />
 
         <button-component
             :custom-class="buttonClass"
             :disabled="disabled && !validForm"
-            :value="__blog('Crear publicación')" />
+            :value="(disabled) ? __blog('...') : __blog('Crear publicación')" />
         
     </form>
 </template>
@@ -109,7 +109,7 @@
                     slug: '',
                     status: 'draft',
                     content: '',
-                    publish_at: '',
+                    published_at: '',
                 }),
             },
         },
@@ -123,7 +123,7 @@
         },
         mounted() {
             this.fetchData();
-            this.post.publish_at = dayjs().format('YYYY-MM-DDTHH:mm');
+            this.post.published_at = dayjs().format('YYYY-MM-DDTHH:mm');
             this.JSValidator = new JSValidator(this.formId).init();
         },
         watch: {

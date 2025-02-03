@@ -70,16 +70,11 @@
             </div>
             <ul role="list" class="mt-3 divide-y divide-gray-100 border-t border-gray-200">
                 <li 
-                    v-for="project in projects" 
-                    :key="project.id">
+                    v-for="post in posts" 
+                    :key="post.id">
                     <a href="#" class="group flex items-center justify-between px-4 py-4 hover:bg-gray-50 sm:px-6">
                         <span class="flex items-center space-x-3 truncate">
-                            <span :class="[project.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></span>
-                            <span class="truncate text-sm/6 font-medium">
-                                {{ project.title }}
-                                {{ ' ' }}
-                                <span class="truncate font-normal text-gray-500">in {{ project.team }}</span>
-                            </span>
+                            <span :class="[post.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></span>
                         </span>
                         <ChevronRightIcon class="ml-4 size-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     </a>
@@ -95,33 +90,33 @@
                         <tr class="border-t border-gray-200">
                             <th class="border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900" scope="col">
                                 <span class="lg:pl-2">
-                                    Project
+                                    {{ __blog('Blog posts') }}
                                 </span>
                             </th>
                             <th class="hidden border-b border-gray-200 bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900 md:table-cell" scope="col">
-                                Last updated
+                                {{ __blog('Last updated') }}
                             </th>
                             <th class="border-b border-gray-200 bg-gray-50 py-3 pr-6 text-right text-sm font-semibold text-gray-900" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
                         <tr 
-                            v-for="project in projects" 
-                            :key="project.id">
+                            v-for="post in posts" 
+                            :key="post.id">
                             <td class="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
                                 <div class="flex items-center space-x-3 lg:pl-2">
-                                    <div :class="[project.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></div>
+                                    <div :class="[post.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></div>
                                     <a href="#" class="truncate hover:text-gray-600">
                                         <span>
-                                            {{ project.title }}
+                                            {{ post.title }}
                                             {{ ' ' }}
-                                            <span class="font-normal text-gray-500">in {{ project.team }}</span>
+                                            <span class="font-normal text-gray-500">in {{ post.team }}</span>
                                         </span>
                                     </a>
                                 </div>
                             </td>
                             <td class="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
-                                {{ project.lastUpdated }}
+                                {{ post.created_at }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-medium relative">
                                 <Menu as="div" class="shrink-0 pr-2">
@@ -172,13 +167,12 @@
                 </table>
             </div>
         </div>
-        
     </div>
 </template>
 
 
 <script>
-    import { toRefs } from 'vue';
+    import { watch, toRefs } from 'vue';
     import { useGlobalStore } from '@blogStore/globalStore'; 
     import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
     import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
@@ -187,9 +181,17 @@
         name: 'BlogDashboardView',
         setup() {
             const globalStore = useGlobalStore();
-            const { blog } = toRefs(globalStore);
+            const { blog, categories, posts, postFilters  } = toRefs(globalStore);
+
+            watch(postFilters, async () => {
+                await globalStore.fetchPosts();
+            });
+
             return {
                 blog,
+                categories,
+                posts,
+                postFilters,
             };
         },
         components: {
@@ -203,52 +205,9 @@
         mounted() {
             this.$setTitle(this.__blog('Dashboard'));
         },
-        data() {
-            return {
-                projects: [
-                    {
-                    id: 1,
-                    title: 'GraphQL API 123456789',
-                    initials: 'GA',
-                    team: 'Engineering',
-                    members: [
-                        {
-                        name: 'Dries Vincent',
-                        handle: 'driesvincent',
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                        },
-                        {
-                        name: 'Lindsay Walton',
-                        handle: 'lindsaywalton',
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                        },
-                        {
-                        name: 'Courtney Henry',
-                        handle: 'courtneyhenry',
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                        },
-                        {
-                        name: 'Tom Cook',
-                        handle: 'tomcook',
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                        },
-                    ],
-                    totalMembers: 12,
-                    lastUpdated: 'March 17, 2020',
-                    pinned: true,
-                    bgColorClass: 'bg-pink-600',
-                    },
-                    // More projects...
-                ],
-            }
-        },
         computed: {
             pinedCategories() {
-                return this.projects.filter((project) => project.pinned);
+                return this.categories.filter((category) => category.pinned === 1);
             },
         }
     };

@@ -69,20 +69,22 @@
                                         </router-link>
                                     </div>
                                     <div class="mt-8">
-                                        <h3 class="px-3 text-sm font-medium text-gray-500" id="mobile-tags-headline">
+                                        <h3 class="px-3 text-sm font-medium text-gray-500" id="mobile-categories-headline">
                                             {{ __blog('Categories') }}
                                         </h3>
                                         <div 
                                             class="mt-1 space-y-1" 
                                             role="group" 
-                                            aria-labelledby="mobile-tags-headline">
+                                            aria-labelledby="mobile-categories-headline">
                                             <a 
-                                                v-for="tag in tags" 
-                                                :key="tag.name" 
-                                                :href="tag.href" 
+                                                v-for="category in categories" 
+                                                :key="category.name" 
+                                                @click="postFilters.category_id = category.id; updateFilters()"
                                                 class="group flex items-center rounded-md px-3 py-2 text-base/5 font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                                                <span :class="[tag.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true" />
-                                                <span class="truncate">{{ tag.name }}</span>
+                                                <span :class="[category.bgColorClass ?? 'bg-indigo-500', 'mr-4 size-2.5 rounded-full']" aria-hidden="true" />
+                                                <span class="truncate">
+                                                    {{ categoryDashIndentation(category.level) + category.name }}
+                                                </span>
                                             </a>
                                         </div>
                                     </div>
@@ -106,6 +108,7 @@
                         type="search" 
                         name="search" 
                         aria-label="Search" 
+                        @input="postFilters.search = $event.target.value; updateFilters()"
                         class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
                         placeholder="Search" />
                     <MagnifyingGlassIcon 
@@ -134,18 +137,18 @@
                     </div>
                     <div class="mt-8">
                         <!-- Secondary navigation -->
-                        <h3 class="px-3 text-sm font-medium text-gray-500" id="desktop-tags-headline">
+                        <h3 class="px-3 text-sm font-medium text-gray-500" id="desktop-categories-headline">
                             {{ __blog('Categories') }}
                         </h3>
-                        <div class="mt-1 space-y-1" role="group" aria-labelledby="desktop-tags-headline">
+                        <div class="mt-1 space-y-1" role="group" aria-labelledby="desktop-categories-headline">
                             <a 
-                                v-for="tag in tags" 
-                                :key="tag.name" 
-                                :href="tag.href" 
+                                v-for="category in categories" 
+                                :key="category.name" 
+                                @click="postFilters.category_id = category.id; updateFilters()"
                                 class="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">
-                                <span :class="[tag.bgColorClass, 'mr-4 size-2.5 rounded-full']" aria-hidden="true"></span>
+                                <span :class="[category.bgColorClass ?? 'bg-indigo-500', 'mr-4 size-2.5 rounded-full']" aria-hidden="true"></span>
                                 <span class="truncate">
-                                    {{ __blog(tag.name) }}
+                                    {{ categoryDashIndentation(category.level) + category.name }}
                                 </span>
                             </a>
                         </div>
@@ -153,8 +156,6 @@
                 </nav>
             </div>
         </div>
-
-        <!-- Main column -->
         <div class="flex flex-col lg:pl-64">
             <!-- Search header -->
             <div class="sticky top-0 z-10 flex h-16 shrink-0 border-b border-gray-200 bg-white lg:hidden">
@@ -174,6 +175,7 @@
                             name="search" 
                             aria-label="Search" 
                             style="outline: none; box-shadow: none;" 
+                            @input="postFilters.search = $event.target.value; updateFilters()"
                             class="col-start-1 row-start-1 block size-full border-0 rounded-md bg-white py-2 pl-8 pr-3 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
                             placeholder="Search" />
                         <MagnifyingGlassIcon 
@@ -214,7 +216,9 @@
 
 <script>
     import { watch, toRefs, getCurrentInstance } from 'vue';
+    import { debounce } from 'innoboxrr-js-libs/libs/utils';
     import { useGlobalStore } from '@blogStore/globalStore';
+    import { categoryDashIndentation } from '@blogModels/blog-category/helpers/utils';
     import { useTranslationsStore } from '@blogStore/translationsStore';
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
     import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -255,11 +259,11 @@
             const $blogLoadLocale = instance?.appContext.config.globalProperties.$blogLoadLocale;
 
             // 3. Referenciar datos reactivos del store global
-            const { navigation, title } = toRefs(globalStore);
+            const { navigation, title, categories } = toRefs(globalStore);
 
             // 4. Establecer el blog inicial
             const initializeBlog = () => {
-                globalStore.setBlog(props.blog);
+                globalStore.initBlog(props.blog);
             };
 
             // 5. Cargar el idioma inicial
@@ -275,7 +279,7 @@
                 watch(
                     () => props.blog,
                     (newBlog) => {
-                        globalStore.setBlog(newBlog);
+                        globalStore.initBlog(newBlog);
                     },
                     { immediate: true }
                 );
@@ -290,6 +294,16 @@
                 );
             };
 
+            // Mecanismo de filtrado
+            const postFilters = {
+                category_id: null,
+                search: '',
+            };
+
+            const updateFilters = debounce(() => {
+                globalStore.setPostFilters(postFilters);
+            }, 300);
+
             // 7. Inicializar lógica
             initializeBlog();
             initializeLocale();
@@ -299,62 +313,18 @@
             return {
                 navigation,
                 title,
+                categories,
+                postFilters,
+                updateFilters,
             };
         },
         data() {
             return {
                 sidebarOpen: false,
-
-                projects: [
-                    {
-                        id: 1,
-                        title: 'GraphQL API 123456789',
-                        initials: 'GA',
-                        tag: 'Engineering',
-                        members: [
-                            {
-                                name: 'Dries Vincent',
-                                handle: 'driesvincent',
-                                imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                            },
-                            {
-                                name: 'Lindsay Walton',
-                                handle: 'lindsaywalton',
-                                imageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                            },
-                            {
-                                name: 'Courtney Henry',
-                                handle: 'courtneyhenry',
-                                imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                            },
-                            {
-                                name: 'Tom Cook',
-                                handle: 'tomcook',
-                                imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                            },
-                        ],
-                        totalMembers: 12,
-                        lastUpdated: 'March 17, 2020',
-                        pinned: true,
-                        bgColorClass: 'bg-pink-600',
-                    },
-                    // More projects...
-                ],
-                tags: [
-                    { name: 'Engineering', href: '#', bgColorClass: 'bg-indigo-500' },
-                    { name: 'Human Resources', href: '#', bgColorClass: 'bg-green-500' },
-                    { name: 'Customer Success', href: '#', bgColorClass: 'bg-yellow-500' },
-                ]
             }
         },
-        computed: {
-            pinnedProjects() {
-                return this.projects.filter((project) => project.pinned);
-            },
-        }
+        methods: {
+            categoryDashIndentation,
+        },
     };
 </script>
-
-<style scoped>
-/* Personaliza los estilos adicionales aquí */
-</style>

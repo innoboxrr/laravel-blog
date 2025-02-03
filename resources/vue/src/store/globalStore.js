@@ -1,4 +1,6 @@
 import { indexModel as indexCategoryModel } from '@blogModels/blog-category'
+import { indexModel as indexPostModel } from '@blogModels/blog-post'
+import { createFlattenedCategories } from '@blogModels/blog-category/helpers/utils';
 import { __blog } from '../utils/translate';
 import { defineStore } from 'pinia';
 import { 
@@ -27,15 +29,40 @@ export const useGlobalStore = defineStore('blog-global', {
         categories: [],
         posts: [],
         tags: [],
+        postFilters: {
+            category_id: null,
+            categories: [],
+            tag_id: null,
+            tags: [],
+            search: '',
+            order_by: 'created_at',
+            order_direction: 'desc',
+        },
     }),
     actions: {
-        setBlog(blogData) {
+        async initBlog(blogData) {
             this.blog = blogData; // Actualiza el blog
+            await this.fetchCategories();
+            await this.fetchPosts();
         },
         async fetchCategories() {
             this.categories = await indexCategoryModel({
-                paginate: 0
+                paginate: 0,
+                blog_id: this.blog.id,
+                only_parents: true,
+                load_children: true,
             });
-        }
+            this.categories = createFlattenedCategories(this.categories);
+        },
+        setPostFilters(filters) {
+            this.postFilters = { ...this.postFilters, ...filters }; // Combina los filtros
+        },
+        async fetchPosts() {
+            this.posts = await indexPostModel({
+                paginate: 0,
+                blog_id: this.blog.id,
+                ...this.postFilters,
+            });
+        },
     },
 });

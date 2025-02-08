@@ -11,7 +11,10 @@ class BlogPost extends Component
 
     public function mount($postSlug)
     {
-        $this->post = BlogPostModel::where('slug', $postSlug)
+        $this->post = BlogPostModel::where(function ($query) use ($postSlug) {
+                $query->where('slug', $postSlug)
+                    ->orWhere('id', $postSlug);
+            })
             ->where('blog_id', $this->blog->id)
             ->firstOrFail();
     }

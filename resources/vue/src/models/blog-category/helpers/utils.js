@@ -1,3 +1,5 @@
+import { updateModel as updateBlogCategoryModel } from '@blogModels/blog-category';
+
 export const createFlattenedCategories = (categories, level = 0) => {
     return categories.reduce((acc, category) => {
         acc.push({ ...category, level });
@@ -44,3 +46,13 @@ export const sortCategories = (selectedCategories, allCategories) => {
 
     return sorted;
 };
+
+export const pinCategory = async (category) => {
+    await updateBlogCategoryModel(category.id, { pinned: true });
+    category.pinned = true;
+}
+
+export const unpinCategory = async (category) => {
+    await updateBlogCategoryModel(category.id, { pinned: false });
+    category.pinned = false;
+}

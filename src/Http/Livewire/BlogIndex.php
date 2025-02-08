@@ -10,13 +10,10 @@ class BlogIndex extends Component
 {
     use WithPagination;
 
-
-
     public function render()
     {
         $posts = BlogPost::where('blog_id', $this->blog->id)
             ->paginate(10);
-
 
         return view("$this->themeView.blog-index-view", [
                 'posts' => $posts

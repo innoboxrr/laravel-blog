@@ -51,6 +51,7 @@ export const useGlobalStore = defineStore('blog-global', {
                 blog_id: this.blog.id,
                 only_parents: true,
                 load_children: true,
+                load_posts_count: true,
             });
             this.categories = createFlattenedCategories(this.categories);
         },

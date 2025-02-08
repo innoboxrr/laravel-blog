@@ -5,28 +5,21 @@ namespace Innoboxrr\LaravelBlog\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Innoboxrr\LaravelBlog\Models\Blog;
+use Innoboxrr\LaravelBlog\Helpers\BlogHelper;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    public function map()
+    public function boot()
     {
-        // Siempre registra las rutas API para el dominio principal
-        $this->mapApiRoutes();
+        parent::boot();
 
-        // Verifica el dominio actual y registra las rutas web correspondientes
-        $host = request()->getHost();
-
-        if ($this->isAppDomain($host)) {
-            $this->mapWebRoutes();
-        } elseif ($this->isBlogDomain($host)) {
-            // Subdominios personalizados
-            $this->mapBlogRoutes($host);
-        } 
+        $this->routes(function () {
+            $this->mapAppRoutes();
+            $this->mapBlogRoutes();
+            $this->mapApiRoutes();   
+        });
     }
 
-    /**
-     * Siempre registra las rutas API.
-     */
     protected function mapApiRoutes()
     {
         foreach (glob(__DIR__ . '/../../routes/api/models/*.php') as $file) {
@@ -39,55 +32,17 @@ class RouteServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Registra las rutas WEB para el dominio principal.
-     */
-    protected function mapWebRoutes()
+    protected function mapAppRoutes()
     {
         Route::middleware('web')
-            ->group(base_path('routes/web.php'));
+            ->as('blog.')
+            ->group(__DIR__ . '/../../routes/app.php');
     }
 
-    /**
-     * Registra las rutas para subdominios personalizados.
-     */
-    protected function mapBlogRoutes($host)
+    protected function mapBlogRoutes()
     {
-        if(!str_starts_with($host, 'blog.')){
-            abort(404, 'Blog not found');
-        }
-
-        // Extrae el dominio sin el subdominio "blog."
-        if(explode('.', $host)[0] == 'blog'){
-            $domain = implode('.', array_slice(explode('.', $host), 1));
-        }
-
-        // Busca el blog en la base de datos
-        $blog = Blog::where('domain', $domain)->first();
-
-        if (!$blog) {
-            abort(404, 'Blog not found');
-        }
-
-        // Registra las rutas específicas para el blog
-        Route::domain($host)
-            ->middleware('web')
+        Route::middleware('web')
+            ->as('blog.')
             ->group(__DIR__ . '/../../routes/blog.php');
-    }
-
-    /**
-     * Verifica si es el dominio principal de la aplicación.
-     */
-    protected function isAppDomain($host)
-    {
-        return $host === config('app.app_host', 'seguropro.test.com');
-    }
-
-    /**
-     * Verifica si el dominio es un subdominio personalizado.
-     */
-    protected function isBlogDomain($host)
-    {
-        return str_starts_with($host, 'blog.');
     }
 }

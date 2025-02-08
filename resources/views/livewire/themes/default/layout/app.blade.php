@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mi Paquete')</title>
-    @livewireStyles {{-- Cargar estilos de Livewire --}}
+    @livewireStyles
 </head>
 <body>
     <header class="bg-gray-800 text-white py-4">
@@ -15,6 +15,6 @@
     <main class="container mx-auto mt-4">
         @yield('content')
     </main>
-    @livewireScripts {{-- Cargar scripts de Livewire --}}
+    @livewireScripts
 </body>
 </html>

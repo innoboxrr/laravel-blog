@@ -16,6 +16,10 @@ class EagerLoadingFilter
             $query->with(['children']);
         }
 
+        if($data->load_posts_count == 1 || $data->load_posts_count == true) {
+            $query->withCount(['posts']);
+        }
+
         /*
         if ($data->load_relation == 1 || $data->load_relation == true) {
             $query->with(['relation']);

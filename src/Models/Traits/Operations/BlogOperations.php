@@ -20,7 +20,7 @@ trait BlogOperations
     {
         return self::where('domain', $host)
             ->orWhere('slug', $slug)
-            ->firstOrFail();
+            ->first();
     }
 
 }

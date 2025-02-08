@@ -2,25 +2,34 @@
     <div class="min-h-full">
         <div class="mt-6 px-4 sm:px-6 lg:px-8">
             <h2 class="text-sm font-medium text-gray-900">
-                {{ __blog('Pined Categories') }}
+                {{ __blog('Pinned Categories') }}
             </h2>
             <ul 
                 role="list" 
                 class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
                 <li 
-                    v-for="category in pinedCategories" 
+                    v-for="category in pinnedCategories" 
                     :key="category.id" 
                     class="relative col-span-1 flex rounded-md shadow-sm">
-                    <div :class="[category.bgColorClass, 'flex w-16 shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white']">
-                        {{ category.initials }}
+                    <div 
+                        :class="[
+                            'bg-' + ['red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink'][category.id % 7] + '-600',
+                            'flex w-16 shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white'
+                        ]">
+                        <span class="text-lg">{{ category.name.charAt(0) }}</span>
                     </div>
                     <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
                         <div class="flex-1 truncate px-4 py-2 text-sm">
                             <a href="#" class="font-medium text-gray-900 hover:text-gray-600">
-                                {{ category.title }}
+                                {{ category.name }}
                             </a>
-                            <p class="text-gray-500">
-                                {{ category.totalMembers }} {{ __blog('Posts') }}
+                            <p v-if="category.posts_count > 0" class="text-gray-500">
+                                {{ category.posts_count }} 
+                                <span v-if="category.posts_count > 1">{{ __blog('posts') }}</span>
+                                <span v-else>{{ __blog('post') }}</span>
+                            </p>
+                            <p v-else class="text-gray-500">
+                                {{ __blog('No posts') }}
                             </p>
                         </div>
                         <Menu as="div" class="shrink-0 pr-2">
@@ -42,16 +51,16 @@
                                     <div class="py-1">
                                         <MenuItem v-slot="{ active }">
                                             <a 
-                                                href="#" 
+                                                @click="unpinCategory(category)"
                                                 :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
                                                 {{ __blog('Remove from pinned') }}
                                             </a>
                                         </MenuItem>
                                         <MenuItem v-slot="{ active }">
                                             <a 
-                                                href="#" 
+                                                @click="categoryBeingEdited = category"
                                                 :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
-                                                {{ __blog('Share') }}
+                                                {{ __blog('Edit') }}
                                             </a>
                                         </MenuItem>
                                     </div>
@@ -61,12 +70,19 @@
                     </div>
                 </li>
             </ul>
+            <edit-category-modal 
+                v-if="categoryBeingEdited"
+                :key="'edit-category-modal-' + categoryBeingEdited?.id"
+                :categories="categories"
+                :category-being-edited="categoryBeingEdited"
+                @cancelEdit="categoryBeingEdited = null"
+                @saveCategoryEdit="categoryEdited" />
         </div>
 
         <!-- Projects list (only on smallest breakpoint) -->
         <div class="mt-10 sm:hidden">
             <div class="px-4 sm:px-6">
-                <h2 class="text-sm font-medium text-gray-900">Projects</h2>
+                <h2 class="text-sm font-medium text-gray-900">Posts</h2>
             </div>
             <ul role="list" class="mt-3 divide-y divide-gray-100 border-t border-gray-200">
                 <li 
@@ -76,6 +92,7 @@
                         <span class="flex items-center space-x-3 truncate">
                             <span :class="[post.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></span>
                         </span>
+                        {{ post.title }}
                         <ChevronRightIcon class="ml-4 size-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     </a>
                 </li>
@@ -128,24 +145,31 @@
                                         <MenuItems class="absolute right-10 top-3 z-10 mx-3 mt-1 w-48 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                                             <div class="py-1">
                                                 <MenuItem v-slot="{ active }">
-                                                    <a 
-                                                        href="#" 
+                                                    <router-link 
+                                                        :to="{
+                                                            name: 'BlogPostsEditor',
+                                                            params: { id: post.id }
+                                                        }"
                                                         :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
                                                         {{ __blog('Edit') }}
-                                                    </a>
+                                                    </router-link>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                    <a 
-                                                        href="#" 
+                                                    <router-link
+                                                        :to="{
+                                                            name: 'BlogPostsShow',
+                                                            params: { id: post.id }
+                                                        }"
                                                         :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
                                                         {{ __blog('Admin view') }}
-                                                    </a>
+                                                    </router-link>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
                                                     <a 
                                                         href="#" 
+                                                        target="_blank"
                                                         :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
-                                                        {{ __blog('Blog view') }}
+                                                        {{ __blog('Site siew') }}
                                                     </a>
                                                 </MenuItem>
                                             </div>
@@ -176,18 +200,22 @@
     import { useGlobalStore } from '@blogStore/globalStore'; 
     import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
     import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
+    import { unpinCategory } from '@blogModels/blog-category/helpers/utils';
+    import EditCategoryModal from '@blogModels/blog-category/components/category-selector/EditCategoryModal.vue';
 
     export default {
         name: 'BlogDashboardView',
         setup() {
             const globalStore = useGlobalStore();
             const { blog, categories, posts, postFilters  } = toRefs(globalStore);
+            const fetchCategories = globalStore.fetchCategories;
 
             watch(postFilters, async () => {
                 await globalStore.fetchPosts();
             });
 
             return {
+                fetchCategories,
                 blog,
                 categories,
                 posts,
@@ -201,13 +229,26 @@
             MenuItems,
             ChevronRightIcon,
             EllipsisVerticalIcon,
+            EditCategoryModal,
+        },
+        data() {
+            return {
+                categoryBeingEdited: null,
+            }
         },
         mounted() {
             this.$setTitle(this.__blog('Dashboard'));
         },
         computed: {
-            pinedCategories() {
-                return this.categories.filter((category) => category.pinned === 1);
+            pinnedCategories() {
+                return this.categories.filter((category) => category.pinned === 1 || category.pinned === true);
+            },
+        },
+        methods: {
+            unpinCategory,
+            categoryEdited(category) {
+                this.categoryBeingEdited = null;
+                this.fetchCategories();
             },
         }
     };

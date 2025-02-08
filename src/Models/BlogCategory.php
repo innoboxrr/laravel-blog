@@ -31,6 +31,7 @@ class BlogCategory extends Model
     protected $fillable = [
         'name',
         'slug',
+        'pinned',
         'order',
         'description',
         'parent_id',
@@ -40,6 +41,7 @@ class BlogCategory extends Model
     protected $creatable = [
         'name',
         'slug',
+        'pinned',
         'order',
         'description',
         'parent_id',
@@ -49,12 +51,15 @@ class BlogCategory extends Model
     protected $updatable = [
         'name',
         'slug',
+        'pinned',
         'order',
         'description',
         'parent_id',
     ];
 
-    protected $casts = [];
+    protected $casts = [
+        'pinned' => 'boolean',
+    ];
 
     protected $protected_metas = [];
 

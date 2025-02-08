@@ -85,6 +85,21 @@
                                                 <span class="truncate">
                                                     {{ categoryDashIndentation(category.level) + category.name }}
                                                 </span>
+                                                <!-- Pin icon to pin category -->
+                                                <a 
+                                                    v-if="category.pinned"
+                                                    @click="unpinCategory(category)"
+                                                    class="ml-auto text-gray-400 hover:text-gray-500" 
+                                                    aria-label="Pin category">
+                                                    <i class="fas fa-thumbtack opacity-90 hover:opacity-65"></i>
+                                                </a>
+                                                <a 
+                                                    v-else
+                                                    @click="pinCategory(category)"
+                                                    class="ml-auto text-gray-400 hover:text-gray-500" 
+                                                    aria-label="Pin category">
+                                                    <i class="fas fa-thumbtack rotate-45 opacity-40 hover:opacity-75"></i>
+                                                </a> 
                                             </a>
                                         </div>
                                     </div>
@@ -150,6 +165,21 @@
                                 <span class="truncate">
                                     {{ categoryDashIndentation(category.level) + category.name }}
                                 </span>
+                                <!-- Pin icon to pin category -->
+                                <a 
+                                    v-if="category.pinned"
+                                    @click="unpinCategory(category)"
+                                    class="ml-auto text-gray-400 hover:text-gray-500" 
+                                    aria-label="Pin category">
+                                    <i class="fas fa-thumbtack opacity-90 hover:opacity-65"></i>
+                                </a>
+                                <a 
+                                    v-else
+                                    @click="pinCategory(category)"
+                                    class="ml-auto text-gray-400 hover:text-gray-500" 
+                                    aria-label="Pin category">
+                                    <i class="fas fa-thumbtack rotate-45 opacity-40 hover:opacity-75"></i>
+                                </a>    
                             </a>
                         </div>
                     </div>
@@ -218,7 +248,7 @@
     import { watch, toRefs, getCurrentInstance } from 'vue';
     import { debounce } from 'innoboxrr-js-libs/libs/utils';
     import { useGlobalStore } from '@blogStore/globalStore';
-    import { categoryDashIndentation } from '@blogModels/blog-category/helpers/utils';
+    import { categoryDashIndentation, pinCategory, unpinCategory } from '@blogModels/blog-category/helpers/utils';
     import { useTranslationsStore } from '@blogStore/translationsStore';
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
     import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline'
@@ -325,6 +355,8 @@
         },
         methods: {
             categoryDashIndentation,
+            pinCategory,
+            unpinCategory,
         },
     };
 </script>

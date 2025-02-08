@@ -21,7 +21,7 @@
                         v-for="cat in categories"
                         :key="cat.id"
                         :value="cat.id"
-                        :disabled="cat.id === category.id">
+                        :disabled="cat.id === category.id || cat.parent_id === category.id">
                         {{ categoryDashIndentation(cat.level) + cat.name }}
                     </option>
                 </select>
@@ -55,15 +55,9 @@
 </template>
 
 <script>
-    import {
-        updateModel as updateCategoryModel
-    } from '@blogModels/blog-category'
-    import { 
-        categoryDashIndentation
-    } from '@blogModels/blog-category/helpers/utils';
-    import {
-        TextareaInputComponent,
-    } from 'innoboxrr-form-elements'
+    import { updateModel as updateCategoryModel } from '@blogModels/blog-category'
+    import { categoryDashIndentation } from '@blogModels/blog-category/helpers/utils';
+    import { TextareaInputComponent } from 'innoboxrr-form-elements'
     export default {
         components: {
             TextareaInputComponent,

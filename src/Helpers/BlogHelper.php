@@ -81,9 +81,9 @@ class BlogHelper
     public static function route($name, $parameters = [], $absolute = true)
     {
         if(self::contextIsApp()){
-            return route('blog.app.' . $name, $parameters, $absolute);
+            return route('blog.app.' . $name, $parameters['app'], $absolute);
         } elseif(self::contextIsBlog()){
-            return route('blog.' . $name, $parameters, $absolute);
+            return route('blog.' . $name, array_merge($parameters['blog'], ['domain' => self::getBlogDomain()]), $absolute);
         }
     }
 }

@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Put your description here.">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/gulpfile.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
         <title>@yield('title', 'Mi Paquete')</title>
         <link rel="stylesheet" href="{{ blog_assets('default', 'css', 'main.css') }}" type="text/css" />

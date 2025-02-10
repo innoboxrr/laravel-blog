@@ -18,7 +18,7 @@ const navigation = [
     // { name: __blog('Posts'), href: '#', icon: ClockIcon, current: false },
     // { name: __blog('Tags'), href: '#', icon: TagIcon, current: false },
     // { name: __blog('Subscribers'), href: '#', icon: UserGroupIcon, current: false },
-    // { name: __blog('Settings'), href: '#', icon: CogIcon, current: false },
+    { name: __blog('Settings'), path: 'BlogAppSettings', params: {}, query: {}, icon: CogIcon, current: false },
 ];
 
 export const useGlobalStore = defineStore('blog-global', {

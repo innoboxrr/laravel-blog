@@ -62,6 +62,24 @@ return [
 
 	'file_disk' => 's3',
 
-	'file_directory' => 'public/blogs',
+	'file_directory' => 'public/blogs', // Para S3 de AWS
+
+	'assets_mime_types' => [
+        'css'   => 'text/css',
+        'js'    => 'application/javascript',
+        'html'  => 'text/html',
+        'htm'   => 'text/html',
+        'png'   => 'image/png',
+        'jpg'   => 'image/jpeg',
+        'jpeg'  => 'image/jpeg',
+        'gif'   => 'image/gif',
+        'woff2' => 'font/woff2',
+        'woff'  => 'font/woff',
+        'ttf'   => 'font/ttf',
+    ],
+
+    'assets_cdn_enabled' => env('LARAVEL_BLOG_CDN_ENABLED', false),
+
+    'assets_cdn_url' => env('LARAVEL_BLOG_CDN_URL', ''),
 	
 ];

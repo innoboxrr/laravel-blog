@@ -1,10 +1,9 @@
-import { createPinia } from 'pinia';
 import BlogApp from './src/BlogApp.vue';
-import { TranslatePlugin, TitlePlugin } from './src/plugins';
 import blogRoutes from './src/routes';
+import { createPinia } from 'pinia';
+import { TranslatePlugin, TitlePlugin } from './src/plugins';
 
 const piniaInstance = createPinia();
-
 export const routes = blogRoutes;
 
 export default {

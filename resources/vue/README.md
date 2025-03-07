@@ -172,7 +172,7 @@ module.exports = {
 
 ## Uso del Paquete
 
-### Tienda Global con Pinia
+### Store Global con Pinia
 `innoboxrr-vue-blog` utiliza una tienda global para manejar el estado del blog. El estado inicial del blog debe pasarse como `prop` al componente `BlogApp` y sincronizarse con la tienda global.
 
 **Ejemplo:**

@@ -97,6 +97,18 @@
                 validators="required"
                 v-model="content" />
 
+            <!--Mostrar subtitulos -->
+            <editor-input-component
+                class="mt-4"
+                id="video-subtitles"
+                :file="false"
+                name="subtitles"
+                :height="500"
+                :label="__blog('Subtitles')"
+                :placeholder="__blog('Subtitles')"
+                validators="required"
+                v-model="subtitles" />
+
             <button-component
                 @click="submit"
                 :custom-class="buttonClass"
@@ -123,7 +135,7 @@
         props: {
             blogId: {
                 type: [String, Number],
-                required: true,
+                default: null,
             },
         },
 
@@ -149,6 +161,7 @@
                 // Content
                 title: undefined,
                 content: undefined,
+                subtitles: undefined,
             };
         },
 
@@ -251,7 +264,7 @@
 
             async uploadCompleted() {
                 this.isProcessing = true;
-                let {message, title, content} = await makeHttpRequest(
+                let {message, title, content, subtitles} = await makeHttpRequest(
                     'POST', 
                     route('api.larablog.blog.lambda'),
                     {
@@ -266,6 +279,7 @@
                 );
                 this.title = title;
                 this.content = content;
+                this.subtitles = subtitles.replace(/\n/g, '<br>');
                 this.isProcessing = false;
             },
 
@@ -287,6 +301,7 @@
                     title: this.title,
                     slug: slugify(this.title),
                     content: this.content,
+                    subtitles: this.subtitles,
                 });
             },
         },

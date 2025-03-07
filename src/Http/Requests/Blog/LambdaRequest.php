@@ -11,7 +11,7 @@ use Innoboxrr\LaravelBlog\Services\Lambda\LambdaService;
 
 class LambdaRequest extends FormRequest
 {
-    protected Blog $blog;
+    protected ?Blog $blog; 
 
     protected function prepareForValidation()
     {
@@ -20,8 +20,14 @@ class LambdaRequest extends FormRequest
 
     public function authorize()
     {
-        $this->blog = Blog::findOrFail($this->blog_id);
-        return $this->user()->can('update', $this->blog);
+        $this->blog = Blog::find($this->blog_id);
+        if($this->blog) {
+            return $this->user()->can('update', $this->blog);
+        } else {
+            // PENDIENTE - Validar si el usuario tiene permisos para realizar la acción
+            // Esto es para usar esta herramienta como tools
+            return true;
+        }
     }
 
     public function rules()
@@ -29,7 +35,7 @@ class LambdaRequest extends FormRequest
         return [
             'action' => 'required|string',
             'payload' => 'sometimes|array',
-            'blog_id' => 'required|numeric'
+            'blog_id' => 'nullable'
         ];
     }
 

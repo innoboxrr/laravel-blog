@@ -21,17 +21,6 @@ class VideoToTextAIAction
         return $instance->process();
     }
 
-    public static function after($data, $payload, $response)
-    {
-        // Eliminar el archivo de audio del bucket de S3
-        $videoS3Url = $data['payload']['s3Url'];
-        $videoS3Path = parse_url($videoS3Url, PHP_URL_PATH);
-        $audioS3Path = $payload['data']['s3Url'];
-        $audioS3Path = parse_url($audioS3Path, PHP_URL_PATH);
-        Storage::disk('s3')->delete($videoS3Path);
-        Storage::disk('s3')->delete($audioS3Path);
-    }
-
     protected function process()
     {
         // Procesar el video y convertir a audio y recuperar la URL de S3
@@ -93,5 +82,16 @@ class VideoToTextAIAction
 
         // Devolver la ruta del archivo procesado en S3
         return Storage::disk('s3')->url($audioS3Path);
+    }
+
+    public static function after($data, $payload, $response)
+    {
+        // Eliminar el archivo de audio del bucket de S3
+        $videoS3Url = $data['payload']['s3Url'];
+        $videoS3Path = parse_url($videoS3Url, PHP_URL_PATH);
+        $audioS3Path = $payload['data']['s3Url'];
+        $audioS3Path = parse_url($audioS3Path, PHP_URL_PATH);
+        Storage::disk('s3')->delete($videoS3Path);
+        Storage::disk('s3')->delete($audioS3Path);
     }
 }

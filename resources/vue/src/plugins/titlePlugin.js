@@ -2,10 +2,14 @@ import { useGlobalStore } from '@blogStore/globalStore';
 
 export default {
     install(app) {
-        const globalStore = useGlobalStore();
+
+        const getGlobalStore = () => {
+            return useGlobalStore();
+        }
 
         // Función para cambiar el título
         const setTitle = (newTitle) => {
+            const globalStore = getGlobalStore();
             globalStore.title = newTitle;
             document.title = newTitle; // Actualizar el título del documento
         };

@@ -243,120 +243,109 @@
     </div>
 </template>
 
-
 <script>
-    import { watch, toRefs, getCurrentInstance } from 'vue';
-    import { debounce } from 'innoboxrr-js-libs/libs/utils';
-    import { useGlobalStore } from '@blogStore/globalStore';
-    import { categoryDashIndentation, pinCategory, unpinCategory } from '@blogModels/blog-category/helpers/utils';
-    import { useTranslationsStore } from '@blogStore/translationsStore';
-    import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
-    import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-    import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
-    import DesktopAuthorDropdown from '@blogComponents/DesktopAuthorDropdown.vue';
-    import MobileAuthorDropdown from '@blogComponents/MobileAuthorDropdown.vue';
+import { debounce } from 'innoboxrr-js-libs/libs/utils';
+import { useGlobalStore } from '@blogStore/globalStore';
+import { useTranslationsStore } from '@blogStore/translationsStore';
+import { categoryDashIndentation, pinCategory, unpinCategory } from '@blogModels/blog-category/helpers/utils';
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
+import DesktopAuthorDropdown from '@blogComponents/DesktopAuthorDropdown.vue';
+import MobileAuthorDropdown from '@blogComponents/MobileAuthorDropdown.vue';
 
-    export default {
-        name: 'BlogDashboardView',
-        components: {
-            TransitionRoot,
-            Dialog,
-            DialogPanel,
-            TransitionChild,
-            Bars3CenterLeftIcon,
-            XMarkIcon,
-            MagnifyingGlassIcon,
-            DesktopAuthorDropdown,
-            MobileAuthorDropdown,
+export default {
+    name: 'BlogDashboardView',
+    components: {
+        TransitionRoot,
+        Dialog,
+        DialogPanel,
+        TransitionChild,
+        Bars3CenterLeftIcon,
+        XMarkIcon,
+        MagnifyingGlassIcon,
+        DesktopAuthorDropdown,
+        MobileAuthorDropdown,
+    },
+    props: {
+        blog: {
+            type: Object,
+            required: true
         },
-        props: {
-            blog: {
-                type: Object,
-                required: true, // Asegúrate de pasar el blog desde el componente padre
-            },
-            lang: {
-                type: String,
-                default: 'en',
-            },
-        },
-        setup(props) {
-            // 1. Importar stores
-            const globalStore = useGlobalStore();
-            const translationsStore = useTranslationsStore();
-
-            // 2. Acceder a propiedades globales
-            const instance = getCurrentInstance();
-            const $blogLoadLocale = instance?.appContext.config.globalProperties.$blogLoadLocale;
-
-            // 3. Referenciar datos reactivos del store global
-            const { navigation, title, categories } = toRefs(globalStore);
-
-            // 4. Establecer el blog inicial
-            const initializeBlog = () => {
-                globalStore.initBlog(props.blog);
-            };
-
-            // 5. Cargar el idioma inicial
-            const initializeLocale = () => {
-                if (translationsStore.currentLang !== props.lang) {
-                    $blogLoadLocale(props.lang);
-                }
-            };
-
-            // 6. Configurar watchers reactivos
-            const setupWatchers = () => {
-                // Vigilar cambios en el blog
-                watch(
-                    () => props.blog,
-                    (newBlog) => {
-                        globalStore.initBlog(newBlog);
-                    },
-                    { immediate: true }
-                );
-
-                // Vigilar cambios en el idioma (lang)
-                watch(
-                    () => props.lang,
-                    (newLang) => {
-                        $blogLoadLocale(newLang);
-                    },
-                    { immediate: true }
-                );
-            };
-
-            // Mecanismo de filtrado
-            const postFilters = {
+        lang: {
+            type: String,
+            default: 'en'
+        }
+    },
+    data() {
+        return {
+            sidebarOpen: false,
+            postFilters: {
                 category_id: null,
-                search: '',
-            };
-
-            const updateFilters = debounce(() => {
-                globalStore.setPostFilters(postFilters);
-            }, 300);
-
-            // 7. Inicializar lógica
-            initializeBlog();
-            initializeLocale();
-            setupWatchers();
-
-            // 8. Retornar propiedades reactivas
-            return {
-                navigation,
-                title,
-                categories,
-                postFilters,
-                updateFilters,
-            };
+                search: ''
+            },
+            globalStore: null,
+            translationsStore: null,
+            blogLoadLocale: null
+        };
+    },
+    computed: {
+        navigation() {
+            return this.globalStore ? this.globalStore.navigation : [];
         },
-        data() {
-            return {
-                sidebarOpen: false,
+        title() {
+            return this.globalStore ? this.globalStore.title : '';
+        },
+        categories() {
+            return this.globalStore ? this.globalStore.categories : [];
+        }
+    },
+    created() {
+        // Inicializar los stores de Pinia
+        this.globalStore = useGlobalStore();
+        this.translationsStore = useTranslationsStore();
+        // Acceder a la función global para cargar el idioma (registrada por el plugin)
+        this.blogLoadLocale = this.$.appContext.config.globalProperties.$blogLoadLocale;
+        // Establecer el blog y cargar el idioma inicial
+        this.globalStore.initBlog(this.blog);
+        if (this.translationsStore.currentLang !== this.lang && this.blogLoadLocale) {
+            this.blogLoadLocale(this.lang);
+        }
+    },
+    watch: {
+        blog(newBlog) {
+            if (this.globalStore) {
+                this.globalStore.initBlog(newBlog);
             }
         },
-        methods: {
-            categoryDashIndentation,
-            pinCategory,
-            unpinCategory,
+        lang(newLang) {
+            if (this.blogLoadLocale) {
+                this.blogLoadLocale(newLang);
+            }
         },
-    };
+        'postFilters.search': {
+            handler: debounce(function () {
+                if (this.globalStore) {
+                    this.globalStore.setPostFilters(this.postFilters);
+                }
+            }, 300),
+            immediate: false
+        },
+        'postFilters.category_id'(newVal) {
+            if (this.globalStore) {
+                this.globalStore.setPostFilters(this.postFilters);
+            }
+        }
+    },
+    methods: {
+        categoryDashIndentation,
+        pinCategory,
+        unpinCategory,
+        updateFilters() {
+            if (this.globalStore) {
+                this.globalStore.setPostFilters(this.postFilters);
+            }
+        }
+    }
+};
 </script>

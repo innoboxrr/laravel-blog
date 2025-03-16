@@ -7,16 +7,19 @@ const defaultTranslations = { es, en };
 
 export default {
     install(app, options = {}) {
-
-        const translationsStore = useTranslationsStore();
-
-        // Cargar locales personalizados si se proporcionan
-        const customLocales = options.locales || {};
+        // En lugar de llamar inmediatamente a useTranslationsStore(),
+        // definimos una función que la invoque cuando se requiera.
+        const getTranslationsStore = () => {
+            return useTranslationsStore();
+        };
 
         // Función para cargar el idioma
         const blogLoadLocale = async (lang) => {
             try {
+                const translationsStore = getTranslationsStore();
+
                 // Usar traducciones personalizadas si están disponibles, con respaldo en las predeterminadas
+                const customLocales = options.locales || {};
                 const translationsForLang = customLocales[lang] || defaultTranslations[lang];
 
                 if (!translationsForLang) {
@@ -35,14 +38,14 @@ export default {
 
         // Función para traducir cadenas
         const translate = (string) => {
-            return translationsStore.translate(string);
+            return getTranslationsStore().translate(string);
         };
 
-        // 1. Registrar como propiedades globales
+        // Registrar como propiedades globales
         app.config.globalProperties.__blog = translate;
         app.config.globalProperties.$blogLoadLocale = blogLoadLocale;
 
-        // 2. Registrar como inyectables
+        // Registrar como inyectables
         app.provide('__blog', translate);
         app.provide('$blogLoadLocale', blogLoadLocale);
 

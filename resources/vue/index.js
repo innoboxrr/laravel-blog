@@ -3,18 +3,18 @@ import blogRoutes from './src/routes';
 import { createPinia } from 'pinia';
 import { TranslatePlugin, TitlePlugin } from './src/plugins';
 
-const piniaInstance = createPinia();
 export const routes = blogRoutes;
 
 export default {
     install(app, options = {}) {
-        if (!app.config.globalProperties.$pinia) {
-            app.use(piniaInstance);
+        if (!options.pinia) {
+            console.warn('Se recomienda proveer la instancia de Pinia desde la app principal');
+            app.use(createPinia());
+        } else {
+            app.use(options.pinia);
         }
-
         app.use(TranslatePlugin, options.translateOptions || {});
         app.use(TitlePlugin);
-
         app.component('BlogApp', BlogApp);
     },
     piniaInstance,

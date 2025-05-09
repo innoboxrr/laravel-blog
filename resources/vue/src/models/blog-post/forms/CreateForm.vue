@@ -32,7 +32,9 @@
 
         <editor-input-component
             :id="`content-${formId}`"
-            :file="false"
+            :file="true"
+            :uploadUrl="fileUploadUrl"
+            :onFileUploadSuccess="handleFileUploadSuccess"
             name="content"
             :height="500"
             :label="__blog('Content')"

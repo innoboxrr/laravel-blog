@@ -122,7 +122,9 @@
             <editor-input-component
                 class="mt-4"
                 id="video-content"
-                :file="false"
+                :file="true"
+                :uploadUrl="fileUploadUrl"
+                :onFileUploadSuccess="handleFileUploadSuccess"
                 name="content"
                 :height="500"
                 :label="__blog('Content')"

@@ -58,11 +58,44 @@ class Blog extends Model
 
     protected $casts = [
         'status' => BlogStatus::class,
+        'payload' => 'json',
     ];
 
     protected $protected_metas = [];
 
-    protected $editable_metas = [];
+    protected $editable_metas = [
+        'author_name',
+
+        'author_social_x-twitter',
+        'author_social_facebook',
+        'author_social_instagram',
+        'author_social_linkedin',
+        'author_social_github',
+        'author_social_tiktok',
+        'author_social_youtube',
+        'author_social_pinterest',
+        'author_social_snapchat',
+        'author_social_whatsapp',
+        'author_social_telegram',
+        'author_social_discord',
+        'author_social_reddit',
+
+        'blog_footer_text',
+        
+        'blog_social_x-twitter',
+        'blog_social_facebook',
+        'blog_social_instagram',
+        'blog_social_linkedin',
+        'blog_social_github',
+        'blog_social_tiktok',
+        'blog_social_youtube',
+        'blog_social_pinterest',
+        'blog_social_snapchat',
+        'blog_social_whatsapp',
+        'blog_social_telegram',
+        'blog_social_discord',
+        'blog_social_reddit',
+    ];
 
     public static $export_cols = [
         'name',

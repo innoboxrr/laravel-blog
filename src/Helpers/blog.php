@@ -15,15 +15,9 @@ if (!function_exists('blog_post_route')) {
         return blog_route(
             'post', 
             [
-                'app' => [
-                    'blog' => $post->blog_id, 
-                    'postSlug' => $post->slug
-                ], 
-                'blog' => [
-                    'postSlug' => $post->slug
-                    ]
-                ]
-            );
+                'blog' => $post->blog_id, 
+                'postSlug' => $post->slug
+            ]);
     }
 }
 
@@ -33,17 +27,9 @@ if(!function_exists('blog_assets')) {
         return blog_route(
             'assets', 
             [
-                'app' => [
-                    'theme' => $theme, 
-                    'folder' => $folder, 
-                    'path' => $path
-                ], 
-                'blog' => [
-                    'theme' => $theme, 
-                    'folder' => $folder, 
-                    'path' => $path
-                    ]
-                ]
-            );
+                'theme' => $theme, 
+                'folder' => $folder, 
+                'path' => $path
+        ]);
     }
 }

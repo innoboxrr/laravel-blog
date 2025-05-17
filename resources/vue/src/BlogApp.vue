@@ -1,5 +1,8 @@
 <template>
-    <div class="min-h-full">
+    <div class="flex flex-col"
+        :class="{'xl:pl-72': sidebarOpen}"
+        style="height: calc(100vh - 54px)">
+        
         <!-- Mobile sidebar -->
         <TransitionRoot 
             as="template" 
@@ -186,7 +189,8 @@
                 </nav>
             </div>
         </div>
-        <div class="flex flex-col lg:pl-64">
+
+        <div class="flex flex-col lg:pl-64 overflow-hidden" style="height: calc(100vh - 54px)">
             <!-- Search header -->
             <div class="sticky top-0 z-10 flex h-16 shrink-0 border-b border-gray-200 bg-white lg:hidden">
                 <button 
@@ -218,7 +222,8 @@
                     </div>
                 </div>
             </div>
-            <main class="flex-1">
+            
+            <main id="BlogAppMainWrapper" class="flex-1 overflow-y-auto">
                 <div class="border-b border-gray-200 px-4 py-2 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 hidden md:flex">
                     <div class="min-w-0 flex-1">
                         <h1 class="text-lg/6 font-medium text-gray-900 sm:truncate">

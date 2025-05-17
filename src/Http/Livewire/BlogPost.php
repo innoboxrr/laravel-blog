@@ -9,11 +9,11 @@ class BlogPost extends Component
 {
     public $post;
 
-    public function mount($postSlug)
+    public function mount($post)
     {
-        $this->post = BlogPostModel::where(function ($query) use ($postSlug) {
-                $query->where('slug', $postSlug)
-                    ->orWhere('id', $postSlug);
+        $this->post = BlogPostModel::where(function ($query) use ($post) {
+                $query->where('slug', $post)
+                    ->orWhere('id', $post);
             })
             ->where('blog_id', $this->blog->id)
             ->firstOrFail();
@@ -21,8 +21,8 @@ class BlogPost extends Component
 
     public function render()
     {
-        return view("$this->themeView.blog-post-view")
-            ->extends($this->themeLayout)
-            ->section('content');
+        return $this->renderView('post', [
+            'post' => $this->post,
+        ]);
     }
 }

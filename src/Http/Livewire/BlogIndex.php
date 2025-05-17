@@ -10,15 +10,27 @@ class BlogIndex extends Component
 {
     use WithPagination;
 
+    public $search;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+    ];
+
+    public function mount()
+    {
+        
+    }
+
+    private function getPosts()
+    {
+        return BlogPost::where('blog_id', $this->blog->id)
+            ->paginate(10);
+    }
+
     public function render()
     {
-        $posts = BlogPost::where('blog_id', $this->blog->id)
-            ->paginate(10);
-
-        return view("$this->themeView.blog-index-view", [
-                'posts' => $posts
-            ])
-            ->extends($this->themeLayout)
-            ->section('content');
+        return $this->renderView('index', [
+            'posts' => $this->getPosts(),
+        ]);
     }
 }

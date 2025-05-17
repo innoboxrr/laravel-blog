@@ -3,10 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Innoboxrr\LaravelBlog\Http\Controllers\BlogController;
 use Innoboxrr\LaravelBlog\Http\Livewire\BlogIndex;
+use Innoboxrr\LaravelBlog\Http\Livewire\BlogContact;
 use Innoboxrr\LaravelBlog\Http\Livewire\BlogPost;
+use Innoboxrr\LaravelBlog\Http\Livewire\BlogCategory;
 
 Route::domain('blog.{domain}')->where(['domain' => '.+'])->group(function () {
     Route::get('/', BlogIndex::class)->name('index');
-    Route::get('/post/{postSlug}', BlogPost::class)->name('post');
+    Route::get('/contact', BlogContact::class)->name('contact');
+    Route::get('/post/{post}', BlogPost::class)->name('post');
+    Route::get('/category/{category}', BlogCategory::class)->name('category');
     Route::get('/blog-assets', [BlogController::class, 'assets'])->name('assets');
 });

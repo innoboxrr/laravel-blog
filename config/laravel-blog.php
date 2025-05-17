@@ -81,5 +81,32 @@ return [
     'assets_cdn_enabled' => env('LARAVEL_BLOG_CDN_ENABLED', false),
 
     'assets_cdn_url' => env('LARAVEL_BLOG_CDN_URL', ''),
+
+	'layout_data' => [
+		'title' => 'Blog',
+		'logo' => url('/site/favicon/logo.png'),
+		'metaDescription' => 'Este es un blog sobre Laravel, Vue y más.',
+		'metaKeywords' => 'Laravel, VueJS, programación, tutoriales',
+		'metaAuthor' => 'Raúl RJR',
+
+		'ogTitle' => 'Título para Facebook',
+		'ogDescription' => 'Descripción atractiva para Open Graph',
+		'ogImage' => asset('images/og.jpg'),
+		'ogSiteName' => 'Blog Técnico',
+
+		'twitterTitle' => 'Título para Twitter',
+		'twitterDescription' => 'Descripción breve para Twitter',
+		'twitterImage' => asset('images/twitter-card.jpg'),
+		'twitterSite' => '@InnoboxRR',
+		'twitterCreator' => '@RaulDev',
+
+		'canonical' => url()->current(),
+
+		'schemaName' => 'Blog ProfeMX',
+		'schemaUrl' => url('/'),
+		'schemaDescription' => 'Blog educativo de desarrollo web',
+		'schemaPublisher' => 'InnoboxR&R',
+		'schemaLogo' => asset('images/logo.png'),
+	],
 	
 ];

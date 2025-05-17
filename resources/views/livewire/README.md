@@ -14,6 +14,7 @@ Cada tema sigue la siguiente estructura:
 ```
 themes/
 ├── default/             # Tema predeterminado
+|   ├── assets
 │   ├── components/      # Componentes Livewire específicos del tema
 │   │   └── subscribe-component.blade.php
 │   ├── layout/          # Layout principal del tema

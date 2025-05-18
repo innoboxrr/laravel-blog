@@ -38,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
             new RecursiveDirectoryIterator($livewirePath)
         );
 
+        $components = [];
+
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
                 // Generar la clase a partir de la ruta
@@ -67,8 +69,13 @@ class AppServiceProvider extends ServiceProvider
 
                     // Registrar el componente en Livewire
                     Livewire::component($viewName, $class);
+
+                    // Agregar el componente al array
+                    $components[$viewName] = $class;
                 }
             }
         }
+
+        //dd($components);
     }
 }

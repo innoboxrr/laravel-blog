@@ -35,6 +35,7 @@ class BaseLivewireComponent extends Component
                 'themeDir' => "laravel-blog::livewire.themes.{$this->theme}",
                 'themeView' => "laravel-blog::livewire.themes.{$this->theme}.views",
                 'themeLayout' => "laravel-blog::livewire.themes.{$this->theme}.layout.app",
+                'themeComponents' => "laravel-blog::livewire.themes.{$this->theme}.components",
             ];
         });
     }
@@ -94,5 +95,10 @@ class BaseLivewireComponent extends Component
         return view("{$this->themeConfig['themeView']}.blog-$view-view", $data)
             ->extends($this->themeConfig['themeLayout'], $this->getLayoutData($layout))
             ->section($section);
+    }
+
+    protected function renderComponent($component, $data = [])
+    {
+        return view("{$this->themeConfig['themeComponents']}.$component", $data);
     }
 }

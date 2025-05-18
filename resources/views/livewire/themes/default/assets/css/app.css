@@ -344,7 +344,7 @@ video {
 }
 
 @font-face {
-    font-family: Merriweather;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 400;
     font-display: swap;
@@ -353,7 +353,7 @@ video {
 }
 
 @font-face {
-    font-family: Merriweather;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 700;
     font-display: swap;
@@ -362,7 +362,7 @@ video {
 }
 
 @font-face {
-    font-family: Merriweather;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 900;
     font-display: swap;
@@ -1176,7 +1176,7 @@ video {
 }
 
 .font-serif {
-    font-family: Merriweather, serif
+    font-family: Roboto, serif
 }
 
 .text-2xl {
@@ -2276,7 +2276,7 @@ video {
 }
 
 body {
-    font-family: Merriweather, serif
+    font-family: Roboto, serif
 }
 
 .font-primary {
@@ -2289,7 +2289,7 @@ body {
 }
 
 .font-secondary {
-    font-family: Merriweather, serif;
+    font-family: Roboto, serif;
     font-size: 15px;
     line-height: 30px;
     letter-spacing: -.05px;
@@ -3158,10 +3158,10 @@ body {
 
 .blog-post-article-text {
     margin-bottom: 1rem;
-    font-family: Merriweather, serif;
+    font-family: Roboto, serif;
     font-size: 15px;
     line-height: 30px;
-    letter-spacing: -.05px
+    letter-spacing: -.05px;
 }
 
 @media (min-width: 768px) {
@@ -3180,7 +3180,7 @@ body {
     margin-top: 2.25rem;
     margin-bottom: 2.25rem;
     padding-left: 1.75rem;
-    font-family: Merriweather, serif;
+    font-family: Roboto, serif;
     font-size: 15px;
     font-style: italic;
     line-height: 30px;

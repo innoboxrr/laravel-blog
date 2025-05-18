@@ -10,6 +10,10 @@ trait BlogOperations
         return [
             'author' => [
                 'name' => $this->meta('author_name'),
+                'bio' => $this->meta('author_bio'),
+                'avatar' => $this->meta('author_avatar'),
+                'email' => $this->meta('author_email'),
+
                 'social' => [
                     'x-twitter' => $this->meta('author_social_x-twitter'),
                     'facebook' => $this->meta('author_social_facebook'),
@@ -27,6 +31,7 @@ trait BlogOperations
                 ]
             ],
             'blog' => [
+                'footer_text' => $this->meta('blog_footer_text'),
                 'social' => [
                     'x-twitter' => $this->meta('blog_social_x-twitter'),
                     'facebook' => $this->meta('blog_social_facebook'),

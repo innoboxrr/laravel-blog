@@ -3,14 +3,16 @@ import path from 'path';
 import fs from 'fs';
 import tailwindcss from 'tailwindcss';
 
+// Ruta a input y salida
 const inputPath = path.resolve('assets/css/input.css');
-const outputPath = path.resolve('assets/css/main.css');
-const buildPath = path.resolve('assets/css/build');
+const outputDir = path.resolve('assets/css');
+const outputFile = 'main.css';
+const fullOutputPath = path.join(outputDir, outputFile);
 
-// Elimina main.css si existe
-if (fs.existsSync(outputPath)) {
-    fs.unlinkSync(outputPath);
-    console.log('🧹 Eliminado main.css anterior');
+// Eliminar main.css si ya existe
+if (fs.existsSync(fullOutputPath)) {
+    fs.unlinkSync(fullOutputPath);
+    console.log(`🧹 Eliminado: ${fullOutputPath}`);
 }
 
 export default defineConfig({
@@ -22,10 +24,14 @@ export default defineConfig({
         },
     },
     build: {
+        emptyOutDir: false,
+        outDir: outputDir,
         rollupOptions: {
             input: inputPath,
-        },
-        outDir: buildPath,
-        emptyOutDir: true,
+            output: {
+                assetFileNames: () => outputFile,
+                entryFileNames: () => outputFile, // por si Vite lo considera entrada JS también
+            }
+        }
     }
 });

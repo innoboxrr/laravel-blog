@@ -53,7 +53,8 @@
 <!-- Estilos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ blog_assets('default', 'css', 'main.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ blog_assets('default', 'css', 'main2.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ blog_assets('default', 'css', 'app.css') }}" type="text/css" />
 
 <!-- Scripts -->
 <script src="{{ blog_assets('default', 'js', 'main.js') }}" type="text/javascript"></script>

@@ -13,7 +13,9 @@ use Innoboxrr\LaravelBlog\Models\Traits\Storage\BlogPostStorage;
 use Innoboxrr\LaravelBlog\Models\Traits\Assignments\BlogPostAssignment;
 use Innoboxrr\LaravelBlog\Models\Traits\Operations\BlogPostOperations;
 use Innoboxrr\LaravelBlog\Models\Traits\Mutators\BlogPostMutators;
+use Innoboxrr\LaravelBlog\Models\Traits\Scopes\BlogPostScopes;
 use Innoboxrr\LaravelBlog\Enums\BlogPostStatus;
+use Usamamuneerchaudhary\Commentify\Traits\Commentable;
 
 class BlogPost extends Model
 {
@@ -27,7 +29,9 @@ class BlogPost extends Model
         BlogPostStorage,
         BlogPostAssignment,
         BlogPostOperations,
-        BlogPostMutators;
+        BlogPostScopes,
+        BlogPostMutators,
+        Commentable;
         
     protected $fillable = [
         'title',
@@ -61,6 +65,7 @@ class BlogPost extends Model
     protected $casts = [
         'status' => BlogPostStatus::class,
         'payload' => 'json',
+        'published_at' => 'datetime',
     ];
 
     protected $protected_metas = [];

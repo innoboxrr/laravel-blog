@@ -51,5 +51,21 @@ trait BlogPostOperations
     {
         FeaturedImageService::generateImage($this);
     }
+
+    public function next()
+    {
+        return $this->blog->posts()
+            ->where('id', '>', $this->id)
+            ->orderBy('id', 'asc')
+            ->first();
+    }
+
+    public function previous()
+    {
+        return $this->blog->posts()
+            ->where('id', '<', $this->id)
+            ->orderBy('id', 'desc')
+            ->first();
+    }
     
 }

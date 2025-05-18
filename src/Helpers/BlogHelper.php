@@ -3,7 +3,8 @@
 namespace Innoboxrr\LaravelBlog\Helpers;
 
 use Innoboxrr\LaravelBlog\Models\Blog;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 
 class BlogHelper
 {
@@ -37,6 +38,12 @@ class BlogHelper
     {
         $host = request()->getHost();
         $path = request()->getPathInfo();
+        $referer = request()->headers->get('referer');
+
+        if($path == '/livewire/update') {
+            $refererPath = parse_url($referer, PHP_URL_PATH);
+            $path = $refererPath;
+        }
 
         // Si path inicia como /blog o /blog/ entonces es un blog
         if(!str_starts_with($path, '/blog')){
@@ -68,12 +75,33 @@ class BlogHelper
 
     public static function getBlogFromDomain()
     {
-        return Blog::resolveBlog(self::getBlogDomain());
+        $blog = Blog::resolveBlog(self::getBlogDomain());
+
+        Config::set('session.domain', '.' . $blog->url['host']);
+        Config::set('app.url', $blog->url['scheme'] . '://' . $blog->url['host']);
+        Config::set('app.name', $blog->name);
+
+        $sessionName = str_replace('.', '_', $blog->url['host']) . '_session';
+        Session::setName($sessionName);
+        Config::set('session.cookie', $sessionName);
+
+        $stateful_array = config('sanctum.stateful');
+        array_push($stateful_array, $blog->url['host']);
+        Config::set('sanctum.stateful', $stateful_array);
+
+        return $blog;
     }
 
     public static function getBlogFromPath()
     {
         $path = request()->getPathInfo();
+
+        $referer = request()->headers->get('referer');
+        if($path == '/livewire/update') {
+            $refererPath = parse_url($referer, PHP_URL_PATH);
+            $path = $refererPath;
+        }
+
         $slug = explode('/', $path)[2] ?? null;
         return Blog::find($slug);
     }   

@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build --config vite.config.js && node move.mjs"
+        "build": "vite build --config vite.config.js"
     },
     "devDependencies": {
         "tailwindcss": "^3.4.1",

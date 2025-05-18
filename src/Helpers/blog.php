@@ -16,7 +16,19 @@ if (!function_exists('blog_post_route')) {
             'post', 
             [
                 'blog' => $post->blog_id, 
-                'postSlug' => $post->slug
+                'post' => $post->slug
+            ]);
+    }
+}
+
+if (!function_exists('blog_category_route')) {
+    function blog_category_route($category)
+    {
+        return blog_route(
+            'category', 
+            [
+                'blog' => $category->blog_id, 
+                'category' => $category->slug
             ]);
     }
 }

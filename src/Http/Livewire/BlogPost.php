@@ -23,6 +23,10 @@ class BlogPost extends Component
     {
         return $this->renderView('post', [
             'post' => $this->post,
+            'category' => $this->post->categories()->first(),
+            'tags' => $this->post->tags()->get(),
+            'previous' => $this->post->previous(),
+            'next' => $this->post->next(),
         ]);
     }
 }

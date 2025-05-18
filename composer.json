@@ -42,7 +42,6 @@
         "livewire/livewire": "^3.5",
         "innoboxrr/s3-resumable-uploads": "^1.0",
         "php-ffmpeg/php-ffmpeg": "^1.3",
-        "intervention/image-laravel": "^1.4",
-        "usamamuneerchaudhary/commentify": "^1.5"
+        "intervention/image-laravel": "^1.4"
     }
 }

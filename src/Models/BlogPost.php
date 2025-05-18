@@ -15,6 +15,7 @@ use Innoboxrr\LaravelBlog\Models\Traits\Operations\BlogPostOperations;
 use Innoboxrr\LaravelBlog\Models\Traits\Mutators\BlogPostMutators;
 use Innoboxrr\LaravelBlog\Models\Traits\Scopes\BlogPostScopes;
 use Innoboxrr\LaravelBlog\Enums\BlogPostStatus;
+use Innoboxrr\Wirecomments\Traits\Commentable;
 
 class BlogPost extends Model
 {
@@ -29,7 +30,8 @@ class BlogPost extends Model
         BlogPostAssignment,
         BlogPostOperations,
         BlogPostScopes,
-        BlogPostMutators;
+        BlogPostMutators,
+        Commentable;
         
     protected $fillable = [
         'title',

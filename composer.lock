@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5702b1eed9fe9057de2163ce27805ab4",
+    "content-hash": "1bc0817bcbcb78b3abd45d265578a6c7",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1306,6 +1306,70 @@
                 "source": "https://github.com/innoboxrr/s3-resumable-uploads/tree/v1.0.0"
             },
             "time": "2025-01-20T03:22:10+00:00"
+        },
+        {
+            "name": "innoboxrr/wirecomments",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/innoboxrr/wirecomments.git",
+                "reference": "f1aa18041bc017ece23869fd0c1c139dd45cc969"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/innoboxrr/wirecomments/zipball/f1aa18041bc017ece23869fd0c1c139dd45cc969",
+                "reference": "f1aa18041bc017ece23869fd0c1c139dd45cc969",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "*",
+                "illuminate/support": "*",
+                "livewire/livewire": "^3.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^v8.0.4",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Innoboxrr\\Wirecomments\\Providers\\MarkdownServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Innoboxrr\\Wirecomments\\": "src",
+                    "Innoboxrr\\Wirecomments\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "InnoboxRR",
+                    "email": "admin@innoboxrr.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easy Laravel Livewire Comments with TailwindCSS UI",
+            "keywords": [
+                "comments",
+                "innoboxrr",
+                "laravel-livewire",
+                "livewire",
+                "livewire-comments",
+                "wirecomments"
+            ],
+            "support": {
+                "issues": "https://github.com/innoboxrr/wirecomments/issues",
+                "source": "https://github.com/innoboxrr/wirecomments/tree/1.0.0"
+            },
+            "time": "2025-05-18T04:47:09+00:00"
         },
         {
             "name": "intervention/gif",

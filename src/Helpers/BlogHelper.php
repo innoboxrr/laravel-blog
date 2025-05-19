@@ -106,7 +106,7 @@ class BlogHelper
         return Blog::find($slug);
     }   
 
-    public static function route($name, $parameters = [], $absolute = true)
+    public static function route($name, $parameters = [], $absolute = false)
     {
         if(self::contextIsApp()){
             $route = route(

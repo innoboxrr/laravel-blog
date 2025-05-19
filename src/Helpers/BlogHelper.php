@@ -111,6 +111,8 @@ class BlogHelper
 
     public static function route($name, $parameters = [], $absolute = true)
     {
+        \URL::forceScheme('https');
+        
         if(self::contextIsApp()){
             return route(
                 'blog.app.' . $name, 

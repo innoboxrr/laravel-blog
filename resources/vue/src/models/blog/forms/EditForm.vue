@@ -1,97 +1,51 @@
 <template>
-	
-	<form :id="formId" @submit.prevent="onSubmit">
-
-<!-- Add more inputs -->
-
-        <button-component
-            :custom-class="buttonClass"
-            :disabled="disabled"
-            value="Actualizar" />
-        
+    <form :id="formId" @submit.prevent>
+        <WizardForm
+            v-if="blog"
+            :blog="blog"
+            mode="edit"
+            @submit="$emit('submit', $event)" />
     </form>
-
 </template>
 
 <script>
+import { showModel } from '@blogModels/blog'
+import WizardForm from './WizardForm.vue'
 
-    import { showModel, updateModel} from '@blogModels/blog'
-    import JSValidator from 'innoboxrr-js-validator'
-    import {
-        TextInputComponent,
-        ButtonComponent,
-//import_more_components//
-    } from 'innoboxrr-form-elements'
-    
-	
-	export default {
-
-        components: {
-            TextInputComponent,
-            ButtonComponent,
-//register_more_components//
+export default {
+    components: { WizardForm },
+    props: {
+        formId: {
+            type: String,
+            default: 'editFormForm'
         },
-
-        props: {
-            formId: {
-                type: String,
-                default: 'editBlogForm'
-            },
-            blogId: {
-                type: [Number, String],
-                required: true
-            },
-//props//
-        },
-
-        emits: ['submit'],
-
-        mounted() {
-            this.fetchData(); 
-            this.JSValidator = new JSValidator(this.formId).init();
-            this.JSValidator.status = true;
-        },
-
-        data() {
-            return {
-                blog: {
-//model_data//
-                },
-                disabled: false,
-                JSValidator: undefined,
-            }
-        },
-
-        methods: {
-
-            fetchData() {
-                this.fetchBlog();
-            },
-
-            fetchBlog() {
-                showModel(this.blogId).then( res => {
-                    this.blog = res;
-                });
-            },
-
-            onSubmit() {
-                if(this.JSValidator.status) {
-                    this.disabled = true;
-                    updateModel(this.blog.id, {
-//submit_data//
-                    }).then( res => {
-                        this.$emit('submit', res);
-                        setTimeout(() => { this.disabled = false; }, 2500);
-                    }).catch(error => {
-                        this.disabled = false;
-                        if(error.response.status == 422)
-                            this.JSValidator
-                                .appendExternalErrors(error.response.data.errors);
-                    });
-                } else {
-                    this.disabled = false;
-                }
-            }
+        blogId: {
+            type: [String, Number],
+            required: true
         }
-	}
+    },
+    emits: ['submit'],
+    data() {
+        return {
+            blog: null
+        }
+    },
+    async mounted() {
+        await this.fetchData();
+    },
+    methods: {
+        async fetchData() {
+            try {
+                const rawBlog = await this.fetchBlog();
+                this.blog = rawBlog;
+            } catch (error) {
+                console.error('Error loading blog:', error)
+            }
+        },
+        async fetchBlog() {
+            const response = await showModel(this.blogId);
+            return response;
+        }
+    }
+}
 </script>

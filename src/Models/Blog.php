@@ -58,15 +58,17 @@ class Blog extends Model
 
     protected $casts = [
         'status' => BlogStatus::class,
-        'payload' => 'json',
+        'payload' => 'array',
     ];
 
     protected $protected_metas = [];
 
     protected $editable_metas = [
         'author_name',
-
-        'author_social_x-twitter',
+        'author_bio',
+        'author_avatar',
+        'author_email',
+        'author_social_x',
         'author_social_facebook',
         'author_social_instagram',
         'author_social_linkedin',
@@ -79,10 +81,11 @@ class Blog extends Model
         'author_social_telegram',
         'author_social_discord',
         'author_social_reddit',
-
+        'blog_theme',
+        'blog_allow_comments',
+        'blog_allow_subscriptions',
         'blog_footer_text',
-        
-        'blog_social_x-twitter',
+        'blog_social_x',
         'blog_social_facebook',
         'blog_social_instagram',
         'blog_social_linkedin',

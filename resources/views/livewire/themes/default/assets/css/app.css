@@ -111,6 +111,7 @@ select {
     text-transform: none
 }
 
+/*
 button,
 [type=button],
 [type=reset],
@@ -119,6 +120,7 @@ button,
     background-color: transparent;
     background-image: none
 }
+*/
 
 :-moz-focusring {
     outline: auto

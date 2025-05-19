@@ -89,5 +89,8 @@
 		'post' => $post
 	])
 
-	<livewire:comments :model="$post"/>
+	@livewire('wirecomments::livewire.comments', [
+		'model' => $post,
+		'login' => blog_route('login', ['blog' => $post->blog_id]),
+	])
 </div>

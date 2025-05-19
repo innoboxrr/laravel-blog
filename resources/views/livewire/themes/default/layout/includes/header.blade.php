@@ -83,10 +83,38 @@
                         class="text-secondary flex items-center group" 
                         href="{{ blog_route('contact', ['blog' => $blog->id]) }}" 
                         title="Contacto">
-                    <i class="pe-7s-mail text-3xl text-primary mr-2.5 group-hover:text-secondary"></i>
-                    <span class="group-hover:underline">Contacto</span>
+                        <i class="pe-7s-mail text-3xl text-primary mr-2.5 group-hover:text-secondary"></i>
+                        <span class="group-hover:underline">
+                            Contacto
+                        </span>
                     </a>
                 </li>
+                @auth
+                    <li class="ml-5 flex items-center gap-3">
+                        <span class="text-secondary flex items-center group">
+                            <i class="pe-7s-user text-3xl text-primary mr-2.5 group-hover:text-secondary"></i>
+                            {{ Auth::user()->name }}
+                        </span>
+                        <form method="POST" action="{{ blog_route('logout', ['blog' => $blog->id]) }}">
+                            @csrf
+                            <a href="#" class="text-secondary flex items-center group"
+                            onclick="event.preventDefault(); this.closest('form').submit();">
+                                <i class="pe-7s-power text-3xl text-primary mr-2.5 group-hover:text-secondary"></i>
+                                <span class="group-hover:underline">Cerrar sesión</span>
+                            </a>
+                        </form>
+                    </li>
+                @else
+                    <li class="ml-5 flex items-center">
+                        <a 
+                            href="{{ blog_route('login', ['blog' => $blog->id]) }}?redirect={{ urlencode(request()->fullUrl()) }}" 
+                            class="text-secondary flex items-center group">
+                            <i class="pe-7s-user text-3xl text-primary mr-2.5 group-hover:text-secondary"></i>
+                            <span class="group-hover:underline">Iniciar sesión</span>
+                        </a>
+                    </li>
+                @endauth
+
             </ul>
         </nav>
     </div>

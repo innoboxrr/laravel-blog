@@ -33,6 +33,13 @@ if (!function_exists('blog_category_route')) {
     }
 }
 
+if (!function_exists('blog_login_route')) {
+    function blog_login_route($post)
+    {
+        return blog_route('login');
+    }
+}
+
 if(!function_exists('blog_assets')) {
     function blog_assets($theme, $folder, $path)
     {

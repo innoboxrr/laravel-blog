@@ -318,6 +318,19 @@ export default {
         }
     },
     watch: {
+        $route: {
+            handler(to) {
+                if (this.globalStore?.setActivePage) {
+                    this.globalStore.setActivePage(to.name);
+                }
+            },
+            immediate: true
+        },
+        blog(newBlog) {
+            if (this.globalStore) {
+                this.globalStore.initBlog(newBlog);
+            }
+        },
         blog(newBlog) {
             if (this.globalStore) {
                 this.globalStore.initBlog(newBlog);

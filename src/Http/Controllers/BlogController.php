@@ -2,7 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Http\Controllers;
 
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use Innoboxrr\LaravelBlog\Http\Requests\Blog\{
     PoliciesRequest,
     PolicyRequest,
@@ -85,4 +85,11 @@ class BlogController extends Controller
         return $request->handle();
     }
 
+    public function logout()
+    {
+        Auth::guard('web')->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect()->away(request()->header('referer'));
+    }   
 }

@@ -31,6 +31,9 @@ trait BlogOperations
                 ]
             ],
             'blog' => [
+                'theme' => $this->meta('blog_theme', 'default'),
+                'allow_comments' => (int) $this->meta('blog_allow_comments', 1),
+                'allow_subscriptions' => (int) $this->meta('blog_allow_subscriptions', 1),
                 'footer_text' => $this->meta('blog_footer_text'),
                 'social' => [
                     'x-twitter' => $this->meta('blog_social_x-twitter'),

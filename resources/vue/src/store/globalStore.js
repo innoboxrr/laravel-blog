@@ -65,5 +65,10 @@ export const useGlobalStore = defineStore('blog-global', {
                 ...this.postFilters,
             });
         },
+        setActivePage(routeName) {
+            this.navigation.forEach(item => {
+                item.current = item.path === routeName;
+            });
+        }
     },
 });

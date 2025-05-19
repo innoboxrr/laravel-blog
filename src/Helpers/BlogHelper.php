@@ -89,9 +89,6 @@ class BlogHelper
         array_push($stateful_array, $blog->url['host']);
         Config::set('sanctum.stateful', $stateful_array);
 
-        // Forzar https
-        \URL::forceScheme('https');
-
         return $blog;
     }
 
@@ -111,10 +108,8 @@ class BlogHelper
 
     public static function route($name, $parameters = [], $absolute = true)
     {
-        \URL::forceScheme('https');
-        
         if(self::contextIsApp()){
-            return route(
+            $route = route(
                 'blog.app.' . $name, 
                 $parameters, 
                 $absolute
@@ -124,12 +119,14 @@ class BlogHelper
             // unser blog parameter
             unset($parameters['blog']);
 
-            return route(
+            $route = route(
                 'blog.' . $name, 
                 array_merge($parameters, ['domain' => self::getBlogDomain()]), 
                 $absolute
             );
         }
+
+        return str_replace('http://', 'https://', $route);
     }
 }
 

@@ -89,6 +89,9 @@ class BlogHelper
         array_push($stateful_array, $blog->url['host']);
         Config::set('sanctum.stateful', $stateful_array);
 
+        // Forzar https
+        \URL::forceScheme('https');
+
         return $blog;
     }
 

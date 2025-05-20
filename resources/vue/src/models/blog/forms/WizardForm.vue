@@ -69,7 +69,6 @@ import StepBlogSocial from './steps/StepBlogSocial.vue'
 
 import { ButtonComponent } from 'innoboxrr-form-elements'
 import { createModel, updateModel } from '@blogModels/blog'
-import Swal from 'sweetalert2'
 
 export default {
     components: {
@@ -196,14 +195,7 @@ export default {
             handler.then(res => {
                 if (this.storageKey) localStorage.removeItem(this.storageKey);
                 this.$emit('submit', res);
-                console.log('Blog saved:', res);
-                Swal.fire({
-                    icon: 'success',
-                    title: this.mode === 'edit' ? 'Blog actualizado' : 'Blog creado',
-                    text: this.mode === 'edit' ? 'El blog ha sido actualizado correctamente.' : 'El blog ha sido creado correctamente.',
-                    showConfirmButton: true,
-                });
-
+                this.alert('save');
             }).catch(error => {
                 if (error?.response?.status === 422) {
                     // Manejo opcional

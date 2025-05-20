@@ -4,6 +4,10 @@ namespace Innoboxrr\LaravelBlog\Models\Traits\Mutators;
 
 trait BlogMutators
 {
+    public function getThemeAttribute()
+    {
+        return $this->getPayload('blog.theme', 'default');
+    }
 
 	public function getUrlAttribute()
     {

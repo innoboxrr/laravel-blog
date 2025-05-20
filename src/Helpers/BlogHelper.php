@@ -11,7 +11,6 @@ class BlogHelper
     public static function isBlog($request)
     {
         if ($blog = BlogHelper::getBlogFromRequest()) {
-            // Compartir el blog con todas las vistas
             view()->share('currentBlog', $blog);
             view()->share('theme', $blog->theme ?? 'default');
             $request->merge([

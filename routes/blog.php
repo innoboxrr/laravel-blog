@@ -7,6 +7,7 @@ use Innoboxrr\LaravelBlog\Http\Livewire\BlogLogin;
 use Innoboxrr\LaravelBlog\Http\Livewire\BlogContact;
 use Innoboxrr\LaravelBlog\Http\Livewire\BlogPost;
 use Innoboxrr\LaravelBlog\Http\Livewire\BlogCategory;
+use Innoboxrr\LaravelBlog\Http\Livewire\BlogTag;
 
 Route::domain('blog.{domain}')->where(['domain' => '.+'])->group(function () {
     Route::get('/', BlogIndex::class)->name('index');
@@ -15,5 +16,6 @@ Route::domain('blog.{domain}')->where(['domain' => '.+'])->group(function () {
     Route::get('/contact', BlogContact::class)->name('contact');
     Route::get('/post/{post}', BlogPost::class)->name('post');
     Route::get('/category/{category}', BlogCategory::class)->name('category');
+    Route::get('/tag/{tag}', BlogTag::class)->name('tag');
     Route::get('/blog-assets', [BlogController::class, 'assets'])->name('assets');
 });

@@ -10,8 +10,12 @@ trait BlogOperations
         return [
             'author' => [
                 'name' => $this->meta('author_name'),
+                'title' => $this->meta('author_title'),
+                'company' => $this->meta('author_company'),
                 'bio' => $this->meta('author_bio'),
                 'avatar' => $this->meta('author_avatar'),
+                'resume' => $this->meta('author_resume'),
+                'contact_url' => $this->meta('author_contact_url'),
                 'email' => $this->meta('author_email'),
 
                 'social' => [
@@ -50,6 +54,15 @@ trait BlogOperations
                     'discord' => $this->meta('blog_social_discord'),
                     'reddit' => $this->meta('blog_social_reddit'),
                 ]
+            ],
+
+            'advertisement' => [
+                'title' => $this->meta('advertisement_title'),
+                'image' => $this->meta('advertisement_image'),
+                'url' => $this->meta('advertisement_url'),
+                'description' => $this->meta('advertisement_description'),
+                'alt' => $this->meta('advertisement_alt'),
+                'code' => $this->meta('advertisement_code'),
             ]
         ];
     }

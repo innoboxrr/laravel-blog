@@ -14,9 +14,9 @@ class BlogIndex extends Component
 
     public $search;
 
-    public $perPage = 1;
+    public $perPage = 20;
 
-    public $page = 20;
+    public $page = 1;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -65,6 +65,7 @@ class BlogIndex extends Component
         return $this->renderView('index', [
             'posts' => $this->getPosts(),
             'featuredPosts' => $this->getFeaturedPosts(),
+            'asideData' => $this->getLayoutData()['layoutData'],
         ]);
     }
 }

@@ -65,8 +65,12 @@ class Blog extends Model
 
     protected $editable_metas = [
         'author_name',
+        'author_title',
+        'author_company',
         'author_bio',
         'author_avatar',
+        'author_resume',
+        'author_contact_url',
         'author_email',
         'author_social_x',
         'author_social_facebook',
@@ -98,6 +102,12 @@ class Blog extends Model
         'blog_social_telegram',
         'blog_social_discord',
         'blog_social_reddit',
+        'advertisement_title',
+        'advertisement_image',
+        'advertisement_url',
+        'advertisement_description',
+        'advertisement_alt',
+        'advertisement_code',
     ];
 
     public static $export_cols = [

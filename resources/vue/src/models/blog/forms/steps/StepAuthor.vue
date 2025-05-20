@@ -24,6 +24,38 @@
             placeholder="Ej: juan@ejemplo.com"
             validators="required email"
             v-model="localBlog.payload.author.email" />
+        
+        <!-- AUTHOR TITLE -->
+        <text-input-component
+            :custom-class="inputClass"
+            type="text"
+            name="author_title"
+            label="Puesto"
+            placeholder="Ej: Desarrollador Backend"
+            validators="required length"
+            :min_length="3"
+            v-model="localBlog.payload.author.title" />
+
+        <!-- AUTHOR COMPANY -->
+        <text-input-component
+            :custom-class="inputClass"
+            type="text"
+            name="author_company"
+            label="Compañía"
+            placeholder="Ej: InnoBox R&R"
+            validators="required length"
+            :min_length="3"
+            v-model="localBlog.payload.author.company" />
+
+        <!-- AUTHOR CONTACT URL -->
+        <text-input-component
+            :custom-class="inputClass"
+            type="url"
+            name="author_contact_url"
+            label="URL de Contacto"
+            placeholder="Ej: https://www.innoboxrr.com/contacto"
+            validators="url"
+            v-model="localBlog.payload.author.contact_url" />
 
         <!-- AUTHOR BIO -->
         <textarea-input-component
@@ -36,7 +68,7 @@
             v-model="localBlog.payload.author.bio" />
 
         <!-- AUTHOR AVATAR -->
-        <div>
+        <div class="mb-4">
             <label class="uk-form-label">Avatar</label>
             <file-input-component 
                 :upload-url="fileUploadUrl"
@@ -45,6 +77,19 @@
                 :hide-on-max-files-reached="true"
                 :valid-mimes="[ 'image/jpeg', 'image/png' ]"
                 message="Da clic o arrastra una imagen para subir"
+                @updateFileList="onResumeUpload" />
+        </div>
+
+        <!-- AUTHOR RESUME FILE PDF -->
+        <div class="mb-4">
+            <label class="uk-form-label">Curriculum Vitae (PDF)</label>
+            <file-input-component 
+                :upload-url="fileUploadUrl"
+                :auto-upload="true"
+                :show-top-preview="true"
+                :hide-on-max-files-reached="true"
+                :valid-mimes="[ 'application/pdf' ]"
+                message="Da clic o arrastra un archivo PDF para subir"
                 @updateFileList="onAvatarUpload" />
         </div>
     </div>
@@ -94,6 +139,11 @@ export default {
         onAvatarUpload(files) {
             if (files?.[0]?.path) {
                 this.localBlog.payload.author.avatar = files[0].path;
+            }
+        },
+        onResumeUpload(files) {
+            if (files?.[0]?.path) {
+                this.localBlog.payload.author.resume = files[0].path;
             }
         }
     },

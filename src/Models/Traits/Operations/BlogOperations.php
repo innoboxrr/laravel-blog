@@ -57,6 +57,7 @@ trait BlogOperations
             ],
 
             'advertisement' => [
+                'type' => $this->meta('advertisement_type'),
                 'title' => $this->meta('advertisement_title'),
                 'image' => $this->meta('advertisement_image'),
                 'url' => $this->meta('advertisement_url'),

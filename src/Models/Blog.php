@@ -102,6 +102,7 @@ class Blog extends Model
         'blog_social_telegram',
         'blog_social_discord',
         'blog_social_reddit',
+        'advertisement_type',
         'advertisement_title',
         'advertisement_image',
         'advertisement_url',

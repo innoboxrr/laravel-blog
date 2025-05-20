@@ -66,6 +66,7 @@ import StepAuthor from './steps/StepAuthor.vue'
 import StepAuthorSocial from './steps/StepAuthorSocial.vue'
 import StepBlogConfig from './steps/StepBlogConfig.vue'
 import StepBlogSocial from './steps/StepBlogSocial.vue'
+import StepAdvertiser from './steps/StepAdvertiser.vue'
 
 import { ButtonComponent } from 'innoboxrr-form-elements'
 import { createModel, updateModel } from '@blogModels/blog'
@@ -77,6 +78,8 @@ export default {
         StepAuthorSocial,
         StepBlogConfig,
         StepBlogSocial,
+        StepAdvertiser,
+        
         ButtonComponent,
     },
     props: {
@@ -102,6 +105,7 @@ export default {
                 { title: 'Author Network', component: 'StepAuthorSocial', valid: false, completed: false, active: false },
                 { title: 'Blog', component: 'StepBlogConfig', valid: false, completed: false, active: false },
                 { title: 'Blog Network', component: 'StepBlogSocial', valid: false, completed: false, active: false },
+                { title: 'Advertising', component: 'StepAdvertiser', valid: false, completed: false, active: false },
             ],
             storageKey: null,
             hasChanges: false,

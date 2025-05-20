@@ -73,7 +73,7 @@
         @if($asideData['advertisement.image'] == null && $asideData['advertisement.code'] == null) 
             style="display: none;"
         @endif>
-        @if($asideData['advertisement.image'] != null)
+        @if($asideData['advertisement.type'] == 'image')
             <a 
                 href="{{ $asideData['advertisement.url'] }}" 
                 title="{{ $asideData['advertisement.title'] }}"
@@ -85,7 +85,7 @@
                     width="277"
                     height="328" />
             </a>
-        @elseif($asideData['advertisement.code'] != null)
+        @else
             <div class="w-full h-full">
                 {!! $asideData['advertisement.code'] !!}
             </div>

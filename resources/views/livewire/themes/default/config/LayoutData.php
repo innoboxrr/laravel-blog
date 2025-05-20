@@ -31,10 +31,11 @@ class LayoutData
             'blog.socias' => $component->blog->getPayload('blog.social'),
 
             // Advertisement
+            'advertisement.type' => $component->blog->getPayload('advertisement.type'),
             'advertisement.url' => $component->blog->getPayload('advertisement.url'),
             'advertisement.alt' => $component->blog->getPayload('advertisement.alt'),
             'advertisement.title' => $component->blog->getPayload('advertisement.title'),
-            'advertisement.image' => $component->blog->getPayload('advertisement.image'),
+            'advertisement.image' => self::getAdvertisementImageUrl($component),
             'advertisement.code' => $component->blog->getPayload('advertisement.code'),
 
         ];
@@ -126,6 +127,15 @@ class LayoutData
         return $avatar
             ? Storage::disk('s3')->temporaryUrl($avatar, now()->addMinutes(5))
             : 'https://i.imgur.com/WxNkK7J.png';
+    }
+
+    public static function getAdvertisementImageUrl($component)
+    {
+        $image = $component->blog->getPayload('advertisement.image');
+
+        return $image
+            ? Storage::disk('s3')->temporaryUrl($image, now()->addMinutes(5))
+            : null;
     }
 
 }

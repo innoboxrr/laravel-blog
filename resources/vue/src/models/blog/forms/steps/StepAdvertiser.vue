@@ -115,6 +115,22 @@ export default {
             fileUploadUrl: '/upload'
         }
     },
+    created() {
+        if (!this.localBlog.payload) {
+            this.localBlog.payload = {};
+        }
+        if (!this.localBlog.payload.advertisement) {
+            this.localBlog.payload.advertisement = {
+                type: 'image', // valor por defecto
+                title: '',
+                description: '',
+                url: '',
+                alt: '',
+                image: '',
+                code: ''
+            };
+        }
+    },
     computed: {
         localBlog: {
             get() {

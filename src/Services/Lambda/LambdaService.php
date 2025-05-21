@@ -9,7 +9,6 @@ namespace Innoboxrr\LaravelBlog\Services\Lambda;
  *  - generateWithAI
  *  - translateWithAI
  *  - transcriptWithAI
- *  - videoToTextAI
  */
 
 use Illuminate\Support\Facades\Http;
@@ -37,6 +36,7 @@ class LambdaService
     protected function process()
     {
         $type = $this->data['action'];
+
         // Buscar la clase que corresponda al tipo de acción
         $class = __NAMESPACE__ . '\\Actions\\' . ucfirst($type) . 'Action';
         if (!class_exists($class)) {

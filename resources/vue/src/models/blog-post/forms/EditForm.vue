@@ -98,6 +98,16 @@
                 type: [Number, String],
                 required: true
             },
+            preloadPost: {
+                type: Object,
+                default: () => ({
+                    title: '',
+                    slug: '',
+                    status: 'draft',
+                    content: '',
+                    published_at: '',
+                }),
+            },
         },
 
         emits: ['submit', 'blogPostLoaded'],
@@ -127,7 +137,17 @@
                 handler(newTitle) {
                     this.blogPost.slug = slugify(newTitle);
                 }
-            }
+            },
+            preloadPost: {
+                handler(newPost) {
+                    console.log('Preload post changed:', newPost);
+                    this.blogPost = {
+                        ...this.blogPost,
+                        ...newPost
+                    };
+                },
+                deep: true,
+            },
         },
 
         mounted() {
@@ -152,6 +172,9 @@
                         res.published_at = dayjs(new Date()).format('YYYY-MM-DDTHH:mm');
                     }
                     this.blogPost = res;
+
+                    this.blogPost = {...this.blogPost, ...this.preloadPost };
+
                     this.$emit('blogPostLoaded', this.blogPost);
                 } catch (error) {
                     console.error("Error al cargar el blog post:", error);

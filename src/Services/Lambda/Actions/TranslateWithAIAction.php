@@ -19,6 +19,14 @@ class TranslateWithAIAction
 
     protected function process()
     {
-        // Implementar lógica aquí
+        return [
+            'type' => 'translateWithAI',
+            'data' => [
+                'text' => $this->data['payload']['text'],
+                'targetLanguage' => $this->data['payload']['targetLanguage'],
+                'sourceLanguage' => $this->data['payload']['sourceLanguage'] ?? 'auto',
+                'rewrite' => $this->data['payload']['rewrite'] ?? false,
+            ],
+        ];
     }
 }

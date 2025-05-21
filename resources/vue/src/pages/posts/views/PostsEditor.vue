@@ -19,10 +19,13 @@
                 <!-- Left: Form Container -->
                 <div class="lg:col-span-2 bg-white border sm:rounded-lg">
                     <div class="px-6 py-8 sm:p-10">
+                        
                         <h2 class="text-lg font-semibold text-gray-700 border-b pb-4 mb-6">
                             {{ __blog('Post Details') }}
                         </h2>
+
                         <component 
+                            :key="createAction + '-' + preloadPost.title" 
                             v-if="createAction === 'normalPost'"
                             :is="formComponent"
                             :blog-id="blog.id"
@@ -49,13 +52,6 @@
 
                         <transcript-with-ai-form
                             v-else-if="createAction === 'transcriptWithAI'"
-                            :blog-id="blog.id"
-                            :external-params="externalParams"
-                            @change="onChange"
-                            @submit="setPreloadPost" />
-
-                        <video-to-text-ai-form
-                            v-else-if="createAction === 'videoToTextAI'"
                             :blog-id="blog.id"
                             :external-params="externalParams"
                             @change="onChange"
@@ -136,7 +132,6 @@
     import GenerateWithAiForm from '@blogModels/blog-post/forms/GenerateWithAiForm.vue';
     import TranscriptWithAiForm from '@blogModels/blog-post/forms/TranscriptWithAiForm.vue';
     import TranslateWithAiForm from '@blogModels/blog-post/forms/TranslateWithAiForm.vue';
-    import VideoToTextAiForm from '@blogModels/blog-post/forms/VideoToTextAiForm.vue';
 
     import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
     import CategorySelector from '@blogModels/blog-category/components/category-selector/CategorySelector.vue';
@@ -155,7 +150,6 @@
             GenerateWithAiForm,
             TranscriptWithAiForm,
             TranslateWithAiForm,
-            VideoToTextAiForm,
 
             // Components
             PostActionsDropdown,
@@ -226,9 +220,8 @@
                 };
             },
             setPreloadPost(data) {
-                this.preloadPost = data;
+                this.preloadPost = { ...data };
                 this.preloadPost.status = 'draft';
-                console.log(this.preloadPost);
                 this.dropdownActionSelected('normalPost');
             },
             dropdownActionSelected(action) {

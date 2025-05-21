@@ -59,7 +59,6 @@ export default {
                 { value: 'normalPost', label: this.__blog('Normal Post Creation') },
                 { value: 'generateWithAI', label: this.__blog('Generate with AI') },
                 { value: 'transcriptWithAI', label: this.__blog('Transcript with AI') },
-                { value: 'videoToTextAI', label: this.__blog('Video to Text With AI') },
                 { value: 'translateWithAI', label: this.__blog('Translate with AI') },
             ],
         };

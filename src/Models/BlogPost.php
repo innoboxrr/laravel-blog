@@ -72,17 +72,18 @@ class BlogPost extends Model
 
     protected $editable_metas = [
         'views',
-        'meta_title',
-        'meta_description',
-        'meta_keywords',
-
-        // Featured images
+        'likes',
+        'comments',
+        'description',
+        'keywords',
         'original_image',
         'thumbnail_image',
         'medium_image',
         'large_image',
-        
-        // Más etiquetas para seo
+        'share_on_facebook',
+        'share_on_twitter',
+        'share_on_linkedin',
+        'playlist',
     ];
 
     public static $export_cols = [

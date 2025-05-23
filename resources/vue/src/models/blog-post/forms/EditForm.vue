@@ -62,6 +62,10 @@
             :custom-class="inputClass"
             v-model="blogPost.publish_at" />
 
+        <youtube-playlist
+            v-if="blogPost.payload && blogPost.payload.playlist"
+            v-model="blogPost.payload.playlist" />
+
         <button-component
             :custom-class="buttonClass"
             :disabled="disabled"
@@ -74,6 +78,7 @@
     import { showModel, updateModel } from '@blogModels/blog-post'
     import JSValidator from 'innoboxrr-js-validator'
     import { slugify } from 'innoboxrr-js-libs/libs/string'
+    import YoutubePlaylist from '../components/YoutubePlaylist.vue'
     import {
         TextInputComponent,
         EditorInputComponent,
@@ -83,6 +88,7 @@
 
     export default {
         components: {
+            YoutubePlaylist,
             TextInputComponent,
             EditorInputComponent,
             SelectInputComponent,
@@ -106,6 +112,9 @@
                     status: 'draft',
                     content: '',
                     published_at: '',
+                    payload: {
+                        playlist: [],
+                    }
                 }),
             },
         },
@@ -119,7 +128,10 @@
                     slug: '',
                     content: '',
                     status: 'draft',
-                    publish_at: ''
+                    publish_at: '',
+                    payload: {
+                        playlist: [],
+                    }
                 },
                 disabled: false,
                 JSValidator: undefined,
@@ -175,6 +187,19 @@
 
                     this.blogPost = {...this.blogPost, ...this.preloadPost };
 
+                    // Ver si existe playlist y ver si es sctring convertir en JSON
+                    if (this.blogPost.payload && this.blogPost.payload.playlist) {
+                        if (typeof this.blogPost.payload.playlist === 'string') {
+                            try {
+                                this.blogPost.payload.playlist = JSON.parse(this.blogPost.payload.playlist);
+                            } catch (e) {
+                                console.error("Error al parsear la playlist:", e);
+                            }
+                        }
+                    } else {
+                        this.blogPost.payload.playlist = [];
+                    }
+
                     this.$emit('blogPostLoaded', this.blogPost);
                 } catch (error) {
                     console.error("Error al cargar el blog post:", error);
@@ -184,7 +209,9 @@
                 if (this.JSValidator.status) {
                     this.disabled = true;
                     try {
-                        const res = await updateModel(this.blogPost.id, this.blogPost);
+                        const res = await updateModel(this.blogPost.id, {
+                            ...this.blogPost, ...this.blogPost.payload 
+                        });
                         this.$emit('submit', res);
                         setTimeout(() => {
                             this.disabled = false;

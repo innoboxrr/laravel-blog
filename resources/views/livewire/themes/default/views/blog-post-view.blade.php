@@ -64,15 +64,25 @@
 						</span>
 					</div>
 					<div class="articles-content px-8">
-					<h1 class="text-3xl leading-10 md:text-42px md:leading-62px text-secondary font-black my-6.5">
-						<a 
-							class="hover:underline" 
-							href="#" 
-							title="{{ $post->title }}">
-							{{ $post->title }}
-						</a>
-					</h1>
-					<div class="mb-12 blog-post-article-text">{!! $post->content !!}</div>
+						<h1 class="text-3xl leading-10 md:text-42px md:leading-62px text-secondary font-black my-6.5">
+							<a 
+								class="hover:underline" 
+								href="#" 
+								title="{{ $post->title }}">
+								{{ $post->title }}
+							</a>
+						</h1>
+						@php
+							$rawPlaylist = $post->payload['playlist'] ?? '[]';
+							$playlist = is_array($rawPlaylist) 
+								? $rawPlaylist 
+								: json_decode($rawPlaylist, true) ?? [];
+						@endphp
+
+						@livewire('laravel-blog::livewire.components.youtube-playlist', [
+							'playlist' => $playlist,
+						])
+						<div class="mb-12 blog-post-article-text">{!! $post->content !!}</div>
 					</div>
 				</article>
 			</div>

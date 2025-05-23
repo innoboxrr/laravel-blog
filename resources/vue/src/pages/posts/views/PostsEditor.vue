@@ -136,7 +136,7 @@
     import PostActionsDropdown from '../components/PostActionsDropdown.vue'; // Dropdown como componente aparte
     import CategorySelector from '@blogModels/blog-category/components/category-selector/CategorySelector.vue';
     import TagSelector from '@blogModels/blog-tag/components/tag-selector/TagSelector.vue';
-    import FeaturedImage from '@blogModels/blog-post/components/featured-image/FeaturedImage.vue';
+    import FeaturedImage from '@blogModels/blog-post/components/FeaturedImage.vue';
 
     export default {
         name: 'PostsCreate',

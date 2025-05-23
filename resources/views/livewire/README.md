@@ -12,22 +12,38 @@ Este directorio contiene los temas disponibles para el blog. Cada tema es un mó
 Cada tema sigue la siguiente estructura:
 
 ```
-themes/
-├── default/             # Tema predeterminado
-|   ├── assets
-│   ├── components/      # Componentes Livewire específicos del tema
-│   │   └── subscribe-component.blade.php
-│   ├── layout/          # Layout principal del tema
-│   │   └── app.blade.php
-│   ├── views/           # Vistas específicas del tema
-│   │   ├── blog-index-view.blade.php
-│   │   └── blog-post-view.blade.php
-│   └── theme.json       # Configuración del tema
-├── modern/              # Otro tema disponible
-│   ├── components/
-│   ├── layout/
-│   ├── views/
-│   └── theme.json
+themes
+    {theme}
+        /assets
+            /css
+            /fonts
+            /images
+            /js
+        /components
+            blog-post-card.blade.php
+            post-about-author.blade.php
+            related-posts.bñade.php
+            share-post.blade.php
+            subscribe-component.blade.php
+        /config
+            LayoutData.php
+        /layout
+            /includes
+                // ...
+            app.blade.php
+        /node_modules
+            // ...
+        /views
+            blog-category-view.blade.php
+            blog-contact-view.blade.php
+            blog-index-view.blade.php
+            blog-login-view.blade.php
+            blog-post-view.blade.php
+            blog-tag-view.blade.php
+        .gitignore
+        package.json
+        tailwind.config.js
+        vite.config.js
 ```
 
 ### Descripción de las carpetas

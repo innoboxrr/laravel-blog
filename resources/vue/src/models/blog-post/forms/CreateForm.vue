@@ -63,6 +63,10 @@
             :custom-class="inputClass"
             v-model="post.published_at" />
 
+        <youtube-playlist
+            v-if="post.payload && post.payload.playlist"
+            v-model="post.payload.playlist" />
+
         <button-component
             :custom-class="buttonClass"
             :disabled="disabled && !validForm"
@@ -77,6 +81,7 @@
     import { slugify } from 'innoboxrr-js-libs/libs/string';
     import { createModel } from '@blogModels/blog-post'
     import JSValidator from 'innoboxrr-js-validator'
+    import YoutubePlaylist from '../components/YoutubePlaylist.vue'
     import {
         TextInputComponent,
         EditorInputComponent,
@@ -86,6 +91,7 @@
 	
 	export default {
         components: {
+            YoutubePlaylist,
             TextInputComponent,
             EditorInputComponent,
             SelectInputComponent,
@@ -109,9 +115,12 @@
                 default: () => ({
                     title: '',
                     slug: '',
-                    status: 'draft',
+                    status: 'published',
                     content: '',
                     published_at: '',
+                    payload: {
+                        playlist: [],
+                    }
                 }),
             },
         },
@@ -123,9 +132,8 @@
                 JSValidator: undefined,
             }
         },
-        mounted() {
-            this.fetchData();
-            this.post.published_at = dayjs().format('YYYY-MM-DDTHH:mm');
+        async mounted() {
+            await this.fetchData();
             this.JSValidator = new JSValidator(this.formId).init();
         },
         watch: {
@@ -142,7 +150,7 @@
             },
             submitData: {
                 handler() {
-                    console.log(this.submitData);
+                    // console.log(this.submitData);
                 },
                 deep: true,
             },
@@ -155,13 +163,23 @@
                 return {
                     ...this.post,
                     ...this.externalParams,
+                    ...this.payload,
                     blog_id: this.blogId,
                 }
             },
         },
         methods: {
 
-            fetchData() {},
+            fetchData() {
+                this.post.published_at = dayjs().format('YYYY-MM-DDTHH:mm');
+
+                if (!this.post.payload) {
+                    this.post.payload = { playlist: [] }
+                } else if (!this.post.payload.playlist) {
+                    this.post.payload.playlist = []
+                }
+
+            },
 
             onSubmit() {
                 if(this.JSValidator.status) {
@@ -181,6 +199,7 @@
             },
             getSubmitData() {
                 let submitData;
+
                 if (this.externalParams.featured_image) {
                     submitData = new FormData();
                     Object.keys(this.submitData).forEach(key => {

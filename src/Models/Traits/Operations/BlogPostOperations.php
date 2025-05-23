@@ -32,11 +32,6 @@ trait BlogPostOperations
                 'linkedin' => (int) $this->meta('share_on_linkedin'),
                 // ..
             ],
-            'embed' => [
-                'source' => $this->meta('embed_source'),
-                'url' => $this->meta('embed_url'),
-                'thumbnail' => $this->meta('embed_thumbnail'),
-            ],
             'playlist' => $this->meta('playlist'), // Allow to add a playlist to the post
             // Configurar
         ];

@@ -237,7 +237,13 @@
                 <div class="border-b border-gray-200 px-4 py-2 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 hidden md:flex">
                     <div class="min-w-0 flex-1">
                         <h1 class="text-lg/6 font-medium text-gray-900 sm:truncate">
-                            {{ __blog(title) }}
+                            <a 
+                                class="text-gray-500 font-normal hover:text-gray-900 hover:underline" 
+                                target="_blank"
+                                :href="`/blog/${blog.id}`">
+                                {{ __blog(title) }} 
+                                <i class="fas fa-external-link-alt ml-1 text-gray-400 fa-xs"></i>
+                            </a>
                         </h1>
                     </div>
                     <div class="mt-4 flex sm:ml-4 sm:mt-0">
@@ -345,9 +351,6 @@ export default {
             if (this.globalStore) {
                 this.globalStore.initBlog(newBlog);
             }
-
-            // Redirect BlogAppDashboard
-            this.$router.push({ name: 'BlogAppDashboard' });
         },
         blog(newBlog) {
             if (this.globalStore) {

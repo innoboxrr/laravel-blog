@@ -41,11 +41,13 @@
                                 <MenuItems class="absolute right-10 top-3 z-10 mx-3 mt-1 w-48 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
                                     <div class="py-1">
                                         <MenuItem v-slot="{ active }">
-                                            <a 
-                                                href="#" 
-                                                :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
+                                            <button
+                                                @click="filterByCategory(category)"
+                                                type="button"
+                                                :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block w-full text-left px-4 py-2 text-sm']"
+                                            >
                                                 {{ __blog('Filter') }}
-                                            </a>
+                                            </button>
                                         </MenuItem>
                                     </div>
                                     <div class="py-1">
@@ -102,84 +104,104 @@
         <!-- Projects table (small breakpoint and up) -->
         <div class="mt-8 hidden sm:block">
             <div class="inline-block min-w-full border-b border-gray-200 align-middle">
-                <table class="min-w-full">
-                    <thead>
-                        <tr class="border-t border-gray-200">
-                            <th class="border-b border-gray-200 bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900" scope="col">
-                                <span class="lg:pl-2">
-                                    {{ __blog('Blog posts') }}
-                                </span>
+                <table class="min-w-full table-auto border-separate border-spacing-y-2">
+                    <thead class="bg-gray-100 text-xs uppercase tracking-wider text-gray-600">
+                        <tr>
+                            <th class="px-6 py-3 text-left">
+                                {{ __blog('Blog posts') }}
                             </th>
-                            <th class="hidden border-b border-gray-200 bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900 md:table-cell" scope="col">
+                            <th class="hidden md:table-cell px-6 py-3 text-right">
                                 {{ __blog('Last updated') }}
                             </th>
-                            <th class="border-b border-gray-200 bg-gray-50 py-3 pr-6 text-right text-sm font-semibold text-gray-900" scope="col"></th>
+                            <th class="px-6 py-3 text-right">
+                                {{ __blog('Actions') }}
+                            </th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100 bg-white">
-                        <tr 
-                            v-for="post in posts" 
-                            :key="post.id">
-                            <td class="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
-                                <div class="flex items-center space-x-3 lg:pl-2">
-                                    <div :class="[post.bgColorClass, 'size-2.5 shrink-0 rounded-full']" aria-hidden="true"></div>
-                                    <a href="#" class="truncate hover:text-gray-600">
-                                        <span>
+                    <tbody class="bg-white">
+                        <tr
+                            v-for="post in posts"
+                            :key="post.id"
+                            class="bg-white shadow-sm rounded-md transition hover:shadow-md"
+                        >
+                            <!-- Title + Team -->
+                            <td class="px-6 py-4 align-top">
+                                <div class="flex flex-col space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <span :class="[post.bgColorClass, 'inline-block size-2.5 rounded-full']"></span>
+                                        <router-link
+                                            :to="{ name: 'BlogPostsEditor', params: { id: post.id } }"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'font-semibold text-gray-900 hover:text-purple-600 leading-tight truncate']"
+                                        >
                                             {{ post.title }}
-                                            {{ ' ' }}
-                                            <span class="font-normal text-gray-500">in {{ post.team }}</span>
-                                        </span>
-                                    </a>
+                                        </router-link>
+                                    </div>
+                                    <p v-if="post.team" class="text-xs text-gray-500">
+                                        {{ __blog('Team') }}: {{ post.team }}
+                                    </p>
                                 </div>
                             </td>
-                            <td class="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
-                                {{ post.created_at }}
+
+                            <!-- Last updated -->
+                            <td class="hidden md:table-cell px-6 py-4 align-top text-right text-sm">
+                                <span class="inline-block rounded-full bg-gray-100 px-3 py-0.5 text-xs text-gray-700 font-medium">
+                                    {{ formatDate(post.created_at, 'lll') }}
+                                </span>
                             </td>
-                            <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-medium relative">
-                                <Menu as="div" class="shrink-0 pr-2">
-                                    <MenuButton class="inline-flex size-8 items-center justify-center rounded-full bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
-                                        <span class="sr-only">Open options</span>
+
+                            <!-- Actions -->
+                            <td class="px-6 py-4 align-top text-right text-sm font-medium">
+                                <Menu as="div" class="relative inline-block text-left">
+                                    <MenuButton class="inline-flex items-center justify-center rounded-md bg-white text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                                         <EllipsisVerticalIcon class="size-5" aria-hidden="true" />
+                                        <span class="sr-only">{{ __blog('Open options') }}</span>
                                     </MenuButton>
-                                    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                        <MenuItems class="absolute right-10 top-3 z-10 mx-3 mt-1 w-48 origin-top-right divide-y divide-gray-200 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+
+                                    <transition
+                                        enter-active-class="transition ease-out duration-100"
+                                        enter-from-class="transform opacity-0 scale-95"
+                                        enter-to-class="transform opacity-100 scale-100"
+                                        leave-active-class="transition ease-in duration-75"
+                                        leave-from-class="transform opacity-100 scale-100"
+                                        leave-to-class="transform opacity-0 scale-95"
+                                    >
+                                        <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none divide-y divide-gray-200">
                                             <div class="py-1">
                                                 <MenuItem v-slot="{ active }">
-                                                    <router-link 
-                                                        :to="{
-                                                            name: 'BlogPostsEditor',
-                                                            params: { id: post.id }
-                                                        }"
-                                                        :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
+                                                    <router-link
+                                                        :to="{ name: 'BlogPostsEditor', params: { id: post.id } }"
+                                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                                                    >
                                                         {{ __blog('Edit') }}
                                                     </router-link>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
                                                     <router-link
-                                                        :to="{
-                                                            name: 'BlogPostsShow',
-                                                            params: { id: post.id }
-                                                        }"
-                                                        :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
+                                                        :to="{ name: 'BlogPostsShow', params: { id: post.id } }"
+                                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                                                    >
                                                         {{ __blog('Admin view') }}
                                                     </router-link>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                    <a 
-                                                        href="#" 
+                                                    <a
+                                                        :href="`/blog/${post.blog_id}/post/${post.slug}`"
                                                         target="_blank"
-                                                        :class="[active ? 'bg-gray-100 text-gray-900 outline-none' : 'text-gray-700', 'block px-4 py-2 text-sm']">
-                                                        {{ __blog('Site siew') }}
+                                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                                                    >
+                                                        {{ __blog('Site view') }}
                                                     </a>
                                                 </MenuItem>
                                             </div>
                                             <div class="py-1">
                                                 <MenuItem v-slot="{ active }">
-                                                    <a 
-                                                        href="#" 
-                                                        :class="[active ? 'bg-red-100 text-red-900 outline-none' : 'text-red-700', 'block px-4 py-2 text-sm']">
+                                                    <button
+                                                        @click="deletePost(post)"
+                                                        type="button"
+                                                        :class="[active ? 'bg-red-100 text-red-900' : 'text-red-700', 'block w-full text-left px-4 py-2 text-sm']"
+                                                    >
                                                         {{ __blog('Delete') }}
-                                                    </a>
+                                                    </button>
                                                 </MenuItem>
                                             </div>
                                         </MenuItems>
@@ -209,6 +231,7 @@
             const globalStore = useGlobalStore();
             const { blog, categories, posts, postFilters  } = toRefs(globalStore);
             const fetchCategories = globalStore.fetchCategories;
+            const deleteBlogPost = globalStore.deleteBlogPost;
 
             watch(postFilters, async () => {
                 await globalStore.fetchPosts();
@@ -216,6 +239,7 @@
 
             return {
                 fetchCategories,
+                deleteBlogPost,
                 blog,
                 categories,
                 posts,
@@ -250,6 +274,12 @@
                 this.categoryBeingEdited = null;
                 this.fetchCategories();
             },
+            filterByCategory(category) {
+                this.postFilters.category_id = category.id;
+            },
+            async deletePost(post) {
+                await this.deleteBlogPost(post); 
+            }
         }
     };
 </script>

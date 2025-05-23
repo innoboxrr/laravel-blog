@@ -1,5 +1,5 @@
 import { indexModel as indexCategoryModel } from '@blogModels/blog-category'
-import { indexModel as indexPostModel } from '@blogModels/blog-post'
+import { indexModel as indexPostModel, deleteModel as deleteBlogPostModel } from '@blogModels/blog-post'
 import { createFlattenedCategories } from '@blogModels/blog-category/helpers/utils';
 import { __blog } from '../utils/translate';
 import { defineStore } from 'pinia';
@@ -69,6 +69,10 @@ export const useGlobalStore = defineStore('blog-global', {
             this.navigation.forEach(item => {
                 item.current = item.path === routeName;
             });
+        },
+        async deleteBlogPost(post) {
+            await deleteBlogPostModel(post);
+            this.posts = this.posts.filter(p => p.id !== post.id);
         }
     },
 });

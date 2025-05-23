@@ -9,7 +9,7 @@ trait Bloggable
 {
     public function blogs()
     {
-        return $this->morphToMany(Blog::class, 'bloggable');
+        return $this->morphMany(Blog::class, 'bloggable');
     }
 
     public function blog()

@@ -26,6 +26,7 @@ class BlogIndex extends Component
     private function getPosts()
     {
         return BlogPost::where('blog_id', $this->blog->id)
+            ->orderBy('published_at', 'desc')
             ->paginate($this->perPage);
     }
 

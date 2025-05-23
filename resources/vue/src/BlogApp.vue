@@ -119,7 +119,12 @@
         <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-gray-100 lg:pb-4 lg:pt-5 mt-4">
             <div class="mt-5 flex h-0 flex-1 flex-col overflow-y-auto pt-1">
                 <!-- Autores -->
-                <desktop-author-dropdown v-if="false"/>
+                <desktop-blog-dropdown 
+                    :blog="blog"
+                    :blogs="blogs"
+                    @setBlog="$emit('setBlog', $event)"
+                    @createBlog="$emit('createBlog', $event)"
+                    @deleteBlog="$emit('deleteBlog', $event)" />
                 <!-- Sidebar Search -->
                 <div class="mt-2 grid grid-cols-1 px-3">
                     <input 
@@ -218,7 +223,12 @@
                     </form>
                     <div class="flex items-center">
                         <!-- Autores -->
-                        <mobile-author-dropdown v-if="false" />
+                        <mobile-blog-dropdown 
+                            :blog="blog"
+                            :blogs="blogs"
+                            @setBlog="$emit('setBlog', $event)"
+                            @createBlog="$emit('createBlog', $event)"
+                            @deleteBlog="$emit('deleteBlog', $event)" />
                     </div>
                 </div>
             </div>
@@ -256,8 +266,8 @@ import { categoryDashIndentation, pinCategory, unpinCategory } from '@blogModels
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { Bars3CenterLeftIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
-import DesktopAuthorDropdown from '@blogComponents/DesktopAuthorDropdown.vue';
-import MobileAuthorDropdown from '@blogComponents/MobileAuthorDropdown.vue';
+import DesktopBlogDropdown from '@blogComponents/DesktopBlogDropdown.vue';
+import MobileBlogDropdown from '@blogComponents/MobileBlogDropdown.vue';
 
 export default {
     name: 'BlogDashboardView',
@@ -269,12 +279,16 @@ export default {
         Bars3CenterLeftIcon,
         XMarkIcon,
         MagnifyingGlassIcon,
-        DesktopAuthorDropdown,
-        MobileAuthorDropdown,
+        DesktopBlogDropdown,
+        MobileBlogDropdown,
     },
     props: {
         blog: {
             type: Object,
+            required: true
+        },
+        blogs: {
+            type: Array,
             required: true
         },
         lang: {
@@ -282,6 +296,7 @@ export default {
             default: 'en'
         }
     },
+    emits: ['setBlog', 'createBlog', 'deleteBlog'],
     data() {
         return {
             sidebarOpen: false,
@@ -330,6 +345,9 @@ export default {
             if (this.globalStore) {
                 this.globalStore.initBlog(newBlog);
             }
+
+            // Redirect BlogAppDashboard
+            this.$router.push({ name: 'BlogAppDashboard' });
         },
         blog(newBlog) {
             if (this.globalStore) {

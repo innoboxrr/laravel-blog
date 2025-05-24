@@ -5,10 +5,14 @@
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between py-4">
                     <h1 class="text-xl font-bold text-gray-900">
-                        {{ title !== '' ? __blog('Title: ') + title ?? __blog('Create new post') : (isEdit ? __blog('Edit Blog Post') : __blog('Create Blog Post')) }}
+                        {{
+                            title && title.trim() !== ''
+                                ? `${__blog('Title: ')}${title}`
+                                : (isEdit ? __blog('Edit Blog Post') : __blog('Create Blog Post'))
+                        }}
                     </h1>
-                    <!-- Dropdown for actions -->
-                    <post-actions-dropdown @actionSelected="dropdownActionSelected" />
+                    <post-actions-dropdown 
+                        @actionSelected="dropdownActionSelected" />
                 </div>
             </div>
         </header>
@@ -25,7 +29,7 @@
                         </h2>
 
                         <component 
-                            :key="createAction + '-' + preloadPost.title" 
+                            :key="createAction" 
                             v-if="createAction === 'normalPost'"
                             :is="formComponent"
                             :blog-id="blog.id"

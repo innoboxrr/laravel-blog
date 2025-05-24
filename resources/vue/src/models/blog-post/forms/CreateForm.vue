@@ -127,7 +127,7 @@
         emits: ['submit', 'change'],
         data() {
             return {
-                post: this.preloadPost,
+                post: JSON.parse(JSON.stringify(this.preloadPost)),
                 disabled: false,
                 JSValidator: undefined,
             }
@@ -145,14 +145,13 @@
             },
             'post.title': {
                 handler() {
-                    this.post.slug = slugify(this.post.title);
+                    this.post.slug = slugify(this.post.title, '-');
                 }
             },
-            submitData: {
+            'post.slug': {
                 handler() {
-                    // console.log(this.submitData);
-                },
-                deep: true,
+                    this.post.slug = slugify(this.post.slug, '-');
+                }
             },
         },
         computed: {

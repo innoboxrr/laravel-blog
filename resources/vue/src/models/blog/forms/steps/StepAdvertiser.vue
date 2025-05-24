@@ -151,20 +151,7 @@ export default {
     watch: {
         localBlog: {
             handler(val) {
-                const ad = val?.payload?.advertisement || {};
-                let valid = false;
-
-                if (ad.type === 'code') {
-                    valid = ad.code?.length >= 10;
-                } else {
-                    valid =
-                        ad.title?.length >= 3 &&
-                        ad.url?.startsWith('http') &&
-                        ad.alt?.length >= 3 &&
-                        !!ad.image;
-                }
-
-                this.$emit('validated', valid);
+                this.$emit('validated', true);
             },
             deep: true,
             immediate: true

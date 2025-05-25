@@ -86,7 +86,7 @@ class BaseLivewireComponent extends Component
         if(app()->environment('local') && $this->disableCache) {
             return $key . ':' . rand(1, 1000);
         } else {
-            return $key;
+            return $key . ':' . $this->blog->cache_key;
         }
     }
 

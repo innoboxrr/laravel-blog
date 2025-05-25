@@ -4,7 +4,7 @@
             <div class="articles-info pb-4.5 md:max-w-750px">
                 <div class="flex items-start md:items-center justify-between flex-col-reverse md:flex-row">
                     <button class="btn !hover:bg-secondary w-full md:w-auto">
-                        <a title="Write a response" href="#">
+                        <a title="Write a response" href="#post-response" >
                             {{ __('Write a response') }}
                         </a>
                     </button>
@@ -12,10 +12,10 @@
                         <li>
                             <a title="" href="#" class="text-primary flex items-center hover:text-secondary transition-colors duration-200">
                                 <i class="pe-7s-comment text-4xl mr-3 text-secondary"></i> 
-                                {{ $post->responses_count ?? 0 }} {{ __('Response') }}
+                                {{ $post->comments_count ?? 0 }} {{ __('Response') }}
                             </a>
                         </li>
-                        <li class="ml-5.5">
+                        <li class="ml-5.5" hidden>
                             <a title="" href="#" class="text-primary flex items-center hover:text-secondary transition-colors duration-200">
                                 <i class="pe-7s-like text-4xl mr-3 text-secondary"></i> 
                                 {{ $post->likes_count ?? 0 }}

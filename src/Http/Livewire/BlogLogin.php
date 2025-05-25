@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelBlog\Http\Livewire;
 
+use Innoboxrr\LaravelBlog\Events\BlogUserRegisteres;
 use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -70,6 +71,8 @@ class BlogLogin extends Component
             'email' => $this->register_email,
             'password' => Hash::make($this->register_password),
         ]);
+
+        event(new BlogUserRegisteres($user, request()->blog_id));
 
         Auth::login($user);
         session()->regenerate();

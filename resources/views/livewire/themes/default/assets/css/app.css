@@ -2687,9 +2687,9 @@ body {
 
 .banner-time {
     position: absolute;
-    bottom: 22px;
-    left: 30px;
-    font-size: 15px;
+    top: 10px;
+    right: 30px;
+    font-size: 10px;
     --tw-text-opacity: 1;
     color: rgb(245 248 249 / var(--tw-text-opacity))
 }
@@ -3157,6 +3157,8 @@ body {
 .counter-icon i {
     font-size: 42px
 }
+
+/* BLOG POST */
 
 .blog-post-article-text {
     margin-bottom: 1rem;

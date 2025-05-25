@@ -72,17 +72,12 @@
 								{{ $post->title }}
 							</a>
 						</h1>
-						@php
-							$rawPlaylist = $post->payload['playlist'] ?? '[]';
-							$playlist = is_array($rawPlaylist) 
-								? $rawPlaylist 
-								: json_decode($rawPlaylist, true) ?? [];
-						@endphp
-
 						@livewire('laravel-blog::livewire.components.youtube-playlist', [
-							'playlist' => $playlist,
+							'playlist' => $post->playlist,
 						])
-						<div class="mb-12 blog-post-article-text">{!! $post->content !!}</div>
+						<div class="mb-12 blog-post-article-text">
+							{!! $post->content !!}
+						</div>
 					</div>
 				</article>
 			</div>
@@ -98,7 +93,7 @@
 	@livewire('laravel-blog::livewire.components.related-posts', [
 		'post' => $post
 	])
-
+	<div id="post-response"></div>
 	@livewire('wirecomments::livewire.comments', [
 		'model' => $post,
 		'login' => blog_route('login', ['blog' => $post->blog_id]),

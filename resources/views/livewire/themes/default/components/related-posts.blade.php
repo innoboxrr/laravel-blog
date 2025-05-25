@@ -4,7 +4,7 @@
             <div>
                 <div class="last-read py-4.5">
                     <h2 class="text-lg text-bodyColor mb-4.5 leading-46px">
-                        Últimas Lecturas
+                        {{ __('Related Posts') }}
                     </h2>
 
                     <div class="article-banners">
@@ -17,7 +17,12 @@
                                             href="{{ blog_post_route($related) }}" 
                                             title="{{ $related->title }}">
                                             <div class="relative h-full w-full py-5.5 px-7.5 group-hover:bg-bodyBg transition-colors duration-200">
-                                                <h2 class="h2">{{ $related->title }}</h2>
+                                                <time datetime="{{ $related->published_at?->format('Y-m-d') }}" class="banner-time !text-primary">
+                                                    {{ $related->published_at?->format('F j, Y') }}
+                                                </time>
+                                                <h2 class="h2">
+                                                    {{ Str::limit($related->title, 30) }}
+                                                </h2>
                                                 @php
                                                     $category = $related->categories->first();
                                                     $colors = ['blue', 'green', 'red', 'yellow', 'purple', 'indigo', 'pink'];
@@ -27,11 +32,8 @@
                                                     {{ $category->name ?? 'General' }}
                                                 </span>
                                                 <p class="text-13px text-bodyColor font-primary mt-2.5">
-                                                    {{ Str::limit(strip_tags($related->content), 100) }}
+                                                    {{ Str::limit(strip_tags($related->content), 45) }}
                                                 </p>
-                                                <time datetime="{{ $related->published_at?->format('Y-m-d') }}" class="banner-time !text-primary">
-                                                    {{ $related->published_at?->format('F j, Y') }}
-                                                </time>
                                             </div>
                                         </a>
                                     </div>

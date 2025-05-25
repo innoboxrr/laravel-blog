@@ -2,6 +2,8 @@
 
 namespace Innoboxrr\LaravelBlog\Providers;
 
+use Innoboxrr\Wirecomments\Events\CommentPosted;
+use Innoboxrr\LaravelBlog\Support\Listeners\CommentPostedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Cache;
@@ -33,6 +35,8 @@ class EventServiceProvider extends ServiceProvider
         foreach ($data['observers'] as $model => $observer) {
             $model::observe($observer);
         }
+
+        $this->manuallyRegisterEventsAndObservers();
     }
 
     protected function customDiscoverEvents()
@@ -90,6 +94,15 @@ class EventServiceProvider extends ServiceProvider
         }
 
         return $observers;
+    }
+
+    protected function manuallyRegisterEventsAndObservers()
+    {
+        // Aquí puedes registrar eventos y observadores manualmente si es necesario
+        // Event::listen('event.name', 'ListenerClass');
+        // Model::observe(ObserverClass::class);
+
+        Event::listen(CommentPosted::class, CommentPostedListener::class);
     }
 
 }

@@ -2,6 +2,8 @@
 
 namespace Innoboxrr\LaravelBlog\Models\Traits\Operations;
 
+use Illuminate\Support\Str;
+
 trait BlogOperations
 {
 
@@ -79,6 +81,13 @@ trait BlogOperations
         return self::where('domain', $host)
             ->orWhere('slug', $slug)
             ->first();
+    }
+
+    public function clearCache()
+    {
+        $this->cache_key = Str::random(32);
+        $this->save();
+        return $this;
     }
 
 }

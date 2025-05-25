@@ -18,4 +18,5 @@ Route::domain('blog.{domain}')->where(['domain' => '.+'])->group(function () {
     Route::get('/category/{category}', BlogCategory::class)->name('category');
     Route::get('/tag/{tag}', BlogTag::class)->name('tag');
     Route::get('/blog-assets', [BlogController::class, 'assets'])->name('assets');
+    Route::get('/subscriber/verify/{subscriber}', [BlogController::class, 'subscriberVerify'])->name('subscriber.verify');
 });

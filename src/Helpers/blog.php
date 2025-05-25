@@ -52,3 +52,29 @@ if(!function_exists('blog_assets')) {
         ]);
     }
 }
+
+if(!function_exists('getFormattedPhone')) {
+    function getFormattedPhone($phone)
+    {
+        try {
+            $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+            $numberProto = $phoneUtil->parse($phone, 'ZZ');
+
+            if (!$phoneUtil->isValidNumber($numberProto)) {
+                throw new \Exception("Número inválido");
+            }
+
+            $dialCode = $numberProto->getCountryCode();
+            $nationalNumber = $numberProto->getNationalNumber();
+
+            return [
+                'formatted' => "{$dialCode} {$nationalNumber}",
+                'dial_code' => $dialCode,
+                'national_number' => $nationalNumber,
+                'country_iso' => $phoneUtil->getRegionCodeForNumber($numberProto),
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+}

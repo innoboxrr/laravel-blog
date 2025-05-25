@@ -3,10 +3,10 @@
 namespace Innoboxrr\LaravelBlog\Http\Livewire\Components;
 
 use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
-use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
 use Livewire\Attributes\On;
-use Innoboxrr\LaravelBlog\Events\BlogUserSubscribe;
 use Illuminate\Support\Str;
+use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
+use Innoboxrr\LaravelBlog\Events\BlogUserSubscribe;
 use Innoboxrr\LaravelBlog\Enums\BlogSubscriberStatus;
 
 class SubscribeComponent extends Component
@@ -14,7 +14,9 @@ class SubscribeComponent extends Component
     public $email = '';
     public $name = '';
     public $phone = '';
-    public $country_code = '';
+    public $phone_formatted = '';
+
+
     public $emailToConfirm = '';
     public $showModal = false;
 
@@ -29,6 +31,7 @@ class SubscribeComponent extends Component
     {
         $this->showModal = $this->alwaysShow;
     }
+
 
     #[On('openSubscribeModal')]
     public function openSubscribeModal()
@@ -48,19 +51,20 @@ class SubscribeComponent extends Component
 
         if ($this->showPhone) {
             $rules['phone'] = 'required|string|min:8';
-            $rules['country_code'] = 'required|string';
+            $parsed = getFormattedPhone($this->phone);
+            $this->phone_formatted = isset($parsed['formatted']) ? $parsed['formatted'] : '';
         }
 
         $this->validate($rules);
 
-        $subscriber = BlogSubscriber::create([
-            'status' => BlogSubscriberStatus::PENDING->value,
+        $subscriber = BlogSubscriber::updateOrCreate([
             'email' => $this->email,
-            'name' => $this->name,
-            'phone' => $this->phone,
-            'country_code' => $this->country_code,
-            'token' => Str::random(32),
             'blog_id' => $this->blog->id,
+        ],[
+            'status' => BlogSubscriberStatus::PENDING->value,
+            'name' => $this->name,
+            'phone' => $this->phone_formatted,
+            'token' => Str::random(32),
         ]);
 
         $this->subscribed = true;
@@ -68,8 +72,18 @@ class SubscribeComponent extends Component
 
         event(new BlogUserSubscribe($subscriber));
 
-        $this->reset(['email', 'name', 'phone', 'country_code']);
-        $this->dispatchBrowserEvent('set-subscribe-cookie');
+        $this->reset(['email', 'name', 'phone']);
+        $this->dispatch('set-subscribe-cookie');
+    }
+
+    public function resendConfirmation()
+    {
+        $subscriber = BlogSubscriber::where('email', $this->emailToConfirm)
+            ->where('blog_id', $this->blog->id)
+            ->where('status', BlogSubscriberStatus::PENDING->value)
+            ->first();
+
+        event(new BlogUserSubscribe($subscriber));
     }
 
     public function render()

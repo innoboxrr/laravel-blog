@@ -45,6 +45,7 @@
         "intervention/image-laravel": "^1.4",
         "innoboxrr/wirecomments": "^1.0",
         "innoboxrr/support": "^1.0",
-        "victorybiz/laravel-tel-input": "^1.6"
+        "victorybiz/laravel-tel-input": "^1.6",
+        "giggsey/libphonenumber-for-php": "^9.0"
     }
 }

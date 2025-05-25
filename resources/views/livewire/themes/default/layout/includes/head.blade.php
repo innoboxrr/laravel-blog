@@ -65,3 +65,8 @@
 @livewireStyles
 
 <title>{{ $layoutData['title'] ?? '' }}</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.min.css" />
+@laravelTelInputStyles
+
+@stack('styles')

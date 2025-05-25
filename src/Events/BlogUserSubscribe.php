@@ -9,7 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Innoboxrr\Wirecomments\Models\Comment;
 
-class BlogUserSubscribe
+class BlogUserSubscribe implements ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

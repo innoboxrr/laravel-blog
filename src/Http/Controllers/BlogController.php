@@ -15,7 +15,8 @@ use Innoboxrr\LaravelBlog\Http\Requests\Blog\{
     ForceDeleteRequest,
     ExportRequest,
     LambdaRequest,
-    AssetsRequest
+    AssetsRequest,
+    SubscriberVerifyRequest
 };
 
 class BlogController extends Controller
@@ -92,4 +93,9 @@ class BlogController extends Controller
         request()->session()->regenerateToken();
         return redirect()->away(request()->header('referer'));
     }   
+
+    public function subscriberVerify(SubscriberVerifyRequest $request)
+    {
+        return $request->handle();
+    }
 }

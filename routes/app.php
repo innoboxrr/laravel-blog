@@ -17,3 +17,4 @@ Route::get('blog/{blog}/post/{post}', BlogPost::class)->name('app.post');
 Route::get('blog/{blog}/category/{category}', BlogCategory::class)->name('app.category');
 Route::get('blog/{blog}/tag/{tag}', BlogTag::class)->name('app.tag');
 Route::get('blog-assets', [BlogController::class, 'assets'])->name('app.assets');
+Route::get('blog/{blog}/subscriber/verify/{subscriber}', [BlogController::class, 'subscriberVerify'])->name('app.subscriber.verify');

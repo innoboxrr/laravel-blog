@@ -107,20 +107,19 @@ class BlogHelper
 
     public static function route($name, $parameters = [], $absolute = false)
     {
-        if(self::contextIsApp()){
-            $route = route(
-                'blog.app.' . $name, 
-                $parameters, 
-                $absolute
-            );
-        } elseif(self::contextIsBlog()){
-
-            // unser blog parameter
+        $route = null;
+        
+        if(self::contextIsBlog()){
             unset($parameters['blog']);
-
             $route = route(
                 'blog.' . $name, 
                 array_merge($parameters, ['domain' => self::getBlogDomain()]), 
+                $absolute
+            );
+        } else {
+            $route = route(
+                'blog.app.' . $name, 
+                $parameters, 
                 $absolute
             );
         }

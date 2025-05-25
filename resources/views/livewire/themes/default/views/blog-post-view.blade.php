@@ -98,4 +98,11 @@
 		'model' => $post,
 		'login' => blog_route('login', ['blog' => $post->blog_id]),
 	])
+	@livewire('laravel-blog::livewire.components.subscribe-component', [
+		'showName' => true,
+		'showPhone' => true,
+		'alwaysShow' => true,
+		'afterSubscribe' => '<div class="text-sm text-blue-600">🎁 Aquí tienes tu regalo: <a href="#">Descargar</a></div>',
+	])
+
 </div>

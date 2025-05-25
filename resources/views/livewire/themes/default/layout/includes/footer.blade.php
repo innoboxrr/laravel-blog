@@ -87,7 +87,7 @@
                             {{ csrf_field() }}
                             <input type="hidden" name="blog_id" value="{{ $blog->id }}">
                             <input type="hidden" name="blog_subscriber_type" value="email">
-                            <input type="email" class="form-control" placeholder="{{ __('Type Email') }}">
+                            <input type="email" name="email" class="form-control" placeholder="{{ __('Type Email') }}">
                         </form>
                     </div>
                 </div>

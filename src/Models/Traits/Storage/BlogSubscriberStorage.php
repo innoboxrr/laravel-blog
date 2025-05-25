@@ -9,11 +9,17 @@ trait BlogSubscriberStorage
 
     public function createModel($request)
     {
+        $otherData = $request->only($this->creatable);
 
-        $blogSubscriber = $this->create($request->only($this->creatable));
+        unset($otherData['blog_id']);
+        unset($otherData['email']);
+
+        $blogSubscriber = $this->updateOrCreate([
+            'email' => $request->email,
+            'blog_id' => $request->blog_id
+        ], $otherData);
 
         return $blogSubscriber;
-
     }
 
     public function updateModel($request)

@@ -59,7 +59,7 @@ class SubscriberVerifyRequest extends FormRequest
         $blog = $this->subscriber->blog;
 
         return redirect()
-            ->to(blog_route('index', ['blog' => $blog->id]))
+            ->to(blog_route('index', ['blog' => $blog->id, 'subscribed' => 'success']))
             ->with('success', '¡Tu correo ha sido verificado correctamente! 🎉');
     }
 }

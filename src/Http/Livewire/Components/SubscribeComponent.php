@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Innoboxrr\LaravelBlog\Models\BlogSubscriber;
 use Innoboxrr\LaravelBlog\Events\BlogUserSubscribe;
 use Innoboxrr\LaravelBlog\Enums\BlogSubscriberStatus;
+use Illuminate\Support\Facades\Request;
 
 class SubscribeComponent extends Component
 {
@@ -30,6 +31,24 @@ class SubscribeComponent extends Component
     public function mount()
     {
         $this->showModal = $this->alwaysShow;
+
+        $subscribed = Request::query('subscribed');
+
+        if ($subscribed === 'pending') {
+            $this->dispatch('swal:alert', [
+                'icon' => 'info',
+                'title' => 'Revisa tu correo 📩',
+                'text' => 'Te hemos enviado un correo de confirmación. Por favor, verifica tu bandeja de entrada.',
+            ]);
+        }
+
+        if ($subscribed === 'success') {
+            $this->dispatch('swal:alert', [
+                'icon' => 'success',
+                'title' => '¡Suscripción confirmada!',
+                'text' => 'Gracias por confirmar tu suscripción.',
+            ]);
+        }
     }
 
 

@@ -107,5 +107,21 @@
         window.addEventListener('set-subscribe-cookie', function () {
             setCookie();
         });
+
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('swal:alert', (data) => {
+                
+                if (Array.isArray(data)) {
+                    data = data[0];
+                }
+                Swal.fire({
+                    icon: data.icon || 'info',
+                    title: data.title || 'Alerta',
+                    html: data.text || '', // 👈 CAMBIO AQUÍ
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#6366f1'
+                });
+            });
+        });
     </script>
 @endpush

@@ -33,6 +33,7 @@ class CreateRequest extends FormRequest
             'content' => 'required|string',
             'blog_id' => 'required|integer|exists:blogs,id',
             'published_at' => 'nullable|date',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:1048',
             'author_id' => 'required|integer|exists:users,id',
         ];
     }

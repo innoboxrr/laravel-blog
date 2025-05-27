@@ -18,6 +18,7 @@
                 <!-- Left Column: Contenido Principal -->
                 <div class="lg:col-span-2 bg-white border rounded-md">
                     <div class="px-6 py-8">
+
                         <!-- Imagen Destacada -->
                         <div
                             v-if="blogPost.payload && blogPost.payload.images && blogPost.payload.images.original"
@@ -56,7 +57,9 @@
                         </div>
 
                         <!-- Contenido de la Publicación -->
-                        <article class="prose max-w-none" v-html="blogPost.content"></article>
+                        <article 
+                            class="blog-post-article-text" 
+                            v-html="blogPost.content"></article>
 
                         <!-- Metadatos Adicionales -->
                         <div v-if="blogPost.payload && blogPost.payload.metas" class="mt-10">
@@ -74,7 +77,7 @@
                         </div>
 
                         <!-- Sección de Comentarios -->
-                        <div class="mt-12">
+                        <div v-if="false" class="mt-12">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-6">{{ __blog('Comentarios') }}</h3>
                             <div v-if="comments && comments.length" class="space-y-6">
                                 <div
@@ -98,7 +101,7 @@
                 <!-- Right Column: Sidebar Widgets -->
                 <aside class="space-y-8">
                     <!-- Widget de Compartir -->
-                    <div class="bg-white border rounded-md p-6">
+                    <div v-if="false" class="bg-white border rounded-md p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __blog('Compartir') }}</h3>
                         <div class="flex flex-col space-y-3">
                             <button class="flex items-center space-x-2 text-blue-600 hover:underline">
@@ -140,7 +143,7 @@
                                 {{ __blog('Vistas totales') }}:
                                 <span class="font-medium">{{ blogPost.payload.stats.views || 0 }}</span>
                             </p>
-                            <p>
+                            <p v-if="false">
                                 {{ __blog('Likes totales') }}:
                                 <span class="font-medium">{{ blogPost.payload.stats.likes || 0 }}</span>
                             </p>
@@ -222,3 +225,249 @@
         }
     }
 </script>
+
+<style>
+.blog-post-article-text * {
+    all: unset !important;
+    display: revert !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Elementos base */
+.blog-post-article-text {
+    font-size: 1rem !important;
+    line-height: 1.8 !important;
+    color: #1f2937 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Títulos */
+.blog-post-article-text h1,
+.blog-post-article-text h2,
+.blog-post-article-text h3,
+.blog-post-article-text h4,
+.blog-post-article-text h5,
+.blog-post-article-text h6 {
+    font-weight: 700 !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    color: #111827 !important;
+}
+
+.blog-post-article-text h1 { font-size: 2rem !important; }
+.blog-post-article-text h2 { font-size: 1.75rem !important; }
+.blog-post-article-text h3 { font-size: 1.5rem !important; }
+.blog-post-article-text h4 { font-size: 1.25rem !important; }
+.blog-post-article-text h5 { font-size: 1.125rem !important; }
+.blog-post-article-text h6 { font-size: 1rem !important; }
+
+/* Párrafos y span */
+.blog-post-article-text p {
+    margin: 1.25rem 0 !important;
+}
+
+.blog-post-article-text span {
+    font-style: italic !important;
+    color: #4b5563 !important;
+}
+
+/* Listas */
+.blog-post-article-text ul,
+.blog-post-article-text ol {
+    margin-left: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    padding-left: 1rem !important;
+}
+
+.blog-post-article-text ul li {
+    list-style-type: disc !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.blog-post-article-text ol li {
+    list-style-type: decimal !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Blockquote */
+.blog-post-article-text blockquote {
+    margin: 1.5rem 0 !important;
+    padding: 1rem 1.5rem !important;
+    border-left: 4px solid #3b82f6 !important;
+    background-color: #f9fafb !important;
+    color: #374151 !important;
+    font-style: italic !important;
+}
+
+/* Tablas */
+.blog-post-article-text table {
+    width: 100% !important;
+    margin: 2rem 0 !important;
+    border-collapse: collapse !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.blog-post-article-text thead {
+    background-color: #f3f4f6 !important;
+    font-weight: bold !important;
+}
+
+.blog-post-article-text tbody tr:nth-child(odd) {
+    background-color: #f9fafb !important;
+}
+
+.blog-post-article-text th,
+.blog-post-article-text td {
+    border: 1px solid #d1d5db !important;
+    padding: 0.75rem 1rem !important;
+    text-align: left !important;
+}
+
+.blog-post-article-text th {
+    background-color: #e5e7eb !important;
+}
+
+/* Enlaces */
+.blog-post-article-text a {
+    color: #2563eb !important;
+    text-decoration: underline !important;
+    transition: color 0.2s ease !important;
+}
+
+.blog-post-article-text a:hover {
+    color: #1d4ed8 !important;
+}
+
+/* Multimedia */
+.blog-post-article-text img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 0.5rem !important;
+    margin: 1.5rem 0 !important;
+    display: block !important;
+}
+
+.blog-post-article-text video,
+.blog-post-article-text iframe {
+    max-width: 100% !important;
+    margin: 1.5rem 0 !important;
+    border-radius: 0.5rem !important;
+    display: block !important;
+}
+
+.blog-post-article-text iframe {
+    border: none !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+}
+
+/* Código */
+.blog-post-article-text code {
+    background-color: #f3f4f6 !important;
+    color: #dc2626 !important;
+    padding: 0.2rem 0.4rem !important;
+    border-radius: 0.25rem !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.95em !important;
+}
+
+.blog-post-article-text pre {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    overflow-x: auto !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.95em !important;
+    margin: 1.5rem 0 !important;
+}
+
+/* Otros */
+.blog-post-article-text strong {
+    font-weight: bold !important;
+    color: #111827 !important;
+}
+
+.blog-post-article-text em {
+    font-style: italic !important;
+    color: #4b5563 !important;
+}
+
+.blog-post-article-text hr {
+    border: none !important;
+    border-top: 1px solid #e5e7eb !important;
+    margin: 2rem 0 !important;
+}
+
+.blog-post-article-text figure {
+    margin: 2rem 0 !important;
+    text-align: center !important;
+}
+
+.blog-post-article-text figcaption {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+    margin-top: 0.5rem !important;
+}
+
+.blog-post-article-text mark {
+    background-color: #fef08a !important;
+    padding: 0.1rem 0.25rem !important;
+    border-radius: 0.25rem !important;
+    font-weight: bold !important;
+}
+
+.blog-post-article-text abbr[title] {
+    text-decoration: underline dotted !important;
+    cursor: help !important;
+}
+
+.blog-post-article-text del {
+    text-decoration: line-through !important;
+    color: #9ca3af !important;
+}
+
+.blog-post-article-text ins {
+    text-decoration: underline !important;
+    color: #16a34a !important;
+}
+
+.blog-post-article-text small {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+}
+
+.blog-post-article-text iframe,
+.blog-post-article-text video,
+.blog-post-article-text embed,
+.blog-post-article-text object {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 1.5rem 0 !important;
+    border-radius: 0.5rem !important;
+    aspect-ratio: 16 / 9 !important;
+    border: none !important;
+}
+
+.blog-post-article-text .responsive-embed {
+    position: relative !important;
+    padding-bottom: 56.25% !important; /* 16:9 ratio */
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 1.5rem 0 !important;
+}
+
+.blog-post-article-text .responsive-embed iframe {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+}
+
+
+</style>

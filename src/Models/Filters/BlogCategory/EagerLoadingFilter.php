@@ -13,7 +13,15 @@ class EagerLoadingFilter
     {
 
         if ($data->load_children == 1 || $data->load_children == true) {
-            $query->with(['children']);
+            if($data->load_posts_count == 1 || $data->load_posts_count == true) {
+                $query->with([
+                    'children' => function ($q) {
+                        $q->withCount(['posts']);
+                    }
+                ]);
+            } else {
+                $query->with(['children']);
+            }
         }
 
         if($data->load_posts_count == 1 || $data->load_posts_count == true) {

@@ -16,14 +16,18 @@
                             'bg-' + ['red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink'][category.id % 7] + '-600',
                             'flex w-16 shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white'
                         ]">
-                        <span class="text-lg">{{ category.name.charAt(0) }}</span>
+                        <span class="text-lg">
+                            {{ category.name.charAt(0) }}
+                        </span>
                     </div>
                     <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
                         <div class="flex-1 truncate px-4 py-2 text-sm">
                             <a href="#" class="font-medium text-gray-900 hover:text-gray-600">
                                 {{ category.name }}
                             </a>
-                            <p v-if="category.posts_count > 0" class="text-gray-500">
+                            <p 
+                                v-if="category.posts_count > 0" 
+                                class="text-gray-500">
                                 {{ category.posts_count }} 
                                 <span v-if="category.posts_count > 1">{{ __blog('posts') }}</span>
                                 <span v-else>{{ __blog('post') }}</span>
@@ -133,7 +137,7 @@
                                             :to="{ name: 'BlogPostsEditor', params: { id: post.id } }"
                                             :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'font-semibold text-gray-900 hover:text-purple-600 leading-tight truncate']"
                                         >
-                                            {{ post.title }}
+                                            {{ post.title.length > 70 ? post.title.slice(0, 67) + '…' : post.title }}
                                         </router-link>
                                     </div>
                                     <p v-if="post.team" class="text-xs text-gray-500">
@@ -235,7 +239,7 @@
 
             watch(postFilters, async () => {
                 await globalStore.fetchPosts();
-            });
+            }, { deep: true });
 
             return {
                 fetchCategories,

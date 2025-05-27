@@ -131,7 +131,7 @@
                         type="search" 
                         name="search" 
                         aria-label="Search" 
-                        @input="postFilters.search = $event.target.value; updateFilters()"
+                        @input="postFilters.search = $event.target.value"
                         class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-10 pr-3 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" 
                         placeholder="Search" />
                     <MagnifyingGlassIcon 
@@ -214,7 +214,7 @@
                             name="search" 
                             aria-label="Search" 
                             style="outline: none; box-shadow: none;" 
-                            @input="postFilters.search = $event.target.value; updateFilters()"
+                            @input="postFilters.search = $event.target.value"
                             class="col-start-1 row-start-1 block size-full border-0 rounded-md bg-white py-2 pl-8 pr-3 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
                             placeholder="Search" />
                         <MagnifyingGlassIcon 
@@ -312,7 +312,7 @@ export default {
             },
             globalStore: null,
             translationsStore: null,
-            blogLoadLocale: null
+            blogLoadLocale: null,
         };
     },
     computed: {

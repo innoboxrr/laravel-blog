@@ -24,7 +24,7 @@
                             </div>
                         </a>
                         <img 
-                            src="{{ data_get($post->payload, 'images.large') ?? asset('images/default-banner.webp') }}"
+                            src="{{ $post->large_image }}"
                             alt="{{ $post->title }}"
                             class="w-full"
                             width="434"

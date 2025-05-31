@@ -2,8 +2,8 @@
 
 namespace Innoboxrr\LaravelBlog\Models\Traits\Operations;
 
-use Illuminate\Http\Request;
-use Innoboxrr\LaravelBlog\Services\BlogPost\FeaturedImageService;
+use Innoboxrr\LaravelBlog\Jobs\BlogPost\ProcessFeaturedImage;
+use Innoboxrr\LaravelBlog\Jobs\BlogPost\GenerateFeaturedImage;
 
 trait BlogPostOperations
 {
@@ -43,14 +43,14 @@ trait BlogPostOperations
         return $this->save();
     }
     
-    public function uploadFeaturedImage(Request $request)
+    public function processFeaturedImage()
     {
-        FeaturedImageService::uploadImage($request->file('featured_image'), $this);
+        ProcessFeaturedImage::dispatch($this);
     }
 
-    public function generateFeaturedImage(Request $request)
+    public function generateFeaturedImage()
     {
-        FeaturedImageService::generateImage($this);
+        GenerateFeaturedImage::dispatch($this);
     }
 
     public function next()
@@ -68,5 +68,4 @@ trait BlogPostOperations
             ->orderBy('id', 'desc')
             ->first();
     }
-    
 }

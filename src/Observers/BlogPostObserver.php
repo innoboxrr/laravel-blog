@@ -20,7 +20,6 @@ class BlogPostObserver
     public function created(BlogPost $blogPost): void
     {
         $blogPost->log('created');
-        $blogPost->blog->clearCache();
     }
  
     /**
@@ -29,7 +28,6 @@ class BlogPostObserver
     public function updated(BlogPost $blogPost): void
     {
         $blogPost->log('updated');
-        $blogPost->blog->clearCache();
     }
  
     /**
@@ -38,7 +36,6 @@ class BlogPostObserver
     public function deleted(BlogPost $blogPost): void
     {
         $blogPost->log('deleted');
-        $blogPost->blog->clearCache();
     }
  
     /**
@@ -47,7 +44,6 @@ class BlogPostObserver
     public function restored(BlogPost $blogPost): void
     {
         $blogPost->log('restored');
-        $blogPost->blog->clearCache();
     }
  
     /**
@@ -56,6 +52,5 @@ class BlogPostObserver
     public function forceDeleted(BlogPost $blogPost): void
     {
         $blogPost->log('forceDeleted');
-        $blogPost->blog->clearCache();
     }
 }

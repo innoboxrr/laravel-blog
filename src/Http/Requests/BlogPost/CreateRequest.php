@@ -14,8 +14,14 @@ class CreateRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        // Remover del request el campo payload
+        $this->merge($this->except('payload'));
+
         $this->merge([
             'author_id' => $this->user()->id,
+            'thumbnail_image' => $this->original_image ?? null,
+            'medium_image' => $this->original_image ?? null,
+            'large_image' => $this->original_image ?? null,
         ]);
     }
 
@@ -33,7 +39,7 @@ class CreateRequest extends FormRequest
             'content' => 'required|string',
             'blog_id' => 'required|integer|exists:blogs,id',
             'published_at' => 'nullable|date',
-            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:1048',
+            'original_image' => 'nullable|string',
             'author_id' => 'required|integer|exists:users,id',
         ];
     }

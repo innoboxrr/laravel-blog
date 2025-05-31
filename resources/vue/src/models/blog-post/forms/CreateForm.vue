@@ -162,7 +162,7 @@
                 return {
                     ...this.post,
                     ...this.externalParams,
-                    ...this.payload,
+                    ...this.post.payload,
                     blog_id: this.blogId,
                 }
             },
@@ -171,19 +171,19 @@
 
             fetchData() {
                 this.post.published_at = dayjs().format('YYYY-MM-DDTHH:mm');
-
+                this.post.status = 'published';
                 if (!this.post.payload) {
                     this.post.payload = { playlist: [] }
                 } else if (!this.post.payload.playlist) {
                     this.post.payload.playlist = []
                 }
-
             },
 
             onSubmit() {
-                if(this.JSValidator.status) {
+                if(this.JSValidator.status && !this.disabled) {
                     this.disabled = true;
-                    createModel(this.getSubmitData()).then(res => {
+
+                    createModel(this.submitData).then(res => {
                         this.$emit('submit', res);
                         setTimeout(() => { this.disabled = false; }, 2500);
                     }).catch(error => {
@@ -191,25 +191,11 @@
                         if(error.response.status == 422)
                             this.JSValidator
                                 .appendExternalErrors(error.response.data.errors);
+                        this.alert('error', this.__blog('Error al crear la publicación'));
                     });
                 } else {
                     this.disabled = false;
                 }
-            },
-            getSubmitData() {
-                let submitData;
-
-                if (this.externalParams.featured_image) {
-                    submitData = new FormData();
-                    Object.keys(this.submitData).forEach(key => {
-                        submitData.append(key, this.submitData[key]);
-                    });
-                    submitData.append('featured_image', this.externalParams.featured_image);
-
-                } else {
-                    submitData = this.submitData;
-                }
-                return submitData;
             },
         }
 	}

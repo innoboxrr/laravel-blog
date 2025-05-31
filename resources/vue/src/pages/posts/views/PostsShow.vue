@@ -24,7 +24,8 @@
                             v-if="blogPost.payload && blogPost.payload.images && blogPost.payload.images.original"
                             class="mb-8">
                             <img
-                                :src="blogPost.payload.images.original"
+                                :src="fullUrl(blogPost.payload.images.original)"
+                                :alt="blogPost.title || __blog('Imagen Destacada')"
                                 alt="Imagen Destacada"
                                 class="w-full rounded-md" />
                         </div>
@@ -222,6 +223,11 @@
             } finally {
                 this.loading = false
             }
+        },
+        methods: {
+            fullUrl(url) {
+                return url.startsWith('http') ? url : `${window.location.origin}/${url}`;
+            },
         }
     }
 </script>

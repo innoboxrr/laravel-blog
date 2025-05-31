@@ -86,8 +86,29 @@
                     };
                     reader.readAsDataURL(file);
 
-                    // Emitir el archivo seleccionado al padre
-                    this.$emit('onFeaturedImageChange', file);
+                    let formData = new FormData();
+                    const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    formData.append('_token', csrf_token);
+                    formData.append('file', file);
+                    formData.append('visibility', 'public');
+
+                    fetch(this.fileUploadUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                        return response.json();
+                        } else {
+                        throw new Error('An error has occurred');
+                        }
+                    })
+                    .then(data => {
+                        this.$emit('onFeaturedImageChange', data.path);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
                 }
             },
             removeImage() {

@@ -10,7 +10,7 @@
                         @foreach ($layoutData['latest_posts'] as $post)
                             <li class="footer-section-content-response flex gap-3">
                                 <img
-                                    src="{{ $post->thumbnail }}"
+                                    src="{{ $post->thumbnail_image }}"
                                     alt="{{ $post->title }}"
                                     class="w-12 h-12 rounded object-cover"
                                     loading="lazy"

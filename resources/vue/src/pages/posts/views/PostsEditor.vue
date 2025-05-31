@@ -217,10 +217,10 @@
                     tags: data,
                 };
             },
-            featuredImageChange(data) {
+            featuredImageChange(path) {
                 this.externalParams = {
                     ...this.externalParams,
-                    featured_image: data,
+                    original_image: path,
                 };
             },
             setPreloadPost(data) {

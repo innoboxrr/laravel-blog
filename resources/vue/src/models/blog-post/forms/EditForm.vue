@@ -56,11 +56,11 @@
         <text-input-component
             :label="__blog('Publish date')"
             type="datetime-local"
-            name="publish_at"
+            name="published_at"
             :required="true"
             validators="required"
             :custom-class="inputClass"
-            v-model="blogPost.publish_at" />
+            v-model="blogPost.published_at" />
 
         <youtube-playlist
             v-if="blogPost.payload && blogPost.payload.playlist"
@@ -104,6 +104,10 @@
                 type: [Number, String],
                 required: true
             },
+            externalParams: {
+                type: Object,
+                default: () => ({})
+            },
             preloadPost: {
                 type: Object,
                 default: () => ({
@@ -128,7 +132,7 @@
                     slug: '',
                     content: '',
                     status: 'draft',
-                    publish_at: '',
+                    published_at: '',
                     payload: {
                         playlist: [],
                     }
@@ -138,10 +142,41 @@
             }
         },
 
+        mounted() {
+            this.fetchData();
+            this.JSValidator = new JSValidator(this.formId).init();
+            this.JSValidator.status = true;
+        },
+
         computed: {
             validForm() {
                 return this.JSValidator ? this.JSValidator.status : false;
             },
+            submitData() {
+                let data =  {
+                    ...this.blogPost, 
+                    ...this.externalParams,
+                    ...this.blogPost.payload.playlist,
+
+                }
+
+                // 
+
+                // Props to remove from the submit data
+                let propsToRemove = [
+                    'actions',
+                    'author_id',
+                    'payload',
+                ];
+
+                propsToRemove.forEach(prop => {
+                    delete data[prop];
+                });
+
+                console.log(data);
+
+                return data;
+            }
         },
 
         watch: {
@@ -160,12 +195,12 @@
                 },
                 deep: true,
             },
-        },
-
-        mounted() {
-            this.fetchData();
-            this.JSValidator = new JSValidator(this.formId).init();
-            this.JSValidator.status = true;
+            externalParams: {
+                handler(newParams) {
+                    console.log('External params changed:', newParams);
+                },
+                deep: true,
+            }
         },
 
         methods: {
@@ -183,6 +218,9 @@
                     } else {
                         res.published_at = dayjs(new Date()).format('YYYY-MM-DDTHH:mm');
                     }
+
+                    console.log(res.published_at); 
+
                     this.blogPost = res;
 
                     this.blogPost = {...this.blogPost, ...this.preloadPost };
@@ -209,9 +247,7 @@
                 if (this.JSValidator.status) {
                     this.disabled = true;
                     try {
-                        const res = await updateModel(this.blogPost.id, {
-                            ...this.blogPost, ...this.blogPost.payload 
-                        });
+                        const res = await updateModel(this.blogPost.id, this.submitData);
                         this.$emit('submit', res);
                         setTimeout(() => {
                             this.disabled = false;

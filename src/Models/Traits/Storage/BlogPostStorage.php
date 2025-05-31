@@ -41,7 +41,7 @@ trait BlogPostStorage
         $processImage = $request->original_image && $request->original_image !== $this->getPayload('images.original');
 
         $this->update($request->only($this->updatable));
-        $this->updateModelMetas($request);
+        $this->updateModelMetas($request->only($this->editable_metas));
 
         if ($request->has('tags')) {
             $tags = collect($request->tags ?? [])

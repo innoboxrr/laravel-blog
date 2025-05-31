@@ -44,7 +44,7 @@ trait BlogPostStorage
         $this->updateModelMetas($request);
 
         if ($request->has('tags')) {
-            $tags = collect(explode(',', $request->tags ?? ''))
+            $tags = collect($request->tags ?? [])
                 ->map(function ($tag){
                     return BlogTag::firstOrCreate([
                         'name' => $tag,
@@ -56,7 +56,7 @@ trait BlogPostStorage
 
         if ($request->has('categories')) {
             $this->categories()
-                ->sync(explode(',', $request->categories ?? ''));
+                ->sync($request->categories ?? []);
         }
 
         if($processImage) {

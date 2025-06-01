@@ -37,6 +37,15 @@ trait BlogOperations
                 ]
             ],
             'blog' => [
+                'logo' => $this->meta('blog_logo'),
+                'favicon' => $this->meta('blog_favicon'),
+                'apple_touch_icon' => $this->meta('blog_appleTouchIcon'),
+                'favicon_32' => $this->meta('blog_favicon32'),
+                'favicon_16' => $this->meta('blog_favicon16'),
+                'safari_mask_icon' => $this->meta('blog_safariMaskIcon'),
+                'description' => $this->meta('blog_description'),
+                'keywords' => $this->meta('blog_keywords'),
+
                 'theme' => $this->meta('blog_theme', 'default'),
                 'allow_comments' => (int) $this->meta('blog_allow_comments', 1),
                 'allow_subscriptions' => (int) $this->meta('blog_allow_subscriptions', 1),

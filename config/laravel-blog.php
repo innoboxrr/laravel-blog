@@ -83,11 +83,18 @@ return [
     'assets_cdn_url' => env('LARAVEL_BLOG_CDN_URL', ''),
 
 	'layout_data' => [
+		
 		'title' => 'Blog',
-		'logo' => url('/site/favicon/logo.png'),
 		'metaDescription' => 'Este es un blog sobre Laravel, Vue y más.',
 		'metaKeywords' => 'Laravel, VueJS, programación, tutoriales',
 		'metaAuthor' => 'Raúl RJR',
+		
+		'logo' => url('/site/favicon/logo.png'),
+		'favicon' => url('/site/favicon/logo.png'),
+		'appleTouchIcon' => url('/site/favicon/apple-touch-icon.png'),
+		'favicon32' => url('/site/favicon/favicon-32x32.png'),
+		'favicon16' => url('/site/favicon/favicon-16x16.png'),
+		'safariMaskIcon' => url('/site/favicon/safari-pinned-tab.svg'),
 
 		'ogTitle' => 'Título para Facebook',
 		'ogDescription' => 'Descripción atractiva para Open Graph',

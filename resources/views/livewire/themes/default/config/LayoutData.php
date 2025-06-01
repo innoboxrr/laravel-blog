@@ -10,6 +10,16 @@ class LayoutData
     public static function toArray($component)
     {
         return [
+            'title' => $component->blog->name,
+            'logo' => $component->blog->logo,
+            'favicon' => $component->blog->favicon,
+            'appleTouchIcon' => $component->blog->apple_touch_icon,
+            'favicon32' => $component->blog->favicon_32,
+            'favicon16' => $component->blog->favicon_16,
+            'safariMaskIcon' => $component->blog->safari_mask_icon,
+            'description' => $component->blog->getPayload('blog.description'),
+            'keywords' => $component->blog->getPayload('blog.keywords'),
+
             // General
             'categories' => $component->blog->categories()->where('parent_id', null)->get(),
             'tags' => $component->blog->tags()->get(),

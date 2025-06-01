@@ -31,8 +31,13 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 text-gray-300">Teléfono (opcional)</label>
-                <input type="text" wire:model.defer="phone"
-                    class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-700" />
+                <x-tel-input
+                    wire:model.live="phone"
+                    value="{{ $phone }}"
+                    id="phone"
+                    name="phone"
+                    class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
                 @error('phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 
@@ -52,3 +57,23 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('swal:alert', (data) => {
+                
+                if (Array.isArray(data)) {
+                    data = data[0];
+                }
+                Swal.fire({
+                    icon: data.icon || 'info',
+                    title: data.title || 'Alerta',
+                    html: data.text || '', // 👈 CAMBIO AQUÍ
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#6366f1'
+                });
+            });
+        });
+    </script>
+@endpush

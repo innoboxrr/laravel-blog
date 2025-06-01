@@ -4,13 +4,13 @@ namespace Innoboxrr\LaravelBlog\Http\Livewire;
 
 use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
 use Innoboxrr\LaravelBlog\Events\BlogUserContact;
-use Illuminate\Support\Facades\Request;
 
 class BlogContact extends Component
 {
     public $name = '';
     public $email = '';
     public $phone = '';
+    public $phone_formatted = '';
     public $message = '';
 
     public function submit()
@@ -22,24 +22,31 @@ class BlogContact extends Component
             'message' => 'required|string|min:10',
         ]);
 
+        if (!empty($this->phone)) {
+            $parsed = getFormattedPhone($this->phone);
+            $this->phone_formatted = $parsed['formatted'] ?? $this->phone;
+        }
+
         event(new BlogUserContact([
-            'blog_id' => $this->blog->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'message' => $this->message,
-            'referer' => request()->header('referer'),
-            'ip' => request()->ip(),
-            'user_agent' => request()->header('user-agent'),
-            'timestamp' => now(),
+            'blog_id'     => $this->blog->id,
+            'name'        => $this->name,
+            'email'       => $this->email,
+            'phone'       => $this->phone_formatted,
+            'message'     => $this->message,
         ]));
 
-        $this->reset(['name', 'email', 'phone', 'message']);
+        $this->reset([
+            'name', 
+            'email', 
+            'phone', 
+            'phone_formatted', 
+            'message'
+        ]);
 
         $this->dispatch('swal:alert', [
-            'icon' => 'success',
-            'title' => 'Mensaje enviado',
-            'text' => 'Gracias por contactarnos. Te responderemos pronto.',
+            'icon' => 'info',
+            'title' => '¡Mensaje enviado!',
+            'text' => 'Gracias por contactarnos. Nos pondremos en contacto contigo pronto.',
         ]);
     }
 

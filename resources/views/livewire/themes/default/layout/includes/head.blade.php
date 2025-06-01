@@ -25,8 +25,11 @@
 <meta name="twitter:creator" content="{{ $layoutData['twitterCreator'] ?? '' }}" />
 
 <!-- Favicon -->
-<link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
-<link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}" />
+<link rel="icon" href="{{ $layoutData['favicon'] ?? asset('images/favicon.ico') }}" type="image/x-icon" />
+<link rel="apple-touch-icon" href="{{ $layoutData['appleTouchIcon'] ?? asset('images/apple-touch-icon.png') }}" />
+<link rel="icon" type="image/png" sizes="32x32" href="{{ $layoutData['favicon32'] ?? asset('images/favicon-32x32.png') }}" />
+<link rel="icon" type="image/png" sizes="16x16" href="{{ $layoutData['favicon16'] ?? asset('images/favicon-16x16.png') }}" />
+<link rel="mask-icon" href="{{ $layoutData['safariMaskIcon'] ?? asset('images/safari-pinned-tab.svg') }}" color="#5bbad5" />
 
 <!-- Canonical -->
 <link rel="canonical" href="{{ $layoutData['canonical'] ?? url()->current() }}" />

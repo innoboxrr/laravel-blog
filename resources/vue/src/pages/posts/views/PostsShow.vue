@@ -101,6 +101,24 @@
 
                 <!-- Right Column: Sidebar Widgets -->
                 <aside class="space-y-8">
+
+                    <!-- Actions -->
+                    <div class="bg-white border rounded-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __blog('Acciones') }}</h3>
+                        <div class="flex flex-col space-y-3">
+                            <button
+                                @click="$router.push({ name: 'BlogPostsEditor', params: { id: blogPost.id } })"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                                {{ __blog('Editar Publicación') }}
+                            </button>
+                            <button
+                                @click="$router.push({ name: 'BlogAppDashboard' })"
+                                class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
+                                {{ __blog('Volver a la lista') }}
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Widget de Compartir -->
                     <div v-if="false" class="bg-white border rounded-md p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __blog('Compartir') }}</h3>

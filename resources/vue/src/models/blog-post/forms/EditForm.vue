@@ -153,16 +153,13 @@
                 return this.JSValidator ? this.JSValidator.status : false;
             },
             submitData() {
+
                 let data =  {
                     ...this.blogPost, 
                     ...this.externalParams,
                     ...this.blogPost.payload.playlist,
-
                 }
 
-                // 
-
-                // Props to remove from the submit data
                 let propsToRemove = [
                     'actions',
                     'author_id',
@@ -173,7 +170,26 @@
                     delete data[prop];
                 });
 
-                console.log(data);
+                // Validate the structure of categories and tags:
+
+                // - Categories must be an array of IDs.
+                if (Array.isArray(data.categories)) {
+                    data.categories = data.categories.map(cat => {
+                        return typeof cat === 'object' ? cat.id : cat;
+                    });
+                } else {
+                    data.categories = [];
+                }
+
+                // - Tags must be an array of strings.
+                if (Array.isArray(data.tags)) {
+                    data.tags = data.tags.map(tag => {
+                        return typeof tag === 'object' ? tag.name : tag;
+                    });
+                } else {
+                    data.tags = [];
+                }
+
 
                 return data;
             }
@@ -187,7 +203,6 @@
             },
             preloadPost: {
                 handler(newPost) {
-                    console.log('Preload post changed:', newPost);
                     this.blogPost = {
                         ...this.blogPost,
                         ...newPost
@@ -195,12 +210,6 @@
                 },
                 deep: true,
             },
-            externalParams: {
-                handler(newParams) {
-                    console.log('External params changed:', newParams);
-                },
-                deep: true,
-            }
         },
 
         methods: {
@@ -218,8 +227,6 @@
                     } else {
                         res.published_at = dayjs(new Date()).format('YYYY-MM-DDTHH:mm');
                     }
-
-                    console.log(res.published_at); 
 
                     this.blogPost = res;
 

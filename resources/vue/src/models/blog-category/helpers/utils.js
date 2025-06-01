@@ -10,6 +10,23 @@ export const createFlattenedCategories = (categories, level = 0) => {
     }, []);
 }
 
+export const addLevelsFromParentRelations = (categories) => {
+    const categoryMap = new Map(categories.map(cat => [cat.id, cat]));
+
+    const getLevel = (cat) => {
+        if (!cat.parent_id) return 0;
+        const parent = categoryMap.get(cat.parent_id);
+        if (!parent) return 0;
+        return 1 + getLevel(parent);
+    };
+
+    return categories.map(cat => ({
+        ...cat,
+        level: getLevel(cat)
+    }));
+};
+
+
 export const categoryDashIndentation = (level) => {
     return '--'.repeat(level) + ' ';
 }

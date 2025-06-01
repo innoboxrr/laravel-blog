@@ -29,6 +29,7 @@
 </template>
 
 <script>
+    import { addLevelsFromParentRelations } from '@blogModels/blog-category/helpers/utils';
     
     export default {
         props: {
@@ -43,10 +44,18 @@
         },
         data() {
             return {
-                selectedCategories: this.preselected,
+                selectedCategories: this.setSelectedCategories(),
             };
         },
         methods: {
+            setSelectedCategories() {
+                if (this.preselected.length === 0) return [];
+
+                const enriched = addLevelsFromParentRelations([...this.preselected, ...this.categories]);
+                const enrichedMap = new Map(enriched.map(cat => [cat.id, cat]));
+
+                return this.preselected.map(cat => enrichedMap.get(cat.id));
+            },
             editCategory(category) {
                 this.$emit('editCategory', category);
             },

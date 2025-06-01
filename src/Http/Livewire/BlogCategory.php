@@ -4,10 +4,19 @@ namespace Innoboxrr\LaravelBlog\Http\Livewire;
 
 use Innoboxrr\LaravelBlog\Http\Livewire\BaseLivewireComponent as Component;
 use Innoboxrr\LaravelBlog\Models\BlogCategory as BlogCategoryModel;
+use Livewire\WithPagination;
 
 class BlogCategory extends Component
 {
+    use WithPagination;
+
     public $category;
+
+    public $perPage = 20;
+
+    protected $queryString = [
+        'page' => ['except' => 1], 
+    ];
 
     public function mount($category)
     {
@@ -23,7 +32,10 @@ class BlogCategory extends Component
     {
         return $this->renderView('category', [
             'category' => $this->category,
-            'posts' => $this->category->posts()->paginate(10),
+            'posts' => $this->category->posts()
+                ->orderByDesc('published_at')
+                ->paginate(10),
+            'asideData' => $this->getLayoutData()['layoutData'],
         ]);
     }
 }

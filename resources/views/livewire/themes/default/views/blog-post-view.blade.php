@@ -54,14 +54,16 @@
 						<span class="articles-header-tag">
 							{{ $post->tag ?? 'Hot' }}
 						</span>
-						<span class="articles-header-category">
-							<a 
-								href="{{ blog_category_route($category) }}"
-								class="text-greenColor hover:underline float-right" 
-								title="">
-								{{ $category->name }}
-							</a>
-						</span>
+						@if($category)
+							<span class="articles-header-category">
+								<a 
+									href="{{ blog_category_route($category) }}"
+									class="text-greenColor hover:underline float-right" 
+									title="">
+									{{ $category->name }}
+								</a>
+							</span>
+						@endif
 					</div>
 					<div class="articles-content px-8">
 						<h1 class="text-3xl leading-10 md:text-42px md:leading-62px text-secondary font-black my-6.5">

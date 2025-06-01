@@ -128,10 +128,15 @@
                             :key="post.id"
                             class="bg-white shadow-sm rounded-md transition hover:shadow-md"
                         >
+
+
                             <!-- Title + Team -->
                             <td class="px-6 py-4 align-top">
                                 <div class="flex flex-col space-y-1">
                                     <div class="flex items-center gap-2">
+                                        <p class="text-xs text-gray-500">
+                                            ID: {{  post.id }}
+                                        </p>
                                         <span :class="[post.bgColorClass, 'inline-block size-2.5 rounded-full']"></span>
                                         <router-link
                                             :to="{ name: 'BlogPostsEditor', params: { id: post.id } }"
@@ -140,9 +145,6 @@
                                             {{ post.title.length > 70 ? post.title.slice(0, 67) + '…' : post.title }}
                                         </router-link>
                                     </div>
-                                    <p v-if="post.team" class="text-xs text-gray-500">
-                                        {{ __blog('Team') }}: {{ post.team }}
-                                    </p>
                                 </div>
                             </td>
 

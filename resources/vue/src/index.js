@@ -1,5 +1,5 @@
-import blogRoutes from './src/routes';
-import { TranslatePlugin, TitlePlugin } from './src/plugins';
+import blogRoutes from './routes';
+import { TranslatePlugin, TitlePlugin } from './plugins';
 
 export const routes = blogRoutes;
 

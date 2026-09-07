@@ -5,14 +5,16 @@ namespace Innoboxrr\LaravelBlog\Helpers;
 use Innoboxrr\LaravelBlog\Models\Blog;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class BlogHelper
 {
-    public static function isBlog($request)
+    public static function isBlog($request): bool
     {
-        if ($blog = BlogHelper::getBlogFromRequest()) {
+        if ($blog = self::getBlogFromRequest()) {
             view()->share('currentBlog', $blog);
             view()->share('theme', $blog->theme ?? 'default');
+
             $request->merge([
                 'is_blog' => true,
                 'blog_id' => $blog->id,
@@ -20,62 +22,77 @@ class BlogHelper
 
             return true;
         }
+
         return false;
     }
 
-    public static function getBlogFromRequest()
+    public static function getBlogFromRequest(): ?Blog
     {
-        if(self::contextIsApp()){
+        if (self::contextIsApp()) {
             return self::getBlogFromPath();
-        } elseif(self::contextIsBlog()){
+        } elseif (self::contextIsBlog()) {
             return self::getBlogFromDomain();
         }
+
         return null;
     }
 
-    public static function contextIsApp()
+    public static function contextIsApp(): bool
     {
         $host = request()->getHost();
         $path = request()->getPathInfo();
-        $referer = request()->headers->get('referer');
+        $referer = request()->headers->get('referer', '');
 
-        if($path == '/livewire/update') {
-            $refererPath = parse_url($referer, PHP_URL_PATH);
-            $path = $refererPath;
+        if ($path === '/livewire/update' && $referer) {
+            $refererPath = parse_url($referer, PHP_URL_PATH) ?: '';
+            if ($refererPath !== '') {
+                $path = $refererPath;
+            }
         }
 
-        // Si path inicia como /blog o /blog/ entonces es un blog
-        if(!str_starts_with($path, '/blog')){
+        if (!Str::startsWith($path, '/blog')) {
             return false;
         }
+
         return $host === config('app.app_host', 'seguropro.test.com');
     }
 
-    public static function contextIsBlog()
+    public static function contextIsBlog(): bool
     {
         $host = request()->getHost();
-        return str_starts_with($host, 'blog.');
+        return Str::startsWith($host, 'blog.');
     }
 
-    public static function getBlogDomain()
+    public static function getBlogDomain(): ?string
     {
         $host = request()->getHost();
-        if(!str_starts_with($host, 'blog.')){
+
+        if (!Str::startsWith($host, 'blog.')) {
             return null;
         }
 
-        // Extrae el dominio sin el subdominio "blog."
-        if(explode('.', $host)[0] == 'blog'){
-            $domain = implode('.', array_slice(explode('.', $host), 1));
+        $parts = explode('.', $host);
+        if (count($parts) <= 1 || $parts[0] !== 'blog') {
+            return null;
         }
 
-        return $domain;
+        $domain = implode('.', array_slice($parts, 1));
+        return $domain !== '' ? $domain : null;
     }
 
-    public static function getBlogFromDomain()
+    public static function getBlogFromDomain(): ?Blog
     {
-        $blog = Blog::resolveBlog(self::getBlogDomain());
+        $domain = self::getBlogDomain();
+        if (!$domain) {
+            return null;
+        }
 
+        $blog = Blog::resolveBlog($domain);
+        if (!$blog) {
+            return null;
+        }
+
+        // Config dinámico de dominio / URL / sesión
         Config::set('session.domain', '.' . $blog->url['host']);
         Config::set('app.url', $blog->url['scheme'] . '://' . $blog->url['host']);
         Config::set('app.name', $blog->name);
@@ -84,47 +101,69 @@ class BlogHelper
         Session::setName($sessionName);
         Config::set('session.cookie', $sessionName);
 
-        $stateful_array = config('sanctum.stateful');
-        array_push($stateful_array, $blog->url['host']);
-        Config::set('sanctum.stateful', $stateful_array);
+        $stateful = config('sanctum.stateful');
+        if (!is_array($stateful)) {
+            $stateful = [];
+        }
+        if (!in_array($blog->url['host'], $stateful, true)) {
+            $stateful[] = $blog->url['host'];
+        }
+        Config::set('sanctum.stateful', $stateful);
 
         return $blog;
     }
 
-    public static function getBlogFromPath()
+    public static function getBlogFromPath(): ?Blog
     {
         $path = request()->getPathInfo();
+        $referer = request()->headers->get('referer', '');
 
-        $referer = request()->headers->get('referer');
-        if($path == '/livewire/update') {
-            $refererPath = parse_url($referer, PHP_URL_PATH);
-            $path = $refererPath;
+        if ($path === '/livewire/update' && $referer) {
+            $refererPath = parse_url($referer, PHP_URL_PATH) ?: '';
+            if ($refererPath !== '') {
+                $path = $refererPath;
+            }
         }
 
-        $slug = explode('/', $path)[2] ?? null;
-        return Blog::find($slug);
-    }   
+        // /blog/{blog}/{...}
+        $slug = explode('/', trim($path, '/'))[1] ?? null;
+        if (!$slug) {
+            return null;
+        }
 
-    public static function route($name, $parameters = [], $absolute = false)
+        // Si tu Blog::find espera ID numérico y tú usas slug, cambia por where('slug', $slug)->first()
+        return Blog::find($slug) ?: Blog::where('id', $slug)->orWhere('slug', $slug)->first();
+    }
+
+    public static function route(string $name, array $parameters = [], bool $absolute = false): string
     {
-        $route = null;
-        
-        if(self::contextIsBlog()){
-            unset($parameters['blog']);
-            $route = route(
-                'blog.' . $name, 
-                array_merge($parameters, ['domain' => self::getBlogDomain()]), 
-                $absolute
-            );
-        } else {
-            $route = route(
-                'blog.app.' . $name, 
-                $parameters, 
-                $absolute
-            );
+        // Limpia nulls y castea a string todo parámetro escalar
+        $clean = [];
+        foreach ($parameters as $k => $v) {
+            if (is_null($v)) {
+                $clean[$k] = '';
+            } elseif (is_scalar($v)) {
+                $clean[$k] = (string) $v;
+            } else {
+                // Evita pasar arrays/objetos a la generación de rutas
+                $clean[$k] = (string) $v;
+            }
         }
 
-        return str_replace('http://', 'https://', $route);
+        if (self::contextIsBlog()) {
+            unset($clean['blog']);
+
+            $domain = self::getBlogDomain() ?? '';
+            $url = route('blog.' . $name, array_merge($clean, ['domain' => $domain]), $absolute);
+        } else {
+            $url = route('blog.app.' . $name, $clean, $absolute);
+        }
+
+        // Fuerza https si te interesa (evita mezclar contenido)
+        if (Str::startsWith($url, 'http://')) {
+            $url = preg_replace('#^http://#', 'https://', $url) ?: $url;
+        }
+
+        return $url;
     }
 }
-

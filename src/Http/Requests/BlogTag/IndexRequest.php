@@ -52,7 +52,7 @@ class IndexRequest extends FormRequest
 
         $builder = new Builder();
 
-        $query = $builder->get(BlogTag::class, $this->all(), config('laravel-blog.search-options'));
+        $query = $builder->get(BlogTag::class, $this->all());
 
         return BlogTagResource::collection($query);
 

@@ -34,7 +34,9 @@ class BlogTagsExports implements FromView
     public function getQuery()
     {   
         $builder = new Builder();
-        return $builder->get(BlogTag::class, $this->data);
+        // lazy() en vez de get(): un export recorre la tabla entera y
+        // hidratar todas las filas a la vez es lo que revienta la memoria.
+        return $builder->lazy(BlogTag::class, $this->data);
     }
 
 }

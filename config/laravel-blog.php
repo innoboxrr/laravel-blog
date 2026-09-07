@@ -47,10 +47,13 @@ return [
 		'blog-tag-except-abilities' => [],
 	],
 
-	'search-options' => [
-		'filtersPath' => 'vendor' . DIRECTORY_SEPARATOR . 'innoboxrr' . DIRECTORY_SEPARATOR . 'laravel-blog' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . 'Filters',
-		'filtersNamespace' => 'Innoboxrr\LaravelBlog\Models\Filters',
-	],
+	/*
+	| Obsoleto desde SearchSurge v3: los filtros se localizan solos a partir
+	| del namespace del modelo, preguntandole al autoloader de Composer.
+	| Se deja vacio y no como clave ausente para que cualquier codigo que
+	| todavia lo lea siga recibiendo un array valido.
+	*/
+	'search-options' => [],
 
 	'user_class' => 'App\Models\User',
 

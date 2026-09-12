@@ -3,6 +3,10 @@
 namespace Innoboxrr\LaravelBlog\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
+use Innoboxrr\LaravelBlog\TelInput\TelInput;
+use Innoboxrr\LaravelBlog\TelInput\TelInputAssetLoader;
 use Livewire\Livewire;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -16,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/laravel-blog.php', 'laravel-blog');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/laravel-tel-input.php', 'laravel-tel-input');
     }
 
     public function boot()
@@ -23,10 +28,31 @@ class AppServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         $this->registerLivewireComponents();
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'laravel-blog');
+        $this->registerTelInput();
         if ($this->app->runningInConsole()) {
             $this->publishes([__DIR__.'/../../resources/views' => resource_path('views/vendor/laravel-blog'),], 'views');
             $this->publishes([__DIR__.'/../../config/laravel-blog.php' => config_path('laravel-blog.php')], 'config');
+            $this->publishes([__DIR__.'/../../config/laravel-tel-input.php' => config_path('laravel-tel-input.php')], 'laravel-tel-input:config');
         }
+    }
+
+    /**
+     * El campo de telefono de los formularios del tema (<x-tel-input> y sus
+     * directivas). Antes lo aportaba victorybiz/laravel-tel-input; ver TelInput.
+     */
+    protected function registerTelInput(): void
+    {
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views/tel-input', 'laravel-tel-input');
+
+        Blade::component(config('laravel-tel-input.component-name', 'tel-input'), TelInput::class);
+
+        Blade::directive('laravelTelInputStyles', fn () => '<?php echo \\' . TelInputAssetLoader::class . '::outputStyles(); ?>');
+        Blade::directive('laravelTelInputScripts', fn () => '<?php echo \\' . TelInputAssetLoader::class . '::outputScripts(); ?>');
+
+        View::composer('laravel-tel-input::assets', function ($view) {
+            $view->cssPath = __DIR__ . '/../../resources/tel-input/laravel-tel-input.css';
+            $view->jsPath = __DIR__ . '/../../resources/tel-input/laravel-tel-input.js';
+        });
     }
 
     protected function registerLivewireComponents()

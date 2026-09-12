@@ -11,7 +11,7 @@ return [
 	'ffprobe' => env('FFPROBE_PATH', 'ffprobe'),
 
 	'database' => [
-		'connection' => 'mysql',
+		'connection' => env('LARAVEL_BLOG_DB_CONNECTION', 'mysql'),
 	],
 
 	'author_class' => 'App\Models\User',

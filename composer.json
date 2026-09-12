@@ -1,6 +1,5 @@
 {
     "name": "innoboxrr/laravel-blog",
-    "version": "1.0.37",
     "description": "A\u00f1ade un blog a tu app de laravel en cuesti\u00f3n de minutos",
     "type": "library",
     "license": "MIT",
